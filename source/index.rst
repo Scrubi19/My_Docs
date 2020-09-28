@@ -9,9 +9,9 @@
    :maxdepth: 1
 
    Sibsutis/Crypto/cryptography.rst
+   Sibsutis/Compilers/compilers.rst
    Sibsutis/Ruby/ruby.rst
    Sibsutis/Sql/sql.rst
-   Sibsutis/Compilers/compilers.rst
 
 Контакты
 ------------------------------------

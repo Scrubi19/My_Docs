@@ -38,7 +38,8 @@
     
     <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
     <link rel="search" title="Поиск" href="../../search.html" />
-    <link rel="prev" title="Базы данных" href="../Sql/sql.html" /> 
+    <link rel="next" title="Ruby on Rails" href="../Ruby/ruby.html" />
+    <link rel="prev" title="Криптографические методы защиты информации" href="../Crypto/cryptography.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,16 +89,25 @@
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id5">2.2 Алгоритм Эвклида</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id6">2.3 Система Диффи-Хеллмана</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id7">2.4 Метод «шаг младенца, шаг великана»</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id8">Шифр Шамира</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id9">Используемая литература</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Компиляторы</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#llvm">Установка LLVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Инструменты и организация</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">LLVM сегодня</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Используемая литература</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Sql/sql.html">Базы данных</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Компиляторы</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id2">Используемая литература</a></li>
-</ul>
-</li>
 </ul>
 
             
@@ -165,9 +175,109 @@
             
   <div class="section" id="id1">
 <h1>Компиляторы<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
+<div class="section" id="llvm">
+<h2>Установка LLVM<a class="headerlink" href="#llvm" title="Ссылка на этот заголовок">¶</a></h2>
+<ul class="simple">
+<li>Склонировать репозиторий с LLVM:</li>
+</ul>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">llvm</span><span class="o">/</span><span class="n">llvm</span><span class="o">-</span><span class="n">project</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ul class="simple">
+<li>Configure and build LLVM and Clang:</li>
+</ul>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">llvm</span><span class="o">-</span><span class="n">project</span>
+
+<span class="n">mkdir</span> <span class="n">build</span>
+
+<span class="n">cd</span> <span class="n">build</span>
+
+<span class="n">cmake</span> <span class="o">-</span><span class="n">G</span> <span class="o">&lt;</span><span class="n">generator</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="o">../</span><span class="n">llvm</span>
+</pre></div>
+</div>
+<p>Generators:</p>
+<blockquote>
+<div><p>Ninja — для генерации ninja-build сборочных файлов</p>
+<p>Unix Makefiles — для генерации make поддерживающих parallel makefiles</p>
+<p>Visual Studio — for generating Visual Studio projects and solutions</p>
+<p>Xcode — for generating Xcode projects</p>
+</div></blockquote>
+<p>Options:</p>
+<blockquote>
+<div><p>-DLLVM_ENABLE_PROJECTS = „…“ — semicolon-separated list of the LLVM subprojects you’d like to additionally build. Can include any of: clang, clang-tools-extra, libcxx, libcxxabi, libunwind, lldb, compiler-rt, lld, polly, or debuginfo-tests</p>
+<p><em>For example</em> : -DLLVM_ENABLE_PROJECTS=»clang;libcxx;libcxxabi»</p>
+<p>-DCMAKE_INSTALL_PREFIX=directory — Specify for directory the full pathname of where you want the LLVM tools and libraries to be installed (default /usr/local)</p>
+<p>-DCMAKE_BUILD_TYPE=type — Valid options for type are Debug, Release, RelWithDebInfo, and MinSizeRel. Default is Debug.</p>
+<p>-DLLVM_ENABLE_ASSERTIONS=On — Compile with assertion checks enabled (default is Yes for Debug builds, No for all other build types)</p>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li>Запуск сборки:</li>
+</ul>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">--</span><span class="n">build</span> <span class="o">.</span>
+<span class="n">cmake</span> <span class="o">--</span><span class="n">build</span> <span class="o">--</span><span class="n">target</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Примечания:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Собирать на каком-либо теге</li>
+<li>Можно выкачивать не весь репозиторий, см. опцию - -depth в гите</li>
+<li>При сборке нужно включить проект clang в -DLLVM_ENABLE_PROJECTS</li>
+<li>Собирать Debug версию (по умолчанию)</li>
+<li>Для сборки мне понадоби лось 8 GB Ram + 50 GB файлов подкачки + 70 GB свободного места</li>
+<li>Требуется cmake &gt;= 3.13.4, python &gt;= 2.7, gcc &gt;= 5.1.0, ninja-build</li>
+</ol>
+</div></blockquote>
+</div>
 <div class="section" id="id2">
-<h2>Используемая литература<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
-<p><a class="reference external" href="../source/Sibsutis/Compilers/LLVMbook.pdf">LLVM. Инфраструктура для разработки компиляторов</a></p>
+<h2>Инструменты и организация<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Проект LLVM включает несколько библиотек и инструментов, которые, все вместе, образуют больщую инфраструктуру компилятора. Философия LLVM «все сущее есть библиотека»</p>
+<p><em>LLVM</em> - фреймворк со множеством инструментов позволяющий изучать/проходить все стадии компиляции</p>
+<p><strong>10 лет тому назад</strong> реализация, в значительной степени состоящая из алгоритмов трансляции в машинный код, опиралась на GCC, для трансляции программ в промежуточное представление LLVM (IR)</p>
+<p><strong>Сейчас</strong> Собственный codegen. Центральным аспектом LLVM является промежуточное представление IR в форме <em>Single-Static-Assignments</em> (SSA), обладающее 2 важными характеристиками:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Код организован в виде трехадресных инструкций</li>
+<li>Имеет бесконечное множество регистров</li>
+</ol>
+</div></blockquote>
+<p>В философии LLVM есть важный аспект, компилятор (clang) не применяет оптимизаций во время компиляции, оставляя возможность выполнения оптимизаций в то время, когда программа не работает (н: во время компоновки)</p>
+<p><strong>Конкуренция с Java</strong>  Для поддержки оптимизации на всем жизненном цикле программы необходимо их распространение в формате LLVM IR, это предполагает работу LLVM как виртуальной машины и конкуренцию с Java</p>
+<p><strong>Но</strong> LLVM IR(внутреннее представление) не является системно-независимой, к тому же в LLVM отсутствует оптимизация с обратной связью</p>
+<div class="section" id="id3">
+<h3>LLVM сегодня<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/structure.png"><img alt="../../_images/structure.png" src="../../_images/structure.png" style="width: 600px;" /></a>
+</div>
+<p>Части инфраструктуры:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Анализатор исходного кода (frontend «clang»):</strong> Компилятор, выполняющий этап трансляции программ на языках C, C++,.. в промежуточное представление LLVM IR. Включает лексический, синтаксический и семантический анализаторы, а также генератор кода LLVM IR</li>
+<li><strong>Промежуточное представление (IR):</strong> Промежуточное представление LLVM IR имеет две формы: удобночитаемую текстовую форму и двоичную</li>
+<li><strong>Генератор выполняемого кода (backend «asm, JIT»):</strong> Компилятор, преобразующий промежуточное представление LLVM IR программы в конкретный код на языке ассемблера для заданной архитектуры или в двоичный объектный код.</li>
+</ul>
+</div></blockquote>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/deep_structure.png"><img alt="../../_images/deep_structure.png" src="../../_images/deep_structure.png" style="width: 600px;" /></a>
+</div>
+<p>Все компоненты компилятора взаимодействуют друг с другом 2-мя способами:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><strong>Через структуры в памяти:</strong> Clang использует каждый компонент LLVM как библиотеку и опирается на структуру данных в памяти</li>
+<li><strong>Через файлы:</strong> Пользователь запускает отдельные инструменты и использует их выходные файлы как входные файлы для последующих инструментов</li>
+</ol>
+</div></blockquote>
+<div class="section" id="id4">
+<h4>Используемая литература<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h4>
+<p><a class="reference external" href="LLVMbook.pdf">LLVM. Инфраструктура для разработки компиляторов</a></p>
+</div>
+</div>
 </div>
 </div>
 

@@ -38,7 +38,7 @@
     
     <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
     <link rel="search" title="Поиск" href="../../search.html" />
-    <link rel="next" title="Ruby on Rails" href="../Ruby/ruby.html" />
+    <link rel="next" title="Компиляторы" href="../Compilers/compilers.html" />
     <link rel="prev" title="«Не я первый, не я последний»" href="../../index.html" /> 
 </head>
 
@@ -89,16 +89,21 @@
 <li class="toctree-l3"><a class="reference internal" href="#id5">2.2 Алгоритм Эвклида</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id6">2.3 Система Диффи-Хеллмана</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id7">2.4 Метод «шаг младенца, шаг великана»</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Шифр Шамира</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">Используемая литература</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Compilers/compilers.html">Компиляторы</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/compilers.html#llvm">Установка LLVM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#id2">Используемая литература</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Sql/sql.html">Базы данных</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Compilers/compilers.html">Компиляторы</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Compilers/compilers.html#id2">Используемая литература</a></li>
-</ul>
-</li>
 </ul>
 
             
@@ -179,7 +184,6 @@
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../../_images/2.1.png"><img alt="table" src="../../_images/2.1.png" style="width: 650px;" /></a>
 </div>
-<p>￼</p>
 </div>
 <div class="section" id="id4">
 <h3>Элементы теории чисел<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h3>
@@ -187,19 +191,17 @@
 <li>Число называется простым, если оно не делится ни на какое другое число, кроме самого себя и единицы (11, 23)</li>
 <li>Любое целое положительное число  может быть представлено в виде произведения простых чисел, причем единственным образом (27 = 3*3 * 3,33)</li>
 <li>Два числа называются взаимно простыми если они не имеют ни одного общего делителя кроме единицы (27 и 28)</li>
-<li><strong>Функция Эйлера</strong>. Пусть дано целое число N &gt;= 1. Значение функции Эйлера ф(N) равно количеству чисел в ряду 1,2,3,…,N - 1, взаимно простых с N</li>
+<li><strong>Функция Эйлера</strong>. Пусть дано целое число N &gt;= 1. Значение функции Эйлера ф(N) равно количеству чисел в ряду 1,2,3, … ,N - 1, взаимно простых с N</li>
 </ul>
-<div class="figure align-center">
-<a class="reference internal image-reference" href="../../_images/2.2.png"><img alt="../../_images/2.2.png" src="../../_images/2.2.png" style="width: 650px;" /></a>
+<blockquote>
+<div><div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/2.2.png"><img alt="phi" src="../../_images/2.2.png" style="width: 600px;" /></a>
 </div>
-<dl class="docutils">
-<dt>￼</dt>
-<dd><ol class="first last arabic simple">
+<ol class="arabic simple">
 <li>Если p-простое число, то ф(p) = p-1</li>
 <li>Если p и q - два различных простых числа ( p != q). Тогда  ф(pq) = (p-1)(q-1)</li>
 </ol>
-</dd>
-</dl>
+</div></blockquote>
 <ul class="simple">
 <li><strong>Теорема Ферма</strong>. Пусть p - простое число и 0 &lt; a &lt; p. Тогда</li>
 </ul>
@@ -285,6 +287,13 @@
 \[\begin{split}\\{ x = i * m - j }\end{split}\]</div>
 </div></blockquote>
 </div>
+<div class="section" id="id8">
+<h3>Шифр Шамира<a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>Используемая литература<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h2>
+<p><a class="reference external" href="ryabko_fionov_kriptograficheskie_metody_zashchity_i.pdf">Б.Я. Рябко, А.Н. Фионов. «Криптографические методы защиты информации»</a></p>
 </div>
 </div>
 
