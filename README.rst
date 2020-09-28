@@ -5,13 +5,10 @@
 Содержание
 ----------------------
 
-.. toctree::
-   :maxdepth: 1
-
-   Sibsutis/Crypto/cryptography.rst
-   Sibsutis/Ruby/ruby.rst
-   Sibsutis/Sql/sql.rst
-   Sibsutis/Compilers/compilers.rst
+* Криптографические методы защиты информации
+* Ruby on Rails
+* SQL
+* Компиляторы
 
 Контакты
 ------------------------------------
