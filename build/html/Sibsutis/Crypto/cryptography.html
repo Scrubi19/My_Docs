@@ -83,12 +83,12 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Криптографические методы защиты информации</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id2">Глава 2. Криптосистемы с открытым ключом</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">2.1 Возведение в степень по модулю</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Криптосистемы с открытым ключом</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Возведение в степень по модулю</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id4">Элементы теории чисел</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">2.2 Алгоритм Эвклида</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id6">2.3 Система Диффи-Хеллмана</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">2.4 Метод «шаг младенца, шаг великана»</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Обобщенный алгоритм Эвклида</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Система Диффи-Хеллмана</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Метод «шаг младенца, шаг великана»</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id8">Шифр Шамира</a></li>
 </ul>
 </li>
@@ -96,13 +96,33 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Compilers/compilers.html">Компиляторы</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Compilers/compilers.html#llvm">Установка LLVM</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#id2">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/compilers.html#llvm">Установка LLVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/compilers.html#id2">Инструменты и организация</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#id3">LLVM сегодня</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#id4">Взаимодействие с драйвером компилятора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#id5">Использование автономных инструментов</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#id6">Как это работает?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#c-llvm">Приемы программирования на C++ в LLVM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#id8">Демонстрация расширяемого интерфейса проходов</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#tablegen-td">TableGen(.td)</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/compilers.html#id10">Анализатор исходного кода</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#id11">Лексический анализ</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/compilers.html#clang-libtoling">Инструменты Clang и фреймворк LibToling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#clang-tidy">Clang-tidy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/compilers.html#clang-modernizer">Clang Modernizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/compilers.html#id12">Используемая литература</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Ruby/ruby.html#ubuntu">Установка на Ubuntu</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Sql/sql.html">Базы данных</a></li>
 </ul>
 
@@ -172,15 +192,15 @@
   <div class="section" id="id1">
 <h1>Криптографические методы защиты информации<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
 <div class="section" id="id2">
-<h2>Глава 2. Криптосистемы с открытым ключом<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<h2>Криптосистемы с открытым ключом<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
 <div class="section" id="id3">
-<h3>2.1 Возведение в степень по модулю<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
+<h3>Возведение в степень по модулю<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Односторонняя функция (англ.&nbsp;one-way function, OWF)&nbsp;-  &nbsp;математическая функция, которая легко вычисляется для любого входного значения, но трудно найти аргумент по заданному значению функции. В криптографических задачах в качестве односторонней функции часто используется функция:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\\{ y = a^{x}mod p }\end{split}\]</div>
+\[{ y = a^{x}\bmod p }\]</div>
 <p>Обратная функция называется дискретным логарифмом и является трудновычислимой:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\\{ x = log_a(x)mod p }\end{split}\]</div>
+\[{ x = log_a(y)\bmod p }\]</div>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../../_images/2.1.png"><img alt="table" src="../../_images/2.1.png" style="width: 650px;" /></a>
 </div>
@@ -197,28 +217,30 @@
 <div><div class="figure align-center">
 <a class="reference internal image-reference" href="../../_images/2.2.png"><img alt="phi" src="../../_images/2.2.png" style="width: 600px;" /></a>
 </div>
-<ol class="arabic simple">
-<li>Если p-простое число, то ф(p) = p-1</li>
-<li>Если p и q - два различных простых числа ( p != q). Тогда  ф(pq) = (p-1)(q-1)</li>
-</ol>
+<ul class="simple">
+<li>Если p-простое число, то phi(p) = p - 1</li>
+<li>Если p и q - два различных простых числа ( p != q). Тогда</li>
+</ul>
 </div></blockquote>
+<div class="math notranslate nohighlight">
+\[{ \varphi(pq) = (p-1)(q-1)}\]</div>
 <ul class="simple">
 <li><strong>Теорема Ферма</strong>. Пусть p - простое число и 0 &lt; a &lt; p. Тогда</li>
 </ul>
 <div class="math notranslate nohighlight">
-\[\begin{split}\\{ a^{p-1} mod p = 1 }\end{split}\]</div>
+\[{ a^{p-1}\bmod p = 1 }\]</div>
 <ul class="simple">
 <li><strong>Теорема Эйлера</strong>. Пусть a и b - взаимно простые числа. Тогда</li>
 </ul>
 <div class="math notranslate nohighlight">
-\[\begin{split}\\{ a^{\varphi(b)} mod b = 1 }\end{split}\]</div>
+\[{ a^{\varphi(b)}\bmod b = 1 }\]</div>
 </div>
 <div class="section" id="id5">
-<h3>2.2 Алгоритм Эвклида<a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
+<h3>Обобщенный алгоритм Эвклида<a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Пусть a и b — два целых положительных числа. Наибольший общий делитель чисел a и b есть наибольшее число c, которое делит и a и b :</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
-\[\begin{split}\\{ c = gcd(a, b) }\end{split}\]</div>
+\[{ c = gcd(a, b) }\]</div>
 </div></blockquote>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../../_images/gcd.png"><img alt="gcd" src="../../_images/gcd.png" style="width: 600px;" /></a>
@@ -226,7 +248,7 @@
 <p>Пусть a и b — два целых положительных числа. Тогда существуют целые (не обязательно положительные) числа x и y , такие, что</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
-\[\begin{split}\\{ ax + by = gcd(a, b) }\end{split}\]</div>
+\[{ ax + by = gcd(a, b) }\]</div>
 </div></blockquote>
 <p>Введем три строки U = (u 1 , u 2 , u 3 ), V = (v 1 , v 2 , v 3 ) и T = (t 1 , t 2 , t 3 ). Тогда алгоритм записывается следующим образом:</p>
 <div class="figure align-center">
@@ -234,19 +256,19 @@
 </div>
 </div>
 <div class="section" id="id6">
-<h3>2.3 Система Диффи-Хеллмана<a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
-<p>Для обеспечения высокой стойкости рассмотренной системы число p-1 должно обязательно содержать большой простой множитесь. Рекомендуют использовать следующее:</p>
+<h3>Система Диффи-Хеллмана<a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Для обеспечения высокой стойкости рассмотренной системы число p-1 должно обязательно содержать большой простой множитель. Рекомендуют использовать следующее:</p>
 <blockquote>
 <div><blockquote>
 <div><div class="math notranslate nohighlight">
-\[\begin{split}\\{ P = 2Q + 1 ,}\end{split}\]</div>
+\[{ P = 2Q + 1 ,}\]</div>
 </div></blockquote>
 <p>где Q-простое число</p>
 </div></blockquote>
 <p>Для Q должны выполняться условия:</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
-\[\begin{split}\\{ 1 &lt; G &lt; P − 1  \quad и \quad G^{Q} mod P \quad != 1 }\end{split}\]</div>
+\[{ 1 &lt; G &lt; P − 1  \quad и \quad G^{Q}\bmod P != 1 }\]</div>
 </div></blockquote>
 <p>Согласно малой теореме Ферма можно утверждать,что если для какого-то числа a &lt; P выполняется условие <strong>a^(P-1)mod P != 1</strong> ,  то число  является составным. Исходя из данного утверждения, можно легко разработать тест Ферма для проверки на простоту:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">bool</span> <span class="n">testFerma</span><span class="p">(</span><span class="n">long</span> <span class="n">long</span> <span class="n">p</span><span class="p">,</span> <span class="nb">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
@@ -261,34 +283,76 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>Абоненты выбирают большие числа Xa, Xb, Xc, которые храняться в секрете. Каждый абонент вычисляет соответсвующее число Y, которое открыто передается другим абонентам</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin {cases} {Y_A = g^{X_A} \bmod p} \\
+   {Y_B = g^{X_B} \bmod p} \\
+   {Y_C = g^{X_C} \bmod p} \\
+  \end {cases}\end{split}\]</div>
+<p>Допустим, абонент A решил организовать сеанс связи с B, при этом обоим абонентам доступна открытая информация (P, G, Y). Абонент A сообщает B по открытому каналу, что он хочет передать ему сообщение. Затем абонент A вычисляет величину:</p>
+<div class="math notranslate nohighlight">
+\[{Z_{AB} = (Y_B)^{X_A} \bmod p}\]</div>
+<p>В свою очередь, абонент B вычисляет число:</p>
+<div class="math notranslate nohighlight">
+\[{Z_{BA} = (Y_A)^{X_B} \bmod p}\]</div>
+<p>Получаем что:</p>
+<div class="math notranslate nohighlight">
+\[{Z_{BA} = Z_{AB} }\]</div>
+<p>Доказательство:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}{Z_{AB} = (Y_B)^{X_A} \bmod p = (g^{X_B})^{X_A} \bmod p = \\
+    = g^{X_A X_B} \bmod p = (Y_A)^{X_B} \bmod p = Z_{BA} }\end{split}\]</div>
+<dl class="docutils">
+<dt>Пример:</dt>
+<dd>Пусть P = 23 = 2 · 11 + 1 (Q = 11). Выберем параметр G. Попробуем взять g = 3. Проверим: 3^11 mod 23 = 1 и значит, такое g не подходит. Возьмем g = 5. Проверим: 5^11 mod 23 = 22. Итак, мы выбрали параметры p = 23, g = 5. Теперь каждый абонент выбирает секретное число и вычисляет соответствующее ему открытое число. Пусть выбраны Xa = 7 , Xb = 13 . Вычисляем Ya = 5^7 mod 23 = 17, Yb = 5^13 mod 23 = 21. Пусть A и B решили сформировать общий секретный ключ. Для этого A вычисляет Zab = 21^7 mod 23 = 10, а B вычисляет Zba = 17^13 mod 23 = 10.Теперь они имеют общий ключ 10, который не передавался по каналу связи</dd>
+</dl>
 </div>
 <div class="section" id="id7">
-<h3>2.4 Метод «шаг младенца, шаг великана»<a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
+<h3>Метод «шаг младенца, шаг великана»<a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Задача поиска x, при известных a и y. Сначала берем два целых числа m и k, такие что</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
-\[\begin{split}\\{ m * k &gt; p, \quad m = k = \sqrt{p} + 1 }\end{split}\]</div>
+\[{ m * k &gt; p, \quad m = k = \sqrt{p} + 1 }\]</div>
 </div></blockquote>
 <p>Вычислим два ряда чисел:</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
-\[\begin{split}\\{ y,ay,a^{2y},...a^{m-1}y \quad (mod p) }
-\\{   a^{m},a^{2m},...a^{km} \quad (mod p) }\end{split}\]</div>
+\[{ y,ay,a^{2y},...a^{m-1}y \quad (\bmod p) }
+{   a^{m},a^{2m},...a^{km} \quad (\bmod p) }\]</div>
 <p>(все вычисления по модулю p)</p>
 </div></blockquote>
 <p>Найдем такие i и j, для которых выполняется равенство</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
-\[\begin{split}\\{ a^{im} = a^{i} * y }\end{split}\]</div>
+\[{ a^{im} = a^{i} * y }\]</div>
 </div></blockquote>
 <p>Число x:</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
-\[\begin{split}\\{ x = i * m - j }\end{split}\]</div>
+\[{ x = i * m - j }\]</div>
 </div></blockquote>
 </div>
 <div class="section" id="id8">
 <h3>Шифр Шамира<a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Этот шифр, предложенный Шамиром (Adi Shamir), был первым, позволяющим организовать обмен секретными сообщениями по открытой линии связи для лиц, которые не имеют никаких защищен-
+ных каналов и секретных ключей и, возможно, никогда не видели друг друга.</p>
+<p>Пусть есть два абонента A и B, соединенные линией связи. A хочет передать сообщение m абоненту B так, чтобы никто не узнал его содержание. A выбирает случайное большое простое число P и открыто передает его B. Затем A выбирает два числа Ca и Da , такие, что</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}{ C_A*D_A \bmod (P-1) = 1  \\
+    C_B*D_B \bmod (P-1) = 1 }\end{split}\]</div>
+<p>После этого A передает свое сообщение m. Если m &lt; P, то сообщение передается сразу, если же m &gt;= P, то сообщение разбивается на части. Рассмотрим случай m &lt; P
+<strong>Шаг 1.</strong> A вычисляет число</p>
+<div class="math notranslate nohighlight">
+\[{x_1 = m^{C_A} \bmod p, }\]</div>
+<p><strong>Шаг 2.</strong> B получив x1, вычисляет</p>
+<div class="math notranslate nohighlight">
+\[{x_2 = x_1^{C_B} \bmod p, }\]</div>
+<p><strong>Шаг 3.</strong> A вычисляет число</p>
+<div class="math notranslate nohighlight">
+\[{x_3 = x_2^{D_A} \bmod p, }\]</div>
+<p><strong>Шаг 4.</strong> B получив x3, вычисляет</p>
+<div class="math notranslate nohighlight">
+\[{x_4 = x_3^{D_B} \bmod p, }\]</div>
 </div>
 </div>
 <div class="section" id="id9">
