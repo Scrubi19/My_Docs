@@ -529,6 +529,46 @@
   .. math::
    { x = i * m - j }
 
+Листинг программы:
+
+.. code-block:: java
+
+  public class BabyGiantSteps {
+      public static long calculate(long a, long p, long y)  {
+          SecureRandom srand = new SecureRandom();
+          srand.setSeed(System.currentTimeMillis());
+          int[] ji = new int[2];
+          ji[0] = -1;
+          ji[1] = -1;
+          long m, k;
+          do {
+              m = (int)Math.sqrt(p)+1;// sqrt(p)+1
+              k = (int)Math.sqrt(p)+1;;
+          } while (m * k <= p);
+  //        System.out.println("m = "+m+" k = "+k);
+          HashMap<Long, Integer> rowY= new HashMap<>();
+          // y, ay, a^2y...
+          for (int j = 0; j < m; j++) {
+              if(!rowY.containsKey(((long)Math.pow(a, j)*y) % p)) {
+                  rowY.put(((long)Math.pow(a, j)*y) % p, j);
+              }
+          }
+          // a^m, a^2m ...
+          for (int i = 1; i <= k; i++) {
+              if (rowY.containsKey(((long)Math.pow(a, i*m)) % p)) {
+                  ji[0] = rowY.get((long)Math.pow(a, i*m)%p);
+                  ji[1] = i;
+                  break;
+              }
+          }
+          if (ji[0] == -1 && (ji[1] == -1)) {
+              //  no solutions
+              return -1;
+          }
+          return ji[1] * m - ji[0];
+      }
+  }
+
 
 Используемая литература
 ~~~~~~~~~~~~~~~~~~~~~~~~~
