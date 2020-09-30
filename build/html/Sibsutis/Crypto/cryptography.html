@@ -39,7 +39,7 @@
     <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
     <link rel="search" title="Поиск" href="../../search.html" />
     <link rel="next" title="Компиляторы" href="../Compilers/compilers.html" />
-    <link rel="prev" title="«Не я первый, не я последний»" href="../../index.html" /> 
+    <link rel="prev" title="Scrubi19_Docs" href="../../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,16 +83,21 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Криптографические методы защиты информации</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id2">Криптосистемы с открытым ключом</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Возведение в степень по модулю</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Глава 1. Криптосистемы с открытым ключом</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Быстрое возведение в степень по модулю</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id4">Элементы теории чисел</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id5">Обобщенный алгоритм Эвклида</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id6">Система Диффи-Хеллмана</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">Метод «шаг младенца, шаг великана»</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id8">Шифр Шамира</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Шифр Шамира</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Шифр Эль Гамаля</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rsa">Шифр RSA</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id9">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Метод «шаг младенца, шаг великана»</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Compilers/compilers.html">Компиляторы</a><ul>
@@ -192,9 +197,9 @@
   <div class="section" id="id1">
 <h1>Криптографические методы защиты информации<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
 <div class="section" id="id2">
-<h2>Криптосистемы с открытым ключом<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<h2>Глава 1. Криптосистемы с открытым ключом<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
 <div class="section" id="id3">
-<h3>Возведение в степень по модулю<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
+<h3>Быстрое возведение в степень по модулю<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Односторонняя функция (англ.&nbsp;one-way function, OWF)&nbsp;-  &nbsp;математическая функция, которая легко вычисляется для любого входного значения, но трудно найти аргумент по заданному значению функции. В криптографических задачах в качестве односторонней функции часто используется функция:</p>
 <div class="math notranslate nohighlight">
 \[{ y = a^{x}\bmod p }\]</div>
@@ -203,6 +208,61 @@
 \[{ x = log_a(y)\bmod p }\]</div>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../../_images/2.1.png"><img alt="table" src="../../_images/2.1.png" style="width: 650px;" /></a>
+</div>
+<p>Перейдем к описанию алгоритма быстрого возведения числа в степень по модулю. Любое десятичное число может быть представлено в виде полинома степеней двойки</p>
+<div class="math notranslate nohighlight">
+\[x = x_02^{0} + x_12^{1}+ ...+x_t2^{t}\]</div>
+<p>Описание хода вычислений алгоритма:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}a^{x} \bmod m = y \\
+23^{15} \bmod 17 = ?\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}15_{10} = 1111_2 = 2^{0}+2^{1}+2^{2}+2^{3} =&gt; \quad 23^{15} = 23^{2^{0}+2^{1}+2^{2}+2^{3}} \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}(23^{2^{0}} * 23^{2^{1}} * 23^{2^{2}} * 23^{2^{3}}) \bmod 17 = y  \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}(23^{2^{0}} \bmod 17 * 23^{2^{1}} \bmod 17 * 23^{2^{2}} \bmod 17 * 23^{2^{3}} \bmod 17) \bmod 17 = y \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}1) 23^{2^{0}} \bmod 17 = 6 \quad 23^{2^{1}} = 23^{2^{0}} * 23^{2^{0}} \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}2) 23^{2^{1}} \bmod 17 = ((23^{2^{0}} \bmod 17 )*(23^{2^{0}} \bmod 17)) \bmod 17 = (6 * 6) \bmod 17 = 36 \bmod 17 = 2 \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}3) 23^{2^{2}} \bmod 17 = ((23^{2^{1}} \bmod 17 )*(23^{2^{1}} \bmod 17)) \bmod 17 = (2*2) \bmod 17 = 4 \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}4)23^{2^{3}} \bmod 17 = ((23^{2^{2}} \bmod 17 )*(23^{2^{2}} \bmod 17)) \bmod 17 = (4*4) \bmod 17 = 16 \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}Ответ: 23^{15} \bmod 17 = (6*2*4*16) \bmod 17 = 3 \\\end{split}\]</div>
+<p>Листинг программы:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">calculate</span><span class="o">(</span> <span class="kt">long</span> <span class="n">a</span><span class="o">,</span> <span class="kt">long</span> <span class="n">x</span><span class="o">,</span> <span class="kt">long</span> <span class="n">p</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kt">long</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Negative numbers and p=0 are not supported&quot;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">2</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">((</span><span class="n">x</span><span class="o">&amp;</span><span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="o">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">a</span><span class="o">)%</span><span class="n">p</span><span class="o">;</span>
+                <span class="n">t</span><span class="o">++;</span>
+            <span class="o">}</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="o">)</span> <span class="o">%</span> <span class="n">p</span><span class="o">;</span>
+            <span class="n">x</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+<span class="c1">//            System.out.println(&quot;\nNumber of Iteration = &quot;+t);</span>
+        <span class="k">return</span> <span class="n">y</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Примечание</p>
+<p class="last">Количество операций умножения при вычислении по описанному методу не превосходит <em>2log x</em></p>
+</div>
+<div class="admonition attention">
+<p class="first admonition-title">Внимание</p>
+<p class="last"><strong>Доказательство</strong>: Для вычисления чисел ряда требуется t умножений,     для вычисления y не более, чем t умножений. Из условия <em>t = [log x]</em> , учитывая,   что <em>log x ≤ log x</em>, делаем вывод о справедливости доказываемого утверждения</p>
 </div>
 </div>
 <div class="section" id="id4">
@@ -218,7 +278,7 @@
 <a class="reference internal image-reference" href="../../_images/2.2.png"><img alt="phi" src="../../_images/2.2.png" style="width: 600px;" /></a>
 </div>
 <ul class="simple">
-<li>Если p-простое число, то phi(p) = p - 1</li>
+<li>Если p-простое число, то <span class="math notranslate nohighlight">\(\quad \varphi(p) = p - 1 \\\)</span></li>
 <li>Если p и q - два различных простых числа ( p != q). Тогда</li>
 </ul>
 </div></blockquote>
@@ -250,27 +310,95 @@
 <div><div class="math notranslate nohighlight">
 \[{ ax + by = gcd(a, b) }\]</div>
 </div></blockquote>
-<p>Введем три строки U = (u 1 , u 2 , u 3 ), V = (v 1 , v 2 , v 3 ) и T = (t 1 , t 2 , t 3 ). Тогда алгоритм записывается следующим образом:</p>
+<p>Введем три строки <span class="math notranslate nohighlight">\(U = (u_1 , u_2 , u_3 ), V = (v_1 , v_2 , v_3 ), T = (t_1 , t_2 , t_3 )\)</span>. Тогда алгоритм записывается следующим образом:</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../../_images/Euclid.png"><img alt="Euclid" src="../../_images/Euclid.png" style="width: 600px;" /></a>
+</div>
+<p>Описание хода вычислений алгоритма:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Euclid(17, 9) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}ax + by = gcd(a,b) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}U(a, 1, 0) \quad  V(b, 0, 1) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}1) q = U1 \ div \  V1 = 1\\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}T = (U1 \bmod V1; U2 - qV2; U3 - qV3 ) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}T = (8, 1, -1) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}U = V, V = T \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}U = (9,0,1) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}V = (8,1,-1) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}2)q = 1 \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}T = (1, -1, 2) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}U = (8,1,-1) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}V = (1,-1,2) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}3)q = 8 \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}T = (0, -9,-17) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}U = (1,-1,2) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}V = (0,9,-17) \\\\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}Когда \ V1 = 0, тогда \ в \ U \ лежат \ ответы \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}gcd(a,b) = 1, \ x = -1, \ y = 2 \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}17*(-1) + 9*2 = 1 \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}-17+18 = 1 \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}1 = 1 \\\end{split}\]</div>
+<p>Листинг программы:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span><span class="o">[]</span> <span class="nf">calculate</span><span class="o">(</span><span class="kt">long</span> <span class="n">a</span><span class="o">,</span> <span class="kt">long</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">a</span><span class="o">;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">b</span><span class="o">;</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kt">long</span><span class="o">[]</span> <span class="n">U</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[]{</span><span class="n">a</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">};</span>
+    <span class="kt">long</span><span class="o">[]</span> <span class="n">V</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[]{</span><span class="n">b</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">};</span>
+    <span class="kt">long</span><span class="o">[]</span> <span class="n">T</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="mi">3</span><span class="o">];</span>
+    <span class="kt">long</span> <span class="n">q</span><span class="o">;</span>
+    <span class="k">while</span> <span class="o">(</span><span class="n">V</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">U</span><span class="o">[</span><span class="mi">0</span><span class="o">]/</span><span class="n">V</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="n">T</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">U</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">%</span> <span class="n">V</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="n">T</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">U</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">-</span> <span class="n">q</span> <span class="o">*</span> <span class="n">V</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+        <span class="n">T</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">U</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">-</span> <span class="n">q</span> <span class="o">*</span> <span class="n">V</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">U</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">V</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="n">V</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">T</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">U</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="id6">
 <h3>Система Диффи-Хеллмана<a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
-<p>Для обеспечения высокой стойкости рассмотренной системы число p-1 должно обязательно содержать большой простой множитель. Рекомендуют использовать следующее:</p>
+<p>Эта криптосистема была открыта в середине 70-х годов американскими учеными Диффи (Whitfield Diffie) и Хеллманом (Martin Hellman) и привела к настоящей революции в криптографии и ее практических применениях. Для обеспечения высокой стойкости рассмотренной системы число p-1 должно обязательно содержать большой простой множитель. Рекомендуют использовать следующее:</p>
 <blockquote>
-<div><blockquote>
 <div><div class="math notranslate nohighlight">
-\[{ P = 2Q + 1 ,}\]</div>
-</div></blockquote>
-<p>где Q-простое число</p>
+\[P = 2Q + 1 , \ где \ Q - простое \ число\]</div>
 </div></blockquote>
 <p>Для Q должны выполняться условия:</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
 \[{ 1 &lt; G &lt; P − 1  \quad и \quad G^{Q}\bmod P != 1 }\]</div>
 </div></blockquote>
-<p>Согласно малой теореме Ферма можно утверждать,что если для какого-то числа a &lt; P выполняется условие <strong>a^(P-1)mod P != 1</strong> ,  то число  является составным. Исходя из данного утверждения, можно легко разработать тест Ферма для проверки на простоту:</p>
+<p>Согласно малой теореме Ферма можно утверждать,что если для какого-то числа a &lt; P выполняется условие <span class="math notranslate nohighlight">\(a^{P-1} \bmod P != 1\)</span> ,  то число  является составным. Исходя из данного утверждения, можно легко разработать тест Ферма для проверки на простоту:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">bool</span> <span class="n">testFerma</span><span class="p">(</span><span class="n">long</span> <span class="n">long</span> <span class="n">p</span><span class="p">,</span> <span class="nb">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
  <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="n">true</span><span class="p">;</span>
  <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">)</span>  <span class="k">return</span> <span class="n">false</span><span class="p">;</span>
@@ -306,40 +434,92 @@
 <dt>Пример:</dt>
 <dd>Пусть P = 23 = 2 · 11 + 1 (Q = 11). Выберем параметр G. Попробуем взять g = 3. Проверим: 3^11 mod 23 = 1 и значит, такое g не подходит. Возьмем g = 5. Проверим: 5^11 mod 23 = 22. Итак, мы выбрали параметры p = 23, g = 5. Теперь каждый абонент выбирает секретное число и вычисляет соответствующее ему открытое число. Пусть выбраны Xa = 7 , Xb = 13 . Вычисляем Ya = 5^7 mod 23 = 17, Yb = 5^13 mod 23 = 21. Пусть A и B решили сформировать общий секретный ключ. Для этого A вычисляет Zab = 21^7 mod 23 = 10, а B вычисляет Zba = 17^13 mod 23 = 10.Теперь они имеют общий ключ 10, который не передавался по каналу связи</dd>
 </dl>
+<p>Листинг программы:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">generateParameters</span><span class="o">(){</span>
+        <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="o">();</span>
+        <span class="n">srand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+        <span class="kt">long</span> <span class="n">Q</span><span class="o">;</span>
+        <span class="k">do</span> <span class="o">{</span>
+            <span class="n">Q</span> <span class="o">=</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">MAX_VALUE</span><span class="o">-</span><span class="mi">3</span><span class="o">)+</span><span class="mi">2</span><span class="o">;</span>
+            <span class="n">P</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*(</span><span class="kt">int</span><span class="o">)</span><span class="n">Q</span> <span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">while</span><span class="o">(!</span><span class="n">isPrime</span><span class="o">(</span><span class="n">Q</span><span class="o">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">isPrime</span><span class="o">(</span><span class="n">P</span><span class="o">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">testFerma</span><span class="o">(</span><span class="n">P</span><span class="o">,</span><span class="mi">100</span><span class="o">));</span>
+
+        <span class="k">do</span> <span class="o">{</span>
+            <span class="n">G</span> <span class="o">=</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">P</span><span class="o">-</span><span class="mi">3</span><span class="o">)+</span><span class="mi">2</span><span class="o">;</span><span class="c1">// 1 &lt; q &lt; p -1</span>
+        <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">ModularExponentiation</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="n">G</span><span class="o">,</span><span class="n">Q</span><span class="o">,</span><span class="n">P</span><span class="o">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">);</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;P = &quot;</span><span class="o">+</span><span class="n">P</span><span class="o">+</span><span class="s">&quot; G = &quot;</span><span class="o">+</span><span class="n">G</span><span class="o">+</span><span class="s">&quot; Q = &quot;</span><span class="o">+</span><span class="n">Q</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="c1">// Abonent.java</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Abonent</span> <span class="o">{</span>
+    <span class="n">DiffieHellman</span> <span class="n">diffieHellman</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">secretKey</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">publicKey</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Abonent</span><span class="o">(</span><span class="n">DiffieHellman</span> <span class="n">diffieHellman</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">diffieHellman</span> <span class="o">=</span> <span class="n">diffieHellman</span><span class="o">;</span>
+        <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="o">();</span>
+        <span class="n">srand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+        <span class="n">secretKey</span> <span class="o">=</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">diffieHellman</span><span class="o">.</span><span class="na">getP</span><span class="o">()-</span><span class="mi">2</span><span class="o">)+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="n">publicKey</span> <span class="o">=</span> <span class="n">ModularExponentiation</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="n">diffieHellman</span><span class="o">.</span><span class="na">getG</span><span class="o">(),</span><span class="n">secretKey</span><span class="o">,</span> <span class="n">diffieHellman</span><span class="o">.</span><span class="na">getP</span><span class="o">());</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">calculateZ</span><span class="o">(</span><span class="kt">long</span> <span class="n">publicSecondAbonentKey</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">ModularExponentiation</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="n">publicSecondAbonentKey</span><span class="o">,</span> <span class="n">secretKey</span><span class="o">,</span> <span class="n">diffieHellman</span><span class="o">.</span><span class="na">getP</span><span class="o">());</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="id7">
-<h3>Метод «шаг младенца, шаг великана»<a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
-<p>Задача поиска x, при известных a и y. Сначала берем два целых числа m и k, такие что</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
-\[{ m * k &gt; p, \quad m = k = \sqrt{p} + 1 }\]</div>
-</div></blockquote>
-<p>Вычислим два ряда чисел:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
-\[{ y,ay,a^{2y},...a^{m-1}y \quad (\bmod p) }
-{   a^{m},a^{2m},...a^{km} \quad (\bmod p) }\]</div>
-<p>(все вычисления по модулю p)</p>
-</div></blockquote>
-<p>Найдем такие i и j, для которых выполняется равенство</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
-\[{ a^{im} = a^{i} * y }\]</div>
-</div></blockquote>
-<p>Число x:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
-\[{ x = i * m - j }\]</div>
-</div></blockquote>
-</div>
-<div class="section" id="id8">
-<h3>Шифр Шамира<a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
-<p>Этот шифр, предложенный Шамиром (Adi Shamir), был первым, позволяющим организовать обмен секретными сообщениями по открытой линии связи для лиц, которые не имеют никаких защищен-
-ных каналов и секретных ключей и, возможно, никогда не видели друг друга.</p>
+<h3>Шифр Шамира<a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Этот шифр, предложенный Шамиром (Adi Shamir), был первым, позволяющим организовать обмен секретными сообщениями по открытой линии связи для лиц, которые не имеют никаких защищенных каналов и секретных ключей и, возможно, никогда не видели друг друга.</p>
 <p>Пусть есть два абонента A и B, соединенные линией связи. A хочет передать сообщение m абоненту B так, чтобы никто не узнал его содержание. A выбирает случайное большое простое число P и открыто передает его B. Затем A выбирает два числа Ca и Da , такие, что</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}{ C_A*D_A \bmod (P-1) = 1  \\
     C_B*D_B \bmod (P-1) = 1 }\end{split}\]</div>
+<p>Вычисляем C и D, используя обобщенный алгоритм Эвклида</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Вычисляем \ y: \ ax + by = gcd(a, b) ,\ где \ C \ рандомное \ число \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}если \ gcd(С, P-1) \ = \ 1, \ то \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[D = y + (P - 1)\]</div>
+<p>Листинг программы вычисляющей C и D:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Shamir</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">C</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">D</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">generatePublicP</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="o">();</span>
+        <span class="n">srand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+        <span class="kt">long</span> <span class="n">P</span><span class="o">;</span>
+        <span class="k">do</span> <span class="o">{</span>
+            <span class="n">P</span> <span class="o">=</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">MAX_VALUE</span><span class="o">-</span><span class="mi">3</span><span class="o">)+</span><span class="mi">2</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">while</span><span class="o">(!</span><span class="n">DiffieHellman</span><span class="o">.</span><span class="na">isPrime</span><span class="o">(</span><span class="n">P</span><span class="o">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">DiffieHellman</span><span class="o">.</span><span class="na">testFerma</span><span class="o">(</span><span class="n">P</span><span class="o">,</span><span class="mi">100</span><span class="o">));</span>
+        <span class="k">return</span> <span class="n">P</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Shamir</span><span class="o">(</span><span class="kt">long</span> <span class="n">P</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="o">();</span>
+        <span class="n">srand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+        <span class="kt">long</span><span class="o">[]</span> <span class="n">EuclidResult</span><span class="o">;</span>
+        <span class="k">do</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">C</span> <span class="o">=</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">MAX_VALUE</span><span class="o">-</span><span class="mi">3</span><span class="o">)+</span><span class="mi">2</span><span class="o">;</span>
+            <span class="n">EuclidResult</span> <span class="o">=</span> <span class="n">Euclid</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="n">C</span><span class="o">,</span><span class="n">P</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">EuclidResult</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">D</span> <span class="o">=</span> <span class="n">EuclidResult</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="o">(</span><span class="n">P</span> <span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getC</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">C</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getD</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">D</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
 <p>После этого A передает свое сообщение m. Если m &lt; P, то сообщение передается сразу, если же m &gt;= P, то сообщение разбивается на части. Рассмотрим случай m &lt; P
 <strong>Шаг 1.</strong> A вычисляет число</p>
 <div class="math notranslate nohighlight">
@@ -353,10 +533,116 @@
 <p><strong>Шаг 4.</strong> B получив x3, вычисляет</p>
 <div class="math notranslate nohighlight">
 \[{x_4 = x_3^{D_B} \bmod p, }\]</div>
+<p>Пример хода алгоритма:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">P</span> <span class="o">=</span> <span class="mi">23</span><span class="o">,</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="nl">A:</span>  <span class="n">Ca</span> <span class="o">=</span> <span class="mi">7</span><span class="o">,</span>  <span class="n">Da</span> <span class="o">=</span> <span class="mi">19</span>
+<span class="nl">B:</span>   <span class="n">Cb</span> <span class="o">=</span> <span class="mi">13</span><span class="o">,</span>  <span class="n">Db</span> <span class="o">=</span> <span class="mi">17</span>
+
+<span class="n">x1</span><span class="o">,</span>  <span class="n">x2</span><span class="o">,</span>  <span class="n">x3</span><span class="o">,</span>  <span class="n">x4</span>  <span class="o">(==</span><span class="mi">6</span><span class="o">)</span>
+
+<span class="mi">22</span> <span class="mi">0</span>  <span class="o">(</span><span class="n">выбрасываем</span> <span class="n">второй</span> <span class="n">столбец</span><span class="o">)</span>
+<span class="mi">7</span>  <span class="mi">1</span>
+<span class="o">----</span>
+<span class="mi">1</span> <span class="o">-</span><span class="mi">3</span>   <span class="n">q</span> <span class="o">=</span> <span class="mi">22</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">Da</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span><span class="o">+</span><span class="mi">22</span> <span class="o">=</span> <span class="mi">19</span>
+
+<span class="mi">22</span> <span class="mi">0</span>
+<span class="mi">13</span> <span class="mi">1</span>
+<span class="o">----</span>
+<span class="mi">9</span> <span class="o">-</span><span class="mi">1</span>       <span class="n">q</span> <span class="o">=</span> <span class="mi">22</span> <span class="o">/</span> <span class="mi">13</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="mi">4</span>  <span class="mi">2</span>       <span class="n">q</span> <span class="o">=</span> <span class="mi">13</span> <span class="o">/</span> <span class="mi">9</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="mi">1</span>  <span class="o">-</span><span class="mi">5</span>      <span class="n">q</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">Db</span> <span class="o">=</span> <span class="mi">22</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">=</span> <span class="mi">17</span>
+
+<span class="nl">A:</span> <span class="n">x1</span> <span class="o">=</span> <span class="mi">6</span><span class="o">^</span><span class="mi">7</span> <span class="n">mod</span> <span class="mi">23</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="nl">B:</span> <span class="n">x2</span> <span class="o">=</span> <span class="mi">3</span><span class="o">^</span><span class="mi">13</span> <span class="n">mod</span> <span class="mi">23</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="nl">A:</span> <span class="n">x3</span> <span class="o">=</span> <span class="mi">9</span><span class="o">^</span><span class="mi">19</span> <span class="n">mod</span> <span class="mi">23</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="nl">B:</span> <span class="n">x4</span> <span class="o">=</span> <span class="mi">13</span><span class="o">^</span><span class="mi">17</span> <span class="n">mod</span> <span class="mi">23</span> <span class="o">=</span> <span class="mi">6</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>Шифр Эль Гамаля<a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Пусть имеются абоненты A , B , C , … , которые хотят передавать друг другу зашифрованные сообщения, не имея никаких защищенных каналов связи. В этом разделе мы рассмотрим шифр, предложенный Эль-Гамалем (Taher ElGamal), который решает эту задачу, используя, в отличие от шифра Шамира, только одну пересылку сообщения. Фактически здесь используется схема Диффи–Хеллмана, чтобы сформировать общий секретный ключ для двух абонентов, передающих друг другу сообщение, и затем сообщение шифруется путем умножения его на этот ключ. Для каждого следующего сообщения секретный ключ вычисляется заново.</p>
+<p>Для всей группы абонентов выбираются числа <em>P</em> и <em>G</em> подобно как мы это делали в шифре Диффи-Хэллмана:</p>
+<div class="math notranslate nohighlight">
+\[P - простое, \ 1 \ &lt; \ G \ &lt; \ (P-1), \ m &lt; P\]</div>
+<p>Затем каждый абонент группы выбирает свое секретное число <span class="math notranslate nohighlight">\(С, \ 1 &lt; C &lt; P-1\)</span>, и вычисляет соответсвующее ему открытое число <span class="math notranslate nohighlight">\(D\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[D = G^{C} \bmod P\]</div>
+<p>Ход алгоритма:</p>
+<p><strong>Шаг.1:</strong> A формирует случайное число <span class="math notranslate nohighlight">\(k, \ 1 &lt;= k &lt;= P - 2\ \)</span> и вычисляет числа:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}r = G^{k} \bmod p, \\
+e = m * D_B^{k} \bmod p\end{split}\]</div>
+<p>и передает пару числое (r, e) абоненту B</p>
+<p><strong>Шаг.2</strong> B, получив (r, e), вычисляет</p>
+<div class="math notranslate nohighlight">
+\[m' = e * r^{P-1-C_B} \bmod p = m\]</div>
+<p>Доказательство:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Подставим \ e \ в \ m' ,\ (e = m * D_B \bmod p) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}=&gt;  \ m' = m * D_B * r^{P-1-C_B} \bmod p, \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}Подставим \ r \ и \ D_B \ в \ m' , \ (r = G^{k} \bmod p), \ (D_B = G^{C} \bmod P) \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}=&gt;  m' = m * (G^{C_B})^{k} * (G^{k})^{P - 1 - C_B} \bmod p =  m * G^{C_Bk + k(P-1 -kC_B)} \bmod p = m * G^{k(P-1)} \bmod p \\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}По \ теореме \ Ферма: G^{k(P-1)} \bmod p = 1^{k} \bmod p = 1 \\\end{split}\]</div>
+</div>
+<div class="section" id="rsa">
+<h3>Шифр RSA<a class="headerlink" href="#rsa" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Мы видели, что шифр Шамира полностью решает задачу обмена сообщениями, закрытыми для прочтения, в случае, когда або-
+ненты могут пользоваться только открытыми линиями связи. Однако при этом сообщение пересылается три раза от одного абонента
+к другому, что является недостатком. Шифр Эль-Гамаля позволяет решить ту же задачу за одну пересылку данных, но объем передавае-
+мого шифротекста в два раза превышает объем сообщения. Система RSA лишена подобных недостатков. Интересно то, что она базирует-
+ся на другой односторонней функции, отличной от дискретного логарифма. Кроме того, здесь мы встретимся с еще одним изобретением
+современной криптографии – односторонней функцией с «лазейкой» (trapdoor function)</p>
+<p>Эта система базируется на следующих двух фактах из теории
+чисел:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Задача проверки числа на простоту является сравнительно легкой</li>
+<li>Задача разложения чисел вида <span class="math notranslate nohighlight">\(n = pq\)</span> (p и q — простые числа)</li>
+</ol>
+</div></blockquote>
+<p>на множители является очень трудной, если мы знаем только n , а p и q — большие числа (это так называемая задача факторизации)</p>
 </div>
 </div>
 <div class="section" id="id9">
-<h2>Используемая литература<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h2>
+<h2>Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="id10">
+<h3>Метод «шаг младенца, шаг великана»<a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Это был один из первых методов, который показал, что задача вычисления дискретного логарифма может быть решена значительно быстрее, чем методом перебора. Перейдем к описанию этого метода отыскания x</p>
+<p>Задача поиска x, при известных a и y. Сначала берем два целых числа m и k, такие что</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[{ m * k &gt; p, \quad m = k = \sqrt{p} + 1 }\]</div>
+</div></blockquote>
+<p>Вычислим два ряда чисел:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}y,ay,a^{2y},...a^{m-1}y \quad (\bmod p) \\
+  a^{m},a^{2m},...a^{km} \quad (\bmod p)\end{split}\]</div>
+<p>(все вычисления по модулю p)</p>
+</div></blockquote>
+<p>Найдем такие i и j, для которых выполняется равенство</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[{ a^{im} = a^{i} * y }\]</div>
+</div></blockquote>
+<p>Число x:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[{ x = i * m - j }\]</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id11">
+<h2>Используемая литература<a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="ryabko_fionov_kriptograficheskie_metody_zashchity_i.pdf">Б.Я. Рябко, А.Н. Фионов. «Криптографические методы защиты информации»</a></p>
 </div>
 </div>
