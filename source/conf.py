@@ -6,17 +6,16 @@ project = 'My_Docs'
 copyright = '2020, Bulatov Alexandr'
 author = 'Bulatov Alexandr'
 
-# The short X.Y version
 version = ''
-# The full version, including alpha/beta/rc tags
+
 release = '0.0.1'
 
 # needs_sphinx = '1.0'
 
 templates_path = ['_templates']
+
 html_static_path = ['_static']
 
-#
 source_suffix = '.rst'
 
 # The master toctree document.
@@ -59,9 +58,10 @@ epub_exclude_files = ['search.html']
 
 html_theme_path = ['themes']  # папка внутри source, где лежат папки тем
 
-
 # sphinx_rtd_theme
 html_theme = "sphinx_rtd_theme"
+
+html_logo = "_static/logo2.svg"
 
 html_theme_options = {
     'canonical_url': '',
@@ -85,3 +85,9 @@ extensions = [
     "sphinx.ext.viewcode",
     'sphinx_rtd_theme'
 ]
+
+#My CSS
+def setup(app):
+    app.add_stylesheet("main.css") # also can be a full URL
+    # app.add_stylesheet("ANOTHER.css")
+    # app.add_stylesheet("AND_ANOTHER.css")
