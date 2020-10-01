@@ -49,6 +49,7 @@ Ruby on Rails
 
 Команды:
 
+
 .. code-block:: bash
 
   bundle install - установка gem-ов из Gemfile
