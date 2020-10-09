@@ -289,6 +289,7 @@
 
 .. code-block:: java
 
+  // Diffie-Hellman.java
   public void generateParameters(){  
           SecureRandom srand = new SecureRandom();
           srand.setSeed(System.currentTimeMillis());
@@ -348,37 +349,34 @@
 
 .. code-block:: java
 
-  public class Shamir {
-      private long C;
-      private long D;
+ public class Shamir {
+    private final long P;
+    private long C;
+    private long D;
 
-      public static long generatePublicP() {
-          SecureRandom srand = new SecureRandom();
-          srand.setSeed(System.currentTimeMillis());
-          long P;
-          do {
-              P = srand.nextInt(MAX_VALUE-3)+2;
-          } while(!DiffieHellman.isPrime(P) || !DiffieHellman.testFerma(P,100));
-          return P;
-      }
-    
-      public Shamir(long P) {
-          SecureRandom srand = new SecureRandom();
-          srand.setSeed(System.currentTimeMillis());
-          long[] EuclidResult;
-          do {
-              this.C = srand.nextInt(MAX_VALUE-3)+2;
-              EuclidResult = Euclid.calculate(C,P-1);
-          } while(EuclidResult[0] != 1);
-          this.D = EuclidResult[2] + (P -1);
-      }
+    public static long generatePublicP() {
+        SecureRandom srand = new SecureRandom();
+        srand.setSeed(System.currentTimeMillis());
+        long P;
+        do {
+            P = srand.nextInt(MAX_VALUE-3)+2;
+        } while(!DiffieHellman.isPrime(P) || !DiffieHellman.testFerma(P,100));
+        return P;
+    }
 
-      public long getC() {
-          return C;
-      }
-      public long getD() {
-          return D;
-      }
+    public Shamir(long P) {
+        this.P = P;
+        SecureRandom srand = new SecureRandom();
+        srand.setSeed(System.currentTimeMillis());
+        long[] EuclidResult;
+        do {
+            do {
+                this.C = srand.nextInt(MAX_VALUE-3)+2;
+                EuclidResult = Euclid.calculate(C,P-1);
+            } while(EuclidResult[0] != 1);
+            this.D = EuclidResult[2] + (P-1);
+        } while(C*D%(P-1) != 1 );
+    }
   }
   
 После этого A передает свое сообщение m. Если m < P, то сообщение передается сразу, если же m >= P, то сообщение разбивается на части. Рассмотрим случай m < P
@@ -433,6 +431,61 @@
   A: x3 = 9^19 mod 23 = 13
   B: x4 = 13^17 mod 23 = 6
 
+Листинг программы:
+
+.. code-block:: java
+
+ // Shamir.java
+ public List<Long> ShamirCalcIteration(String path, List<Long> prevX, int numOfIteration) throws IOException {
+        switch (numOfIteration) {
+            case 1:
+                byte[] byteArray = getFileBytes(path);
+                List<Long> x1 = new ArrayList<>();
+
+                for (byte a : byteArray) {
+                    x1.add(powMod.calculate(a, getC(), P));
+                }
+                return x1;
+            case 2:
+                List<Long> x2 = new ArrayList<>();
+                for (Long a : prevX) {
+                    x2.add(powMod.calculate(a, getC(), P));
+                }
+                return x2;
+            case 3:
+                List<Long> x3 = new ArrayList<>();
+                for (Long a : prevX) {
+                    x3.add(powMod.calculate(a, getD(), P));
+                }
+                return x3;
+            case 4:
+                byte[] outFile = new byte[prevX.size()];
+                for (int i = 0; i < prevX.size(); i++) {
+                    outFile[i] = (byte) powMod.calculate(prevX.get(i), getD(), P);
+                }
+                getFileFromBytes(path, outFile);
+                return null;
+        }
+        return null;
+    }
+  // Main.java
+   public static void main(String[] args) throws IOException {
+        System.out.println("<Shamir>");
+        long P = Shamir.generatePublicP();
+
+        Shamir A = new Shamir(P);
+        FileManipulation.KeysToFile("Shamir","A", A.getC(), A.getD());
+
+        Shamir B = new Shamir(P);
+        FileManipulation.KeysToFile("Shamir","B", B.getC(), B.getD());
+
+        List<Long> x1 = A.ShamirCalcIteration("files/pic.jpg", null,1);
+        List<Long> x2 = B.ShamirCalcIteration(null, x1,2);
+        List<Long> x3 = A.ShamirCalcIteration(null, x2, 3);
+        List<Long> x4 = B.ShamirCalcIteration("files/picShamir.jpg", x3, 4);
+  }
+
+
 Шифр Эль Гамаля
 """"""""""""""""""
 
@@ -474,18 +527,109 @@
 .. math::
   =>  m' = m * (G^{C_B})^{k} * (G^{k})^{P - 1 - C_B} \bmod p =  m * G^{C_Bk + k(P-1 -kC_B)} \bmod p = m * G^{k(P-1)} \bmod p \\
 .. math::
- По \ теореме \ Ферма: G^{k(P-1)} \bmod p = 1^{k} \bmod p = 1 \\
-  
+ По \ теореме \ Ферма: G^{k(P-1)} \bmod p = 1^{k} \bmod p = 1 \\\\
+
+Листинг программы:
+
+.. code-block:: java
+
+  // ElGamal.java
+  public class ElGamal {
+    private static long P;
+    private static long G;
+
+    private long C;
+    private long D;
+
+    private long R;
+
+    public static void generateParameters() {
+        DiffieHellman diffieHellman = new DiffieHellman();
+        diffieHellman.generateParameters();
+        setP(diffieHellman.getP());
+        setG(diffieHellman.getG());
+    }
+
+    public ElGamal() {
+        SecureRandom srand = new SecureRandom();
+        srand.setSeed(System.currentTimeMillis());
+        C = srand.nextInt((int)P - 2) + 1;
+        D = powMod.calculate(G, C, P);
+    }
+
+    public List<Long> elGamalSendMessage(long D, String path) throws IOException {
+        SecureRandom srand = new SecureRandom();
+        srand.setSeed(System.currentTimeMillis());
+        long k = srand.nextInt((int)P - 3) + 1;
+        byte[] byteArray = getFileBytes(path);
+        List<Long> E = new ArrayList<>();
+
+        long partD = powMod.calculate(D, k, P);
+
+        for (byte b : byteArray) {
+            E.add(powMod.calculate(b * partD, 1, P));
+        }
+        R = powMod.calculate(G, k, P);
+        return E;
+    }
+
+    public void elGamalReceiveMessage (long R, List <Long> E, String Out) throws IOException {
+        byte [] result = new byte[E.size()];
+        long partR = powMod.calculate(R, P-1-C, P);
+
+        for (int i = 0; i < E.size(); i++) {
+            result[i] = (byte) powMod.calculate(E.get(i) * partR, 1, P);
+        }
+        getFileFromBytes(Out, result);
+    }
+
+    public long getC() {
+        return C;
+    }
+
+    public long getD() {
+        return D;
+    }
+
+    public long getR() {
+        return R;
+    }
+
+    public static void setP(int p) {
+        P = p;
+    }
+
+    public static void setG(int g) {
+        G = g;
+    }
+  }
+
+  // Main.java
+
+   public class Main {
+     public static void main(String[] args) throws IOException {
+        ElGamal.generateParameters();
+
+        ElGamal N = new ElGamal();
+        FileManipulation.KeysToFile("ElGamal", "N", N.getC(), N.getD());
+
+        ElGamal M = new ElGamal();
+        FileManipulation.KeysToFile("ElGamal", "M", M.getC(), M.getD());
+
+        List<Long> E =  N.elGamalSendMessage(M.getD(), "files/pic.jpg");
+        M.elGamalReceiveMessage(N.getR(), E, "files/picElgamal.jpg");
+
+        System.out.println("ElGamal successful complete");
+
+     }
+  }
+
+ 
 
 Шифр RSA
 """"""""""""""""""
 
-Мы видели, что шифр Шамира полностью решает задачу обмена сообщениями, закрытыми для прочтения, в случае, когда або-
-ненты могут пользоваться только открытыми линиями связи. Однако при этом сообщение пересылается три раза от одного абонента
-к другому, что является недостатком. Шифр Эль-Гамаля позволяет решить ту же задачу за одну пересылку данных, но объем передавае-
-мого шифротекста в два раза превышает объем сообщения. Система RSA лишена подобных недостатков. Интересно то, что она базирует-
-ся на другой односторонней функции, отличной от дискретного логарифма. Кроме того, здесь мы встретимся с еще одним изобретением
-современной криптографии – односторонней функцией с «лазейкой» (trapdoor function)
+Мы видели, что шифр Шамира полностью решает задачу обмена сообщениями, закрытыми для прочтения, в случае, когда абоненты могут пользоваться только открытыми линиями связи. Однако при этом сообщение пересылается три раза от одного абонента к другому, что является недостатком. Шифр Эль-Гамаля позволяет решить ту же задачу за одну пересылку данных, но объем передаваемого шифротекста в два раза превышает объем сообщения. Система RSA лишена подобных недостатков. Интересно то, что она базируется на другой односторонней функции, отличной от дискретного логарифма. Кроме того, здесь мы встретимся с еще одним изобретением современной криптографии – односторонней функцией с «лазейкой» (trapdoor function)
 
 Эта система базируется на следующих двух фактах из теории
 чисел:

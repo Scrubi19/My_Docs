@@ -1,0 +1,586 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="ru" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Шпаргалки &mdash; Документация My_Docs 0.0.1</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/main.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" />
+    <link rel="next" title="Криптографические методы защиты информации" href="../Crypto/cryptography.html" />
+    <link rel="prev" title="Scrubi19_Docs" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/logo2.svg" class="logo" alt="Логотип"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Шпаргалки</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#git">Git</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Создание репозитория</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Команды</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gitignore">Памятка по .gitignore</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bash">BASH</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Команды</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Переменные и параметры скрипта</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Зарезервированные переменные</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Условия</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Crypto/cryptography.html">Криптографические методы защиты информации</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id2">Глава 1. Криптосистемы с открытым ключом</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id3">Быстрое возведение в степень по модулю</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id4">Элементы теории чисел</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id5">Обобщенный алгоритм Эвклида</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id6">Система Диффи-Хеллмана</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id7">Шифр Шамира</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id8">Шифр Эль Гамаля</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#rsa">Шифр RSA</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id9">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id10">Метод «шаг младенца, шаг великана»</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id11">Используемая литература</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Compilers/llvm.html">LLVM: инфраструктура для разработки компилятора</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id1">Установка LLVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id2">Инструменты и организация</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id3">LLVM сегодня</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id4">Взаимодействие с драйвером компилятора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id5">Использование автономных инструментов</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id6">Как это работает?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#c-llvm">Приемы программирования на C++ в LLVM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id8">Демонстрация расширяемого интерфейса проходов</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#tablegen-td">TableGen(.td)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id10">Анализатор исходного кода</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id11">Лексический анализ</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#clang-libtoling">Инструменты Clang и фреймворк LibToling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-tidy">Clang-tidy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-modernizer">Clang Modernizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-apply-replacements">Clang Apply Replacements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clangformat">ClangFormat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#modularize">Modularize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#module-map-checker">Module Map Checker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#pptrace">PPTrace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-query">Clang-Query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-check">Clang-Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#c-str">Удаление вызовов c_str() «Самый маленький инструмент для рефакторинга»</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id12">Создание собственного инструмента</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id13">Используемая литература</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Ruby/ruby.html#ubuntu">Установка на Ubuntu</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Databases/Databases.html">Базы данных</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id2">Реляционные базы данных</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id3">Реляционная алгебра</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#sql-structed-query-language">SQL(Structed Query Language)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id4">Нереляционные базы данных</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id5">Используемая литература</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">My_Docs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Шпаргалки</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/Sibsutis/Cheat_sheets/cheat.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>Шпаргалки<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
+<div class="section" id="git">
+<h2>Git<a class="headerlink" href="#git" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="id2">
+<h3>Создание репозитория<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Начнем с самого начала, а именно с создания репозитория. Создать репозиторий можно двумя способами:</p>
+<ol class="arabic simple">
+<li>«Ленивый». Создаем пустой репозиторий на сайте github.com, bitbucket.org и клонируем его командой например:</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/Scrubi19/My_Docs.git
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>Этот способ заключается в первоначальном создании локального репозитория у вас на машине, а потом локальный репозиторий размещается на одном из выбранном вами ресурсе (github,bitbucket)</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># создаем репозиторий локально</span>
+git init
+git add .
+git commit -m <span class="s2">&quot;initial commit&quot;</span>
+
+<span class="c1"># создаем репозиторий на github через API</span>
+curl -u <span class="s1">&#39;USER_NAME&#39;</span> https://api.github.com/user/repos -d<span class="s1">&#39;{&quot;name&quot;:&quot;NAME_REPOSITORY&quot;}&#39;</span>
+git remote add origin https://github.com/<span class="s1">&#39;USER_NAME&#39;</span>/<span class="s1">&#39;NAME_REPOSITORY&#39;</span>.git
+git push origin master
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>Команды<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Основы</span>
+git status <span class="c1"># cписок всех измененных и добавленных файлов</span>
+git add file.txt <span class="c1"># добавление файла/папки для коммита</span>
+git add . <span class="c1"># добавление всех файлов для коммита</span>
+git commit -m <span class="s2">&quot;name of commit&quot;</span> <span class="c1"># выполнение коммита файлов</span>
+git push origin master <span class="c1"># передача коммита на удаленный сервер</span>
+git pull origin master <span class="c1"># вливание текущей ветки и указанной ветки (обновление ветки с удаленного сервера)</span>
+git branch <span class="c1"># список всех веток (текущая помечена *)</span>
+git log <span class="c1"># просмотр логов коммитов</span>
+git blame README.md <span class="c1"># построчная информация о последнем коммите</span>
+git reset --hard 9a452d955bdb57e7e4f2b09f8ce2fbb6cd56377a <span class="c1"># откат на коммит</span>
+
+
+<span class="c1">#checkout</span>
+git checkout -b new_branch <span class="c1"># создание новой ветки</span>
+git checkout new_branch <span class="c1"># переход на новую ветку</span>
+git checkout deleted_file.txt <span class="c1"># восстановление удаленного файла</span>
+
+
+<span class="c1">#merge</span>
+git checkout master
+git merge dev <span class="c1">#  выполняет слияние текущей и указанной ветки</span>
+
+
+<span class="c1"># конфликт сливаемых бинарных файлов</span>
+git checkout --ours binary.dat <span class="c1"># выбираем файл для коммита из нашей ветки</span>
+git checkout --theirs binary.dat <span class="c1"># выбираем файло для коммита из вливаемой ветки</span>
+
+
+<span class="c1"># cherry-pick помогает применить один-единственный коммит из одной ветки к дереву другой</span>
+git checkout master
+git cherry-pick eb042098a5 <span class="c1"># коммит другой ветки</span>
+git push origin master
+
+
+<span class="c1"># настройка вывода дерева коммитов</span>
+git config --global alias.hist <span class="s2">&quot;log --oneline --decorate --graph --all&quot;</span>
+
+
+git mergetool <span class="c1"># инструмент для решения конфликтов</span>
+
+<span class="c1"># Удаление игнорируемых файлов</span>
+git rm --cached &lt;file&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="gitignore">
+<h3>Памятка по .gitignore<a class="headerlink" href="#gitignore" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Игнор-лист файлов проекта</span>
+<span class="c1"># Игнорировать ВСЕ файлы и директории, включая поддиректории и файлы в них</span>
+*
+<span class="c1"># ---- ФАЙЛЫ ----</span>
+<span class="c1"># Игнорирование по типу файла, будут игнорироваться в АБСОЛЮТНО всех     директориях</span>
+<span class="c1"># Например /files/data.zip, /server.log, /uploads/users/data/info.xls</span>
+*.zip
+*.log
+*.pdf
+*.xls
+<span class="c1"># Игнорирование файла во ВСЕХ директориях</span>
+<span class="c1"># Например /params/db/config.php, /config.php</span>
+config.php
+<span class="c1"># Игнорирование конкретного файла ТОЛЬКО в корне проекта</span>
+<span class="c1"># (корнём считается расположение файла .gitignore)</span>
+<span class="c1"># Например НЕ БУДЕТ проигнорирован файл /db/config.php</span>
+/config.php
+<span class="c1"># Игнорирование конкретного файла ТОЛЬКО в указанной директории</span>
+<span class="c1"># Например НЕ БУДЕТ проигнорирован файл /prod/params/config.php</span>
+/params/config.php
+<span class="c1"># ---- ДИРЕКТОРИИ ----</span>
+<span class="c1"># Игнорирование всех файлов и папок ТОЛЬКО в конкретной директории(включая   поддиректории и файлы в них)</span>
+<span class="c1"># Например /images/user.jpg, /images/company/logo.png</span>
+<span class="c1"># НЕ БУДУТ проигнорированы файлы и папки /prod/images/user.jpg</span>
+/images/*
+<span class="c1"># Игнорирование всех файлов и папок в ЛЮБЫХ директориях с указанным именем</span>
+<span class="c1"># Например /images/user.jpg, /core/images/user.jpg</span>
+images/*
+<span class="c1"># Игнорирование ВСЕХ html-файлов в ОДНОЙ КОНКРЕТНОЙ директории(НЕ ВКЛЮЧАЯ   поддиректории)</span>
+<span class="c1"># Например /private/index.html</span>
+<span class="c1"># НЕ БУДУТ проигнорированы файлы в /private/ivan/index.html</span>
+/private/*.html
+<span class="c1"># Игнорирование ВСЕХ html-файлов в КОНКРЕТНОЙ директории ВКЛЮЧАЯ поддиректории</span>
+<span class="c1"># Например /private/info.html, /private/users/ivan/info.html</span>
+/private/**/*.html
+<span class="c1"># ---- РАЗНОЕ ----</span>
+<span class="c1"># Исключение из игнорирования</span>
+<span class="c1"># Игнорирование ВСЕХ файлов и папок внутри директории /secret,</span>
+<span class="c1"># за исключением файла /secret/free.txt, он не будет проигнорирован</span>
+/secret/*
+!/secret/free.txt
+<span class="c1"># Игнорирование файла с именем, содержащим спецсимволы</span>
+<span class="c1"># Например !readme!.txt</span>
+<span class="se">\!</span>readme!.txt
+<span class="c1"># Игнорирование всех JPG и JPEG файлов внутри директорий,</span>
+<span class="c1"># которые начинаются на &quot;h&quot; и МОГУТ содержать ещё один символ после</span>
+<span class="c1"># Например /images/h4/user.jpg, /images/h/company.jpeg</span>
+/images/h?/*.jp?g
+</pre></div>
+</div>
+<p><a class="reference external" href="https://git-scm.com/book/ru/v2">Если не нашёл решение»</a></p>
+</div>
+</div>
+<div class="section" id="bash">
+<h2>BASH<a class="headerlink" href="#bash" title="Ссылка на этот заголовок">¶</a></h2>
+<p>BASH — Bourne-Again SHell (что может переводится как «перерожденный шел», или «Снова шел Борна(создатель sh)»), самый популярный командный интерпретатор в юниксоподобных системах, в особенности в GNU/Linux.</p>
+<div class="section" id="id5">
+<h3>Команды<a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">break</span> <span class="c1"># выход из цикла for, while или until</span>
+<span class="k">continue</span> <span class="c1"># выполнение следующей итерации цикла for, while или until</span>
+<span class="nb">echo</span> <span class="c1"># вывод аргументов, разделенных пробелами, на стандартное устройство вывода</span>
+<span class="nb">exit</span> <span class="c1"># выход из оболочки</span>
+<span class="nb">export</span> <span class="c1"># отмечает аргументы как переменные для передачи в дочерние процессы в среде</span>
+<span class="nb">hash</span> <span class="c1"># запоминает полные имена путей команд, указанных в качестве аргументов, чтобы не искать их при следующем обращении</span>
+<span class="nb">kill</span> <span class="c1"># посылает сигнал завершения процессу</span>
+<span class="nb">pwd</span> <span class="c1"># выводит текущий рабочий каталог</span>
+<span class="nb">read</span> <span class="c1"># читает строку из ввода оболочки и использует ее для присвоения значений указанным переменным.\</span>
+<span class="k">return</span> <span class="c1"># заставляет функцию оболочки выйти с указанным значением</span>
+<span class="nb">shift</span> <span class="c1"># перемещает позиционные параметры налево</span>
+<span class="nb">test</span> <span class="c1"># вычисляет условное выражение</span>
+<span class="nb">times</span> <span class="c1"># выводит имя пользователя и системное время, использованное оболочкой и ее потомками</span>
+<span class="nb">trap</span> <span class="c1"># указывает команды, которые должны выполняться при получении оболочкой сигнала</span>
+<span class="nb">unset</span> <span class="c1"># вызывает уничтожение переменных оболочки</span>
+<span class="nb">wait</span> <span class="c1"># ждет выхода из дочернего процесса и сообщает выходное состояние.</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Предупреждение</p>
+<p class="last">Любой bash-скрипт должен начинаться со строки
+<strong>#!/bin/bash</strong>
+<em>в этой строке после #! указывается путь к bash-интерпретатору, поэтому если он у вас установлен в другом месте(где, вы можете узнать набрав `whereis bash`) поменяйте её на ваш путь.</em></p>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>Переменные и параметры скрипта<a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#присваиваем переменной parametr1 значение первого параметра скрипта</span>
+<span class="nv">parametr1</span><span class="o">=</span><span class="nv">$1</span>
+<span class="c1">#присваиваем переменной script_name значение имени скрипта</span>
+<span class="nv">script_name</span><span class="o">=</span><span class="nv">$0</span>
+<span class="c1"># команда echo выводит определенную строку, обращение к переменным осуществляется через $имя_переменной.</span>
+<span class="nb">echo</span> <span class="s2">&quot;Вы запустили скрипт с именем </span><span class="nv">$script_name</span><span class="s2"> и параметром </span><span class="nv">$parametr1</span><span class="s2">&quot;</span>
+<span class="c1"># здесь мы видим другие кавычки, разница в том, что в одинарных кавычках не происходит подстановки переменных.</span>
+<span class="nb">echo</span> <span class="s1">&#39;Вы запустили скрипт с именем $script_name и параметром $parametr1&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h3>Зарезервированные переменные<a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$DIRSTACK</span> <span class="c1"># содержимое вершины стека каталогов</span>
+<span class="nv">$EDITOR</span> <span class="c1"># текстовый редактор по умолчанию</span>
+<span class="nv">$EUID</span> <span class="c1"># Эффективный UID. Если вы использовали программу su для выполнения команд от другого пользователя, то эта переменная содержит UID этого пользователя, в то время как...</span>
+<span class="nv">$UID</span> <span class="c1"># ...содержит реальный идентификатор, который устанавливается только при логине.</span>
+<span class="nv">$FUNCNAME</span> <span class="c1"># имя текущей функции в скрипте.</span>
+<span class="nv">$GROUPS</span> <span class="c1"># массив групп к которым принадлежит текущий пользователь</span>
+<span class="nv">$HOME</span> <span class="c1"># домашний каталог пользователя</span>
+<span class="nv">$HOSTNAME</span> <span class="c1"># ваш hostname</span>
+<span class="nv">$HOSTTYPE</span> <span class="c1"># архитектура машины.</span>
+<span class="nv">$LC_CTYPE</span> <span class="c1"># внутренняя переменная, котороя определяет кодировку символов</span>
+<span class="nv">$OLDPWD</span> <span class="c1"># прежний рабочий каталог</span>
+<span class="nv">$OSTYPE</span> <span class="c1"># тип ОС</span>
+<span class="nv">$PATH</span> <span class="c1"># путь поиска программ</span>
+<span class="nv">$PPID</span> <span class="c1"># идентификатор родительского процесса</span>
+<span class="nv">$SECONDS</span> <span class="c1"># время работы скрипта(в сек.)</span>
+<span class="nv">$#</span> <span class="c1"># общее количество параметров переданных скрипту</span>
+<span class="nv">$*</span> <span class="c1"># все аргументы переданыне скрипту(выводятся в строку)</span>
+<span class="nv">$@</span> <span class="c1"># тоже самое, что и предыдущий, но параметры выводятся в столбик</span>
+<span class="nv">$!</span> <span class="c1"># PID последнего запущенного в фоне процесса</span>
+<span class="nv">$$</span> <span class="c1"># PID самого скрипта</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>Условия<a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+<p>&gt; <cite>#!/bin/bash</cite>
+&gt; #в переменную source засовываем первый параметр скрипта
+&gt; <cite>source=$1</cite>
+&gt; #в переменную dest засовываем второй параметр скрипта
+&gt; <cite>dest=$2</cite>
+&gt;
+&gt; # в ковычках указываем имена переменных для сравнения. -eq - логическое сравнение обозначающие «равны»
+&gt; <cite>if [[ «$source» -eq «$dest» ]]</cite>
+&gt; # если они действительно равны, то
+&gt; <cite>then</cite>
+&gt; #выводим сообщение об ошибке, т.к. $source и $dest у нас равны
+&gt; <cite>echo «Применик $dest и источник $source один и тот же файл!»</cite>
+&gt; # выходим с ошибкой (1 - код ошибки)
+&gt; <cite>exit 1</cite>
+&gt; # если же они не равны
+&gt; <cite>else</cite>
+&gt; # то выполняем команду cp: копируем источник в приемник
+&gt; <cite>cp $source $dest</cite>
+&gt; <cite>echo «Удачное копирование!»</cite>
+&gt; <cite>fi</cite> #обозначаем окончание условия.</p>
+<p>Результат выполнения скрипта:</p>
+<p>&gt; <cite>ite&#64;ite-desktop:~$ ./primer2.sh 1 1</cite>
+&gt; Применик 1 и источник 1 один и тот же файл!</p>
+<p>&gt; <cite>ite&#64;ite-desktop:~$ ./primer2.sh 1 2</cite>
+&gt; Удачное копирование!</p>
+<p>Структура <cite>if-then-else</cite> используется следующим образом:</p>
+<p>&gt; <cite>if</cite> &lt;команда или набор команд возвращающих код возврата(0 или 1)&gt;
+&gt; <cite>then</cite>
+&gt; &lt;если выражение после if истино, то выполняется этот блок&gt;
+&gt; <cite>else</cite>
+&gt; &lt;если выражение после if ложно, тот этот&gt;</p>
+<p>В качестве команд возвращающих код возврата могут выступать структуры <cite>[[ , [ , test, (( ))</cite> или любая другая(или несколько) linux-команда.</p>
+<p>&gt; <cite>test</cite> - используется для логического сравнения. после выражения, неоьбходима закрывающая скобка «]»
+&gt;`[` - синоним команды test
+&gt;`[[` - расширенная версия «[» (начиная с версии 2.02)(как в примере), внутри которой могут быть использованы || (или), &amp; (и). Долна иметь закрывающуб скобку «]]»
+&gt;`(( ))` - математическое сравнение.</p>
+<p>для построения многоярусных условий вида:</p>
+<p>&gt; <cite>if …</cite>
+&gt;`then ….`
+&gt;`else`
+&gt;`if ….`
+&gt;`then….`
+&gt;`else ….`</p>
+<p>для краткости и читаемости кода, можно использовать структуру:</p>
+<p>&gt; <cite>if ..</cite>
+&gt; <cite>then …</cite>
+&gt; <cite>elif …</cite>
+&gt; <cite>then …</cite>
+&gt; <cite>elif …</cite></p>
+<p>## Условия. Множественный выбор</p>
+<p>Если необходимо сравнивать какоую-то одну переменную с большим количеством параметров, то целесообразней использовать оператор case.</p>
+<p>&gt; <cite>#!/bin/bash</cite>
+&gt; <cite>echo «Выберите редатор для запуска:»</cite>
+&gt; <cite>echo «1 Запуск программы nano»</cite>
+&gt; <cite>echo «2 Запуск программы vi»</cite>
+&gt; <cite>echo «3 Запуск программы emacs»</cite>
+&gt; <cite>echo «4 Выход»</cite>
+#здесь мы читаем в переменную $doing со стандартного ввода
+&gt; <cite>read doing</cite>
+&gt;
+&gt; <cite>case $doing in</cite>
+&gt; <cite>1)</cite>
+&gt; <cite>/usr/bin/nano</cite> # если $doing содержит 1, то запустить nano
+&gt; <cite>;;</cite>
+&gt; <cite>2)</cite>
+&gt; <cite>/usr/bin/vi</cite> # если $doing содержит 2, то запустить vi
+&gt; <cite>;;</cite>
+&gt; <cite>3)</cite>
+&gt; <cite>/usr/bin/emacs</cite> # если $doing содержит 3, то запустить emacs
+&gt; <cite>;;</cite>
+&gt; <cite>4)</cite>
+&gt; <cite>exit 0</cite>
+&gt; <cite>;;</cite>
+&gt; <cite>*)</cite> #если введено с клавиатуры то, что в case не описывается, выполнять следующее:
+&gt; <cite>echo «Введено неправильное действие»</cite>
+&gt;
+&gt; <cite>esac</cite> #окончание оператора case.</p>
+<p>Результат работы:</p>
+<p>&gt; <cite>ite&#64;ite-desktop:~$ ./menu2.sh</cite>
+&gt; Выберите редатор для запуска:
+&gt; 1 Запуск программы nano
+&gt; 2 Запуск программы vi
+&gt; 3 Запуск программы emacs
+&gt; 4 Выход</p>
+<p>После выбор цифры и нажатия Enter запуститься тот редактор, который вы выбрали(если конечно все пути указаны правильно, и у вас установлены эти редакторы :) )</p>
+<p>Прведу список логических операторв, которые используются для конструкции if-then-else-fi:</p>
+<p>&gt; <cite>-z</cite> # строка пуста
+&gt; <cite>-n</cite> # строка не пуста
+&gt; <cite>=, (==)</cite> # строки равны
+&gt; <cite>!=</cite> # строки неравны
+&gt; <cite>-eq</cite> # равно
+&gt; <cite>-ne</cite> # неравно
+&gt; <cite>-lt,(&lt; )</cite> # меньше
+&gt; <cite>-le,(&lt;=)</cite> # меньше или равно
+&gt; <cite>-gt,(&gt;)</cite> #больше
+&gt; <cite>-ge,(&gt;=)</cite> #больше или равно
+&gt; <cite>!</cite> #отрицание логического выражения
+&gt; <cite>-a,(&amp;&amp;)</cite> #логическое «И»
+&gt; <cite>-o,(||)</cite> # логическое «ИЛИ»</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Авторские права 2020, Bulatov Alexandr
+
+    </p>
+  </div>
+    
+    
+    
+    Собрано при помощи <a href="http://sphinx-doc.org/">Sphinx</a> с использованием
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">темы,</a>
+    
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

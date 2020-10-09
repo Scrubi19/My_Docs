@@ -6,12 +6,14 @@ Scrubi19_Docs
 ----------------------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
+   Sibsutis/Cheat_sheets/cheat.rst
    Sibsutis/Crypto/cryptography.rst
-   Sibsutis/Compilers/compilers.rst
+   Sibsutis/Compilers/llvm.rst
    Sibsutis/Ruby/ruby.rst
-   Sibsutis/Sql/sql.rst
+   Sibsutis/Databases/Databases.rst
+
 
 Контакты
 ------------------------------------

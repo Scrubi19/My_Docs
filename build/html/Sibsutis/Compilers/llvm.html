@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Компиляторы &mdash; Документация My_Docs 0.0.1</title>
+  <title>LLVM: инфраструктура для разработки компилятора &mdash; Документация My_Docs 0.0.1</title>
   
 
   
@@ -86,6 +86,22 @@
             
             
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Cheat_sheets/cheat.html">Шпаргалки</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Cheat_sheets/cheat.html#git">Git</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id2">Создание репозитория</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id3">Команды</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#gitignore">Памятка по .gitignore</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Cheat_sheets/cheat.html#bash">BASH</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id5">Команды</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id6">Переменные и параметры скрипта</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id7">Зарезервированные переменные</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id8">Условия</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Crypto/cryptography.html">Криптографические методы защиты информации</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id2">Глава 1. Криптосистемы с открытым ключом</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id3">Быстрое возведение в степень по модулю</a></li>
@@ -104,8 +120,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id11">Используемая литература</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Компиляторы</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#llvm">Установка LLVM</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">LLVM: инфраструктура для разработки компилятора</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Установка LLVM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id2">Инструменты и организация</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id3">LLVM сегодня</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id4">Взаимодействие с драйвером компилятора</a></li>
@@ -141,7 +157,16 @@
 <li class="toctree-l2"><a class="reference internal" href="../Ruby/ruby.html#ubuntu">Установка на Ubuntu</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Sql/sql.html">Базы данных</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Databases/Databases.html">Базы данных</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id2">Реляционные базы данных</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id3">Реляционная алгебра</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#sql-structed-query-language">SQL(Structed Query Language)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id4">Нереляционные базы данных</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id5">Используемая литература</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -188,13 +213,13 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Компиляторы</li>
+      <li>LLVM: инфраструктура для разработки компилятора</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/Sibsutis/Compilers/compilers.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+            <a href="../../_sources/Sibsutis/Compilers/llvm.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
           
         
       </li>
@@ -207,10 +232,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="id1">
-<h1>Компиляторы<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
-<div class="section" id="llvm">
-<h2>Установка LLVM<a class="headerlink" href="#llvm" title="Ссылка на этот заголовок">¶</a></h2>
+  <div class="section" id="llvm">
+<h1>LLVM: инфраструктура для разработки компилятора<a class="headerlink" href="#llvm" title="Ссылка на этот заголовок">¶</a></h1>
+<div class="section" id="id1">
+<h2>Установка LLVM<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h2>
 <ul class="simple">
 <li>Склонировать репозиторий с LLVM:</li>
 </ul>
@@ -764,11 +789,19 @@ hello.c:12:5: note: <span class="s2">&quot;root&quot;</span> node binds here
 <li><strong>Clang Plugins:</strong> позволяет добавлять свои проходы непосредственно в процедуру компиляции</li>
 <li><strong>LibTooling</strong> позволяет создавать самостоятельные инструменты, предназначенные для выполнения рефакторинга кода или проверки синтаксиса. В отличии от libclang менее надежен с точки зрения поддержки обратной совместимости, но зато дает полный доступ к структуре дерева AST</li>
 </ul>
-<blockquote>
-<div><ul class="simple">
+<p>Пример создание инструмента:</p>
+<ol class="arabic simple">
 <li>Найдите каталог <em>llvm-project/clang-tools-extra/</em>. Там лежит <em>tool-template</em>. В нём Cmake и код. Для написания собственного инструмента достаточно написать код на cpp и изменить имя в Cmake. Tool должен лежать тоже в этом каталоге</li>
-</ul>
-</div></blockquote>
+<li>Назовем наш инструмент <em>cxxgrep</em>, он будет способен различать конструкции языка <em>C++</em>. Пример опций:</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-function  <span class="c1"># Filter by functions</span>
+-i         <span class="c1"># Make the search case-insensitive</span>
+-member    <span class="c1"># Filter by members</span>
+-parameter <span class="c1"># Filter by function parameter</span>
+-record    <span class="c1"># Filter by records (class/struct)</span>
+-variable  <span class="c1"># Filter by variables</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="id13">
 <h2>Используемая литература<a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h2>

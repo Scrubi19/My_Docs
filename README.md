@@ -6,10 +6,11 @@
 
 # Содержание
 
+* Шпаргалки
 * Криптографические методы защиты информации
 * Компиляторы
 * Ruby on Rails
-* SQL (in developing)
+* Databases (in developing)
 
 # Контакты
 

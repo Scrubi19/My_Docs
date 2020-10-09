@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="ru" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Базы данных &mdash; Документация My_Docs 0.0.1</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/main.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" />
+    <link rel="prev" title="Ruby on Rails" href="../Ruby/ruby.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/logo2.svg" class="logo" alt="Логотип"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Cheat_sheets/cheat.html">Шпаргалки</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Cheat_sheets/cheat.html#git">Git</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id2">Создание репозитория</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id3">Команды</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#gitignore">Памятка по .gitignore</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Cheat_sheets/cheat.html#bash">BASH</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id5">Команды</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id6">Переменные и параметры скрипта</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id7">Зарезервированные переменные</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id8">Условия</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Crypto/cryptography.html">Криптографические методы защиты информации</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id2">Глава 1. Криптосистемы с открытым ключом</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id3">Быстрое возведение в степень по модулю</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id4">Элементы теории чисел</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id5">Обобщенный алгоритм Эвклида</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id6">Система Диффи-Хеллмана</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id7">Шифр Шамира</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id8">Шифр Эль Гамаля</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#rsa">Шифр RSA</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id9">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id10">Метод «шаг младенца, шаг великана»</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id11">Используемая литература</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Compilers/llvm.html">LLVM: инфраструктура для разработки компилятора</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id1">Установка LLVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id2">Инструменты и организация</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id3">LLVM сегодня</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id4">Взаимодействие с драйвером компилятора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id5">Использование автономных инструментов</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id6">Как это работает?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#c-llvm">Приемы программирования на C++ в LLVM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id8">Демонстрация расширяемого интерфейса проходов</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#tablegen-td">TableGen(.td)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id10">Анализатор исходного кода</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id11">Лексический анализ</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#clang-libtoling">Инструменты Clang и фреймворк LibToling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-tidy">Clang-tidy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-modernizer">Clang Modernizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-apply-replacements">Clang Apply Replacements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clangformat">ClangFormat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#modularize">Modularize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#module-map-checker">Module Map Checker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#pptrace">PPTrace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-query">Clang-Query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#clang-check">Clang-Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#c-str">Удаление вызовов c_str() «Самый маленький инструмент для рефакторинга»</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id12">Создание собственного инструмента</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id13">Используемая литература</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Ruby/ruby.html#ubuntu">Установка на Ubuntu</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Базы данных</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Реляционные базы данных</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Реляционная алгебра</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sql-structed-query-language">SQL(Structed Query Language)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Нереляционные базы данных</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">Используемая литература</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">My_Docs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Базы данных</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/Sibsutis/Databases/Databases.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>Базы данных<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
+<div class="section" id="id2">
+<h2>Реляционные базы данных<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Реляционной базой данных называется совокупность отношений, содержащих всю информацию, которая должна храниться в базе.</p>
+<div class="section" id="id3">
+<h3>Реляционная алгебра<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
+<p><em>Реляционная алгебра</em> - замкнутая система операций над отношениями и их составляющими (атрибутами и их кортежами). Результат любой операции реляционной алгебры - новое отношение. Такие системы операций называются замкнутыми. Рассмотрим семь основных операций. Они разделены на две группы.</p>
+<dl class="docutils">
+<dt>Операции над любыми множествами:</dt>
+<dd><ul class="first last simple">
+<li>Обьединение</li>
+<li>Пересечение</li>
+<li>Разность</li>
+<li>Декартово произведение</li>
+</ul>
+</dd>
+<dt>Операции, применимые только к отношениями:</dt>
+<dd><ul class="first last simple">
+<li>Выборка</li>
+<li>Проэкция</li>
+<li>Соединение</li>
+</ul>
+</dd>
+</dl>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/sql_operation.png"><img alt="../../_images/sql_operation.png" src="../../_images/sql_operation.png" style="width: 600px;" /></a>
+</div>
+<p>Для описания каждой операции приведем пример таблиц:</p>
+<table border="1" class="docutils" id="id6">
+<caption><span class="caption-text">таблица PRODUCTS (1.1)</span><a class="headerlink" href="#id6" title="Постоянная ссылка на таблицу">¶</a></caption>
+<colgroup>
+<col width="9%" />
+<col width="25%" />
+<col width="47%" />
+<col width="19%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ID</th>
+<th class="head">NAME</th>
+<th class="head">COMPANY</th>
+<th class="head">PRICE</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>123</td>
+<td>Печеньки</td>
+<td>ООО ”Темная сторона”</td>
+<td>190</td>
+</tr>
+<tr class="row-odd"><td>156</td>
+<td>Чай</td>
+<td>ООО ”Темная сторона”</td>
+<td>60</td>
+</tr>
+<tr class="row-even"><td>235</td>
+<td>Ананасы</td>
+<td>ОАО ”Фрукты”</td>
+<td>100</td>
+</tr>
+<tr class="row-odd"><td>623</td>
+<td>Томаты</td>
+<td>ООО ”Овощи”</td>
+<td>130</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="id7">
+<caption><span class="caption-text">Таблица DRIVERS (1.2)</span><a class="headerlink" href="#id7" title="Постоянная ссылка на таблицу">¶</a></caption>
+<colgroup>
+<col width="66%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">COMPANY</th>
+<th class="head">DRIVER</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ООО ”Темная сторона”</td>
+<td>Владимир</td>
+</tr>
+<tr class="row-odd"><td>ООО ”Темная сторона”</td>
+<td>Михаил</td>
+</tr>
+<tr class="row-even"><td>ОАО ”Фрукты”</td>
+<td>Руслан</td>
+</tr>
+<tr class="row-odd"><td>ООО ”Овощи”</td>
+<td>Владимир</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="id8">
+<caption><span class="caption-text">Таблица Sellers (1.3)</span><a class="headerlink" href="#id8" title="Постоянная ссылка на таблицу">¶</a></caption>
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ID</th>
+<th class="head">SELLERS</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>123</td>
+<td>OOO “Дарт”</td>
+</tr>
+<tr class="row-odd"><td>156</td>
+<td>ОАО ”Ведро”</td>
+</tr>
+<tr class="row-even"><td>235</td>
+<td>ЗАО “Овоще База”</td>
+</tr>
+<tr class="row-odd"><td>623</td>
+<td>ОАО ”Фирма”</td>
+</tr>
+</tbody>
+</table>
+<p>Таблицы состоят из 4х строк, строка в таблице является <strong>кортежем</strong> в реляционной теории. Множество упорядоченных кортежей называется <strong>отношением</strong>.
+Перед тем как дать определение отношения, введем еще один термин — <strong>домен</strong>. Домены применительно к таблице это столбцы</p>
+<p>В отношении требованием является то, что все кортежи должны различаться. Для однозначной идентификации кортежа существует первичный ключ. Первичный ключ это атрибут или набор из минимального числа атрибутов, который однозначно идентифицирует конкретный кортеж и не содержит дополнительных атрибутов.
+Подразумевается, что все атрибуты в первичном ключе должны быть необходимыми и достаточными для идентификации конкретного кортежа, и исключение любого из атрибутов в ключе сделает его недостаточным для идентификации. Например, в таблице (1.2) ключом будет сочетание атрибутов из первого и второго столбца</p>
+<p>В реляционной БД таблицы взаимосвязаны и соотносятся друг с другом как главные и подчиненные. Связь главной и подчиненнной таблицы осуществляется через первичный ключ (primary key) главной таблицы и внешний ключ ( foreign key ) подчиненной таблицы.
+Внешний ключ это атрибут или набор атрибутов, который в главной таблице является первичным ключем</p>
+</div>
+<div class="section" id="sql-structed-query-language">
+<h3>SQL(Structed Query Language)<a class="headerlink" href="#sql-structed-query-language" title="Ссылка на этот заголовок">¶</a></h3>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>Нереляционные базы данных<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h2>
+</div>
+<div class="section" id="id5">
+<h2>Используемая литература<a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Авторские права 2020, Bulatov Alexandr
+
+    </p>
+  </div>
+    
+    
+    
+    Собрано при помощи <a href="http://sphinx-doc.org/">Sphinx</a> с использованием
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">темы,</a>
+    
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
