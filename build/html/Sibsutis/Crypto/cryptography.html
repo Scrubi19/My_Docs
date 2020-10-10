@@ -111,13 +111,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#id7">Шифр Шамира</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id8">Шифр Эль Гамаля</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rsa">Шифр RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">Шифр Вернама</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id9">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id10">Метод «шаг младенца, шаг великана»</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Метод «шаг младенца, шаг великана»</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id11">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Compilers/llvm.html">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -598,7 +599,7 @@
 <span class="nl">B:</span> <span class="n">x4</span> <span class="o">=</span> <span class="mi">13</span><span class="o">^</span><span class="mi">17</span> <span class="n">mod</span> <span class="mi">23</span> <span class="o">=</span> <span class="mi">6</span>
 </pre></div>
 </div>
-<p>Листинг программы:</p>
+<p>Листинг программы шифрования файлов:</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// Shamir.java</span>
 <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">ShamirCalcIteration</span><span class="o">(</span><span class="n">String</span> <span class="n">path</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">prevX</span><span class="o">,</span> <span class="kt">int</span> <span class="n">numOfIteration</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
        <span class="k">switch</span> <span class="o">(</span><span class="n">numOfIteration</span><span class="o">)</span> <span class="o">{</span>
@@ -680,7 +681,7 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 \[\begin{split}=&gt;  m' = m * (G^{C_B})^{k} * (G^{k})^{P - 1 - C_B} \bmod p =  m * G^{C_Bk + k(P-1 -kC_B)} \bmod p = m * G^{k(P-1)} \bmod p \\\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split}По \ теореме \ Ферма: G^{k(P-1)} \bmod p = 1^{k} \bmod p = 1 \\\\\end{split}\]</div>
-<p>Листинг программы:</p>
+<p>Листинг программы шифрования файлов:</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// ElGamal.java</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ElGamal</span> <span class="o">{</span>
   <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">P</span><span class="o">;</span>
@@ -782,16 +783,132 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 <blockquote>
 <div><ol class="arabic simple">
 <li>Задача проверки числа на простоту является сравнительно легкой</li>
-<li>Задача разложения чисел вида <span class="math notranslate nohighlight">\(n = pq\)</span> (p и q — простые числа)</li>
+<li>Задача разложения чисел вида <span class="math notranslate nohighlight">\(n = pq\)</span> (p и q — простые числа) на множители является очень трудной, если мы знаем только n, а p и q — большие числа (это так называемая задача факторизации)</li>
 </ol>
 </div></blockquote>
-<p>на множители является очень трудной, если мы знаем только n , а p и q — большие числа (это так называемая задача факторизации)</p>
+<p>В нашей системе есть абоненты A, B. Каждый абонент выбирает случайное два больших простых числа <em>P</em> и <em>Q</em>. Затем он вычисляет число открытое для всех пользователей системы</p>
+<div class="math notranslate nohighlight">
+\[N = P*Q\]</div>
+<p>После этого абонент вычисляет число</p>
+<div class="math notranslate nohighlight">
+\[\phi = (P-1)(Q-1)\]</div>
+<p>И выбирает некоторое число <span class="math notranslate nohighlight">\(D &lt; \phi\)</span>, взаимно простое с <span class="math notranslate nohighlight">\(\phi\)</span>, и по обобщенному алгоритму Эвклида находит число С, такое что</p>
+<div class="math notranslate nohighlight">
+\[C*D \bmod \phi = 1\]</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/keys_rsa.png"><img alt="keys_rsa" src="../../_images/keys_rsa.png" style="width: 500px;" /></a>
 </div>
+<p>Ход алгоритма:</p>
+<p><strong>Шаг 1.</strong> А шифрует сообщение по формуле</p>
+<div class="math notranslate nohighlight">
+\[e = m^{D_B} \bmod N_B\]</div>
+<p><strong>Шаг 2.</strong> B получивший e, вычисляет</p>
+<div class="math notranslate nohighlight">
+\[m^{'} = e^{C_B} \bmod N_B = m\]</div>
+<p>Доказательство:</p>
+<div class="math notranslate nohighlight">
+\[m^{'} = e^{C_B} \bmod N_B = m^{D_B*C_B} \bmod N_B\]</div>
+<div class="math notranslate nohighlight">
+\[\ для \ некоторого \ k:\]</div>
+<div class="math notranslate nohighlight">
+\[C_B*D_B = k \phi_B + 1\]</div>
+<div class="math notranslate nohighlight">
+\[\phi_B = (P_B - 1)(Q_B - 1) = \varphi (N_B),\]</div>
+<div class="math notranslate nohighlight">
+\[\ где \ \varphi() - \ Функция \ Эйлера\]</div>
+<div class="math notranslate nohighlight">
+\[m^{'} = m^{k* \phi(N_B)+1} \bmod N_B = m\]</div>
+<p>Пример:</p>
+<div class="math notranslate nohighlight">
+\[m = 15, \ P_B = 3, \ Q_B = 1, \ N_B = 33, \ D_B = 3\]</div>
+<div class="math notranslate nohighlight">
+\[3 \ взаимно \ простое \ с \ \phi(33) = 20 \ ((P-1)(Q-1) = 20 )\]</div>
+<div class="math notranslate nohighlight">
+\[Найдем \ C_B \ c \ помощью \ обощенного \ алгоритма \ Эвклида:\]</div>
+<div class="math notranslate nohighlight">
+\[C_B = 7 \ Проверка: \ 3*7 \bmod 20 = 1\]</div>
+<div class="math notranslate nohighlight">
+\[e = 15^{3} \bmod 33 = 15^{2} * 15 \bmod 33 = 27*15 \bmod 33 = 9\]</div>
+<div class="math notranslate nohighlight">
+\[m^{'} = 9^{7} \bmod 33 = (9^{2})^{2} * 9^{2} * 9 \bmod 33 = 15^{2} * 15 * 9 \bmod 33 = 15 = m\]</div>
+<p>Листинг программы:</p>
 </div>
 <div class="section" id="id9">
-<h2>Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h2>
+<h3>Шифр Вернама<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Этот шифр был предложен в 1926 году американским инженером Вернамом (Gilbert Vernam) и использовался на практике, но доказательство его невскрываемости было получено значительно позже Шенноном. Простейший шифр на основе бинарной логики (а именно операции XOR), который обладает абсолютной криптографической стойкостью. Без знания ключа, расшифровать его невозможно Для шифра Вернама часто используется название «одноразовая лента» (one-time pad). Мы опишем этот шифр для случая двоичного алфавита, чтобы упростить обозначения. Пусть множество сообщений M состоит из слов двоичного алфавита длины n , т.е. всего сообщений не более, чем 2 n.</p>
+<table border="1" class="docutils" id="id14">
+<caption><span class="caption-text">Таблица истинности XOR</span><a class="headerlink" href="#id14" title="Постоянная ссылка на таблицу">¶</a></caption>
+<colgroup>
+<col width="24%" />
+<col width="29%" />
+<col width="48%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">a</th>
+<th class="head">b</th>
+<th class="head">a XOR b</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>В шифре Вернама множество ключей также состоит из слов той же длины n и каждый ключ используется с вероятностью 1/2 n . Другими словами, все ключи используются с одинаковой вероятностью. Пусть необходимо зашифровать сообщение <span class="math notranslate nohighlight">\(m̄ = m_1,m_2 . . . m_n\)</span> и пусть выбран ключ <span class="math notranslate nohighlight">\(k̄ = k_1, k_2 . . . k_n\)</span>. Тогда зашифрованное сообщение <span class="math notranslate nohighlight">\(ē = e_1,e_2 . . . e_n\)</span> получается по формуле:</p>
+<div class="math notranslate nohighlight">
+\[e_i = m_i \oplus k_i\]</div>
+<p>Дешифрование осуществляется по формуле:</p>
+<div class="math notranslate nohighlight">
+\[m_i = e_i \oplus k_i\]</div>
+<p>Листинг программы шифрования файлов:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Vernam</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">secretKey</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">encryptFile</span><span class="o">(</span><span class="n">String</span> <span class="n">path</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+      <span class="kt">byte</span><span class="o">[]</span> <span class="n">byteArray</span> <span class="o">=</span> <span class="n">getFileBytes</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
+      <span class="n">secretKey</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">byteArray</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+      <span class="kt">byte</span><span class="o">[]</span> <span class="n">encryptMessage</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">byteArray</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+      <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="o">();</span>
+      <span class="n">srand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">byteArray</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+          <span class="n">secretKey</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">Byte</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">);</span>
+          <span class="n">encryptMessage</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span> <span class="o">(</span><span class="n">byteArray</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">^</span> <span class="n">secretKey</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+      <span class="o">}</span>
+      <span class="k">return</span> <span class="n">encryptMessage</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">decryptFile</span><span class="o">(</span><span class="n">String</span> <span class="n">path</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">encryptMessage</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">key</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+      <span class="kt">byte</span><span class="o">[]</span> <span class="n">decryptMessage</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">encryptMessage</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">encryptMessage</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+          <span class="n">decryptMessage</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span> <span class="o">(</span><span class="n">encryptMessage</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">^</span> <span class="n">key</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+      <span class="o">}</span>
+      <span class="n">getFileFromBytes</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">decryptMessage</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">getSecretKey</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">secretKey</span><span class="o">;</span>
+  <span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="id10">
-<h3>Метод «шаг младенца, шаг великана»<a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
+<h2>Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании<a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="id11">
+<h3>Метод «шаг младенца, шаг великана»<a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Это был один из первых методов, который показал, что задача вычисления дискретного логарифма может быть решена значительно быстрее, чем методом перебора. Перейдем к описанию этого метода отыскания x</p>
 <p>Задача поиска x, при известных a и y. Сначала берем два целых числа m и k, такие что</p>
 <blockquote>
@@ -855,8 +972,8 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 </div>
 </div>
 </div>
-<div class="section" id="id11">
-<h2>Используемая литература<a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="id12">
+<h2>Используемая литература<a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="ryabko_fionov_kriptograficheskie_metody_zashchity_i.pdf">Б.Я. Рябко, А.Н. Фионов. «Криптографические методы защиты информации»</a></p>
 </div>
 </div>
