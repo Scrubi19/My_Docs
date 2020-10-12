@@ -111,13 +111,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id7">Шифр Шамира</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id8">Шифр Эль Гамаля</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#rsa">Шифр RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id9">Шифр Вернама</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id9">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id10">Метод «шаг младенца, шаг великана»</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id10">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id11">Метод «шаг младенца, шаг великана»</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id11">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id12">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Compilers/llvm.html">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -433,105 +434,90 @@ images/*
 </div>
 <div class="section" id="id8">
 <h3>Условия<a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
-<p>&gt; <cite>#!/bin/bash</cite>
-&gt; #в переменную source засовываем первый параметр скрипта
-&gt; <cite>source=$1</cite>
-&gt; #в переменную dest засовываем второй параметр скрипта
-&gt; <cite>dest=$2</cite>
-&gt;
-&gt; # в ковычках указываем имена переменных для сравнения. -eq - логическое сравнение обозначающие «равны»
-&gt; <cite>if [[ «$source» -eq «$dest» ]]</cite>
-&gt; # если они действительно равны, то
-&gt; <cite>then</cite>
-&gt; #выводим сообщение об ошибке, т.к. $source и $dest у нас равны
-&gt; <cite>echo «Применик $dest и источник $source один и тот же файл!»</cite>
-&gt; # выходим с ошибкой (1 - код ошибки)
-&gt; <cite>exit 1</cite>
-&gt; # если же они не равны
-&gt; <cite>else</cite>
-&gt; # то выполняем команду cp: копируем источник в приемник
-&gt; <cite>cp $source $dest</cite>
-&gt; <cite>echo «Удачное копирование!»</cite>
-&gt; <cite>fi</cite> #обозначаем окончание условия.</p>
-<p>Результат выполнения скрипта:</p>
-<p>&gt; <cite>ite&#64;ite-desktop:~$ ./primer2.sh 1 1</cite>
-&gt; Применик 1 и источник 1 один и тот же файл!</p>
-<p>&gt; <cite>ite&#64;ite-desktop:~$ ./primer2.sh 1 2</cite>
-&gt; Удачное копирование!</p>
-<p>Структура <cite>if-then-else</cite> используется следующим образом:</p>
-<p>&gt; <cite>if</cite> &lt;команда или набор команд возвращающих код возврата(0 или 1)&gt;
-&gt; <cite>then</cite>
-&gt; &lt;если выражение после if истино, то выполняется этот блок&gt;
-&gt; <cite>else</cite>
-&gt; &lt;если выражение после if ложно, тот этот&gt;</p>
-<p>В качестве команд возвращающих код возврата могут выступать структуры <cite>[[ , [ , test, (( ))</cite> или любая другая(или несколько) linux-команда.</p>
-<p>&gt; <cite>test</cite> - используется для логического сравнения. после выражения, неоьбходима закрывающая скобка «]»
-&gt;`[` - синоним команды test
-&gt;`[[` - расширенная версия «[» (начиная с версии 2.02)(как в примере), внутри которой могут быть использованы || (или), &amp; (и). Долна иметь закрывающуб скобку «]]»
-&gt;`(( ))` - математическое сравнение.</p>
-<p>для построения многоярусных условий вида:</p>
-<p>&gt; <cite>if …</cite>
-&gt;`then ….`
-&gt;`else`
-&gt;`if ….`
-&gt;`then….`
-&gt;`else ….`</p>
-<p>для краткости и читаемости кода, можно использовать структуру:</p>
-<p>&gt; <cite>if ..</cite>
-&gt; <cite>then …</cite>
-&gt; <cite>elif …</cite>
-&gt; <cite>then …</cite>
-&gt; <cite>elif …</cite></p>
-<p>## Условия. Множественный выбор</p>
-<p>Если необходимо сравнивать какоую-то одну переменную с большим количеством параметров, то целесообразней использовать оператор case.</p>
-<p>&gt; <cite>#!/bin/bash</cite>
-&gt; <cite>echo «Выберите редатор для запуска:»</cite>
-&gt; <cite>echo «1 Запуск программы nano»</cite>
-&gt; <cite>echo «2 Запуск программы vi»</cite>
-&gt; <cite>echo «3 Запуск программы emacs»</cite>
-&gt; <cite>echo «4 Выход»</cite>
-#здесь мы читаем в переменную $doing со стандартного ввода
-&gt; <cite>read doing</cite>
-&gt;
-&gt; <cite>case $doing in</cite>
-&gt; <cite>1)</cite>
-&gt; <cite>/usr/bin/nano</cite> # если $doing содержит 1, то запустить nano
-&gt; <cite>;;</cite>
-&gt; <cite>2)</cite>
-&gt; <cite>/usr/bin/vi</cite> # если $doing содержит 2, то запустить vi
-&gt; <cite>;;</cite>
-&gt; <cite>3)</cite>
-&gt; <cite>/usr/bin/emacs</cite> # если $doing содержит 3, то запустить emacs
-&gt; <cite>;;</cite>
-&gt; <cite>4)</cite>
-&gt; <cite>exit 0</cite>
-&gt; <cite>;;</cite>
-&gt; <cite>*)</cite> #если введено с клавиатуры то, что в case не описывается, выполнять следующее:
-&gt; <cite>echo «Введено неправильное действие»</cite>
-&gt;
-&gt; <cite>esac</cite> #окончание оператора case.</p>
-<p>Результат работы:</p>
-<p>&gt; <cite>ite&#64;ite-desktop:~$ ./menu2.sh</cite>
-&gt; Выберите редатор для запуска:
-&gt; 1 Запуск программы nano
-&gt; 2 Запуск программы vi
-&gt; 3 Запуск программы emacs
-&gt; 4 Выход</p>
-<p>После выбор цифры и нажатия Enter запуститься тот редактор, который вы выбрали(если конечно все пути указаны правильно, и у вас установлены эти редакторы :) )</p>
-<p>Прведу список логических операторв, которые используются для конструкции if-then-else-fi:</p>
-<p>&gt; <cite>-z</cite> # строка пуста
-&gt; <cite>-n</cite> # строка не пуста
-&gt; <cite>=, (==)</cite> # строки равны
-&gt; <cite>!=</cite> # строки неравны
-&gt; <cite>-eq</cite> # равно
-&gt; <cite>-ne</cite> # неравно
-&gt; <cite>-lt,(&lt; )</cite> # меньше
-&gt; <cite>-le,(&lt;=)</cite> # меньше или равно
-&gt; <cite>-gt,(&gt;)</cite> #больше
-&gt; <cite>-ge,(&gt;=)</cite> #больше или равно
-&gt; <cite>!</cite> #отрицание логического выражения
-&gt; <cite>-a,(&amp;&amp;)</cite> #логическое «И»
-&gt; <cite>-o,(||)</cite> # логическое «ИЛИ»</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash`</span>
+<span class="c1">#в переменную source засовываем первый параметр скрипта</span>
+ <span class="nv">source</span><span class="o">=</span><span class="nv">$1</span>
+<span class="c1">#в переменную dest засовываем второй параметр скрипта</span>
+<span class="nv">dest</span><span class="o">=</span><span class="nv">$2</span>
+
+<span class="c1"># в ковычках указываем имена переменных для сравнения. -eq - логическое сравнение обозначающие &quot;равны&quot;</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$source</span><span class="s2">&quot;</span> -eq <span class="s2">&quot;</span><span class="nv">$dest</span><span class="s2">&quot;</span> <span class="o">]]</span>
+<span class="c1"># если они действительно равны, то</span>
+<span class="k">then</span>
+<span class="c1">#выводим сообщение об ошибке, т.к. $source и $dest у нас равны</span>
+<span class="nb">echo</span> <span class="s2">&quot;Применик </span><span class="nv">$dest</span><span class="s2"> и источник </span><span class="nv">$source</span><span class="s2"> один и тот же файл!&quot;</span>
+<span class="c1"># выходим с ошибкой (1 - код ошибки)</span>
+<span class="nb">exit</span> <span class="m">1</span>
+<span class="c1"># если же они не равны</span>
+<span class="k">else</span>
+<span class="c1"># то выполняем команду cp: копируем источник в приемник</span>
+cp <span class="nv">$source</span> <span class="nv">$dest</span>
+<span class="nb">echo</span> <span class="s2">&quot;Удачное копирование!&quot;</span>
+<span class="c1">#обозначаем окончание условия.</span>
+</pre></div>
+</div>
+<p>Для построения многоярусных условий вида:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> ...
+<span class="k">then</span> ....
+<span class="k">else</span>
+<span class="k">if</span> ....
+<span class="k">then</span>....
+<span class="k">else</span> ....
+<span class="c1"># или</span>
+
+<span class="k">if</span> ..
+<span class="k">then</span> ..
+<span class="k">elif</span> ...
+<span class="k">then</span> ...
+<span class="k">elif</span> ...
+</pre></div>
+</div>
+<p><strong>Множественный выбор (case)</strong></p>
+<p>Если необходимо сравнивать какую-то одну переменную с большим количеством параметров, то целесообразней использовать оператор case.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">echo</span> <span class="s2">&quot;Выберите редатор для запуска:&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;1 Запуск программы nano&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;2 Запуск программы vi&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;3 Запуск программы emacs&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;4 Выход&quot;</span>
+<span class="c1">#здесь мы читаем в переменную $doing со стандартного ввода</span>
+<span class="nb">read</span> doing
+
+<span class="k">case</span> <span class="nv">$doing</span> in
+<span class="m">1</span><span class="o">)</span>
+/usr/bin/nano<span class="sb">`</span> <span class="c1"># если $doing содержит 1, то запустить nano</span>
+<span class="p">;;</span>
+<span class="m">2</span><span class="o">)</span>
+/usr/bin/vi<span class="sb">`</span> <span class="c1"># если $doing содержит 2, то запустить vi</span>
+<span class="p">;;</span>
+<span class="m">3</span><span class="o">)</span>
+/usr/bin/emacs<span class="sb">`</span> <span class="c1"># если $doing содержит 3, то запустить emacs</span>
+<span class="p">;;</span>
+<span class="m">4</span><span class="o">)</span>
+<span class="nb">exit</span> <span class="m">0</span>
+<span class="p">;;</span>
+*<span class="o">)</span> <span class="c1">#если введено с клавиатуры то, что в case не описывается, выполнять следующее:</span>
+<span class="nb">echo</span> <span class="s2">&quot;Введено неправильное действие&quot;</span>
+
+<span class="k">esac</span> <span class="c1">#окончание оператора case.</span>
+</pre></div>
+</div>
+<p><strong>Список логических операторов</strong>, которые используются для конструкции if-then-else-fi:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-z <span class="c1"># строка пуста</span>
+-n <span class="c1"># строка не пуста</span>
+<span class="o">=</span>, <span class="o">(==)</span> <span class="c1"># строки равны</span>
+!<span class="o">=</span> <span class="c1"># строки неравны</span>
+-eq <span class="c1"># равно</span>
+-ne <span class="c1"># неравно</span>
+-lt,<span class="o">(</span>&lt; <span class="o">)</span> <span class="c1"># меньше</span>
+-le,<span class="o">(</span>&lt;<span class="o">=)</span> <span class="c1"># меньше или равно</span>
+-gt,<span class="o">(</span>&gt;<span class="o">)</span> <span class="c1">#больше</span>
+-ge,<span class="o">(</span>&gt;<span class="o">=)</span> <span class="c1">#больше или равно</span>
+ ! <span class="c1">#отрицание логического выражения</span>
+-a,<span class="o">(&amp;&amp;)</span> <span class="c1">#логическое «И»</span>
+-o,<span class="o">(||)</span> <span class="c1"># логическое «ИЛИ»</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>

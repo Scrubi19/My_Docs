@@ -1,7 +1,6 @@
 Криптографические методы защиты информации
 ============================================
 
-
 Глава 1. Криптосистемы с открытым ключом
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -728,6 +727,84 @@
   m^{'} = 9^{7} \bmod 33 = (9^{2})^{2} * 9^{2} * 9 \bmod 33 = 15^{2} * 15 * 9 \bmod 33 = 15 = m
 
 Листинг программы:
+
+.. code-block:: java
+
+  public class RSA {
+    public static final int MAX_VALUE = 10000;
+    private long P;
+    private long Q;
+
+    private long N;
+    private long phi;
+
+    private long C;
+    private long D;
+
+    public RSA () {
+        SecureRandom srand = new SecureRandom();
+        srand.setSeed(System.currentTimeMillis());
+        do {
+            this.P = srand.nextInt(MAX_VALUE-3)+2;
+        } while(!isPrime(P) || !testFerma(P,100));
+
+        do {
+            this.Q = srand.nextInt(MAX_VALUE-3)+2;
+        } while(!isPrime(Q) || !testFerma(Q,100));
+
+        this.N = P * Q;
+        this.phi = (P-1)*(Q-1);
+        long[] EuclidResult;
+        do {
+            do {
+                this.D = srand.nextInt((int)phi-3)+2;
+                EuclidResult =  Euclid.calculate(D, phi);
+            } while(EuclidResult[0] != 1);
+            this.C = EuclidResult[2] + phi;
+        } while(D*C%(phi) != 1);
+    }
+
+    public List<Long> sendMessage(String path, long D, long N) throws IOException {
+        byte[] byteArray = getFileBytes(path);
+
+        List<Long> E = new ArrayList<>();
+
+        for (byte b : byteArray) {
+            E.add(powMod.calculate(b, D, N));
+        }
+        return E;
+    }
+
+    public void receiveMessage(List<Long> E, String path) throws IOException {
+        byte [] result = new byte[E.size()];
+
+        for (int i = 0; i < E.size(); i++) {
+            result[i] = (byte) powMod.calculate(E.get(i), getC(), getN());
+        }
+        getFileFromBytes(path, result);
+    }
+
+    public long getP() {
+        return P;
+    }
+
+    public long getQ() {
+        return Q;
+    }
+
+    public long getN() {
+        return N;
+    }
+    public long getC() {
+        return C;
+    }
+    public long getD() {
+        return D;
+    }
+    public long getPhi() {
+        return phi;
+    }
+  }
 
 
 

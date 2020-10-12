@@ -832,6 +832,83 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[m^{'} = 9^{7} \bmod 33 = (9^{2})^{2} * 9^{2} * 9 \bmod 33 = 15^{2} * 15 * 9 \bmod 33 = 15 = m\]</div>
 <p>Листинг программы:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RSA</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">MAX_VALUE</span> <span class="o">=</span> <span class="mi">10000</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kt">long</span> <span class="n">P</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kt">long</span> <span class="n">Q</span><span class="o">;</span>
+
+  <span class="kd">private</span> <span class="kt">long</span> <span class="n">N</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kt">long</span> <span class="n">phi</span><span class="o">;</span>
+
+  <span class="kd">private</span> <span class="kt">long</span> <span class="n">C</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kt">long</span> <span class="n">D</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">RSA</span> <span class="o">()</span> <span class="o">{</span>
+      <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="o">();</span>
+      <span class="n">srand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+      <span class="k">do</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">P</span> <span class="o">=</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">MAX_VALUE</span><span class="o">-</span><span class="mi">3</span><span class="o">)+</span><span class="mi">2</span><span class="o">;</span>
+      <span class="o">}</span> <span class="k">while</span><span class="o">(!</span><span class="n">isPrime</span><span class="o">(</span><span class="n">P</span><span class="o">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">testFerma</span><span class="o">(</span><span class="n">P</span><span class="o">,</span><span class="mi">100</span><span class="o">));</span>
+
+      <span class="k">do</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">Q</span> <span class="o">=</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">MAX_VALUE</span><span class="o">-</span><span class="mi">3</span><span class="o">)+</span><span class="mi">2</span><span class="o">;</span>
+      <span class="o">}</span> <span class="k">while</span><span class="o">(!</span><span class="n">isPrime</span><span class="o">(</span><span class="n">Q</span><span class="o">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">testFerma</span><span class="o">(</span><span class="n">Q</span><span class="o">,</span><span class="mi">100</span><span class="o">));</span>
+
+      <span class="k">this</span><span class="o">.</span><span class="na">N</span> <span class="o">=</span> <span class="n">P</span> <span class="o">*</span> <span class="n">Q</span><span class="o">;</span>
+      <span class="k">this</span><span class="o">.</span><span class="na">phi</span> <span class="o">=</span> <span class="o">(</span><span class="n">P</span><span class="o">-</span><span class="mi">1</span><span class="o">)*(</span><span class="n">Q</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+      <span class="kt">long</span><span class="o">[]</span> <span class="n">EuclidResult</span><span class="o">;</span>
+      <span class="k">do</span> <span class="o">{</span>
+          <span class="k">do</span> <span class="o">{</span>
+              <span class="k">this</span><span class="o">.</span><span class="na">D</span> <span class="o">=</span> <span class="n">srand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">((</span><span class="kt">int</span><span class="o">)</span><span class="n">phi</span><span class="o">-</span><span class="mi">3</span><span class="o">)+</span><span class="mi">2</span><span class="o">;</span>
+              <span class="n">EuclidResult</span> <span class="o">=</span>  <span class="n">Euclid</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="n">D</span><span class="o">,</span> <span class="n">phi</span><span class="o">);</span>
+          <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">EuclidResult</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">);</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">C</span> <span class="o">=</span> <span class="n">EuclidResult</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="n">phi</span><span class="o">;</span>
+      <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">D</span><span class="o">*</span><span class="n">C</span><span class="o">%(</span><span class="n">phi</span><span class="o">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">sendMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">path</span><span class="o">,</span> <span class="kt">long</span> <span class="n">D</span><span class="o">,</span> <span class="kt">long</span> <span class="n">N</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+      <span class="kt">byte</span><span class="o">[]</span> <span class="n">byteArray</span> <span class="o">=</span> <span class="n">getFileBytes</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
+
+      <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">E</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+      <span class="k">for</span> <span class="o">(</span><span class="kt">byte</span> <span class="n">b</span> <span class="o">:</span> <span class="n">byteArray</span><span class="o">)</span> <span class="o">{</span>
+          <span class="n">E</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">powMod</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">D</span><span class="o">,</span> <span class="n">N</span><span class="o">));</span>
+      <span class="o">}</span>
+      <span class="k">return</span> <span class="n">E</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">receiveMessage</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">E</span><span class="o">,</span> <span class="n">String</span> <span class="n">path</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+      <span class="kt">byte</span> <span class="o">[]</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">E</span><span class="o">.</span><span class="na">size</span><span class="o">()];</span>
+
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">E</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+          <span class="n">result</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span> <span class="n">powMod</span><span class="o">.</span><span class="na">calculate</span><span class="o">(</span><span class="n">E</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">getC</span><span class="o">(),</span> <span class="n">getN</span><span class="o">());</span>
+      <span class="o">}</span>
+      <span class="n">getFileFromBytes</span><span class="o">(</span><span class="n">path</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getP</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">P</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getQ</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">Q</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getN</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">N</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getC</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">C</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getD</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">D</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getPhi</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">phi</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="id9">
 <h3>Шифр Вернама<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
