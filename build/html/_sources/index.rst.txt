@@ -14,7 +14,6 @@ Scrubi19_Docs
    Sibsutis/Ruby/ruby.rst
    Sibsutis/Databases/Databases.rst
 
-
 Контакты
 ------------------------------------
 

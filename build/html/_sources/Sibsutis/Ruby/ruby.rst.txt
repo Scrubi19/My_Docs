@@ -55,4 +55,22 @@ Ruby on Rails
   bundle install - установка gem-ов из Gemfile
   bundle exec rubocop - запуск rubocop
   bundle exec rspec - запуск тестов
+
+Начало
+~~~~~~~~~~~
+
+**Ruby on Rails** – это фреймворк для разработки веб-приложений, написанный
+на языке программирования Ruby
+
+.. code-block:: bash
+
+  rails new <name of project> # генерирует новый проект на rails
+  rails server # создает локальный сервер для страницы проэкта (http://localhost:3000/)
+
+  
+
+
+
+
+
   

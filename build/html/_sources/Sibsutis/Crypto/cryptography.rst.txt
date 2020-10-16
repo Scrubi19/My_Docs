@@ -945,6 +945,166 @@
   }
 
 
+Глава 3. Электронная, или цифровая подпись
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Прежде чем начать рассмотрение криптографической цифровой подписи, сформулируем три свойства, которым
+(в идеале) должна удовлетворять любая, в частности, обычная рукописная подпись:
+
+ * Подписать документ может только «законный» владелец подписи (и, следовательно, никто не может подделать подпись)
+
+ * Автор подписи не может от нее отказаться
+
+ * В случае возникновения спора возможно участие третьих лиц (например, суда) для установления подлинности подписи
+
+
+
+Подпись RSA
+""""""""""""""""""
+Если Абонент А планирует подписывать документы, то он должен вначале выбрать параметры RSA:
+
+.. math:: 
+  P, \ Q \  - \ два \ больших \ простых \ числа
+
+Далее вычислить:
+
+.. math:: 
+  N = P * Q \ \ и \ \ \phi = (P − 1)(Q − 1)
+
+
+Выбирает некоторое число :math:`D < \phi`, взаимно простое с :math:`\phi`, и по обобщенному алгоритму Эвклида находит число С, такое что
+
+.. math::
+
+  C*D \bmod \phi = 1
+  
+
+Далее эти параметры например, абонент помещает их на своем сайте, ассоциировав со своим именем, и хранит в секрете число С
+(остальные числа P , Q и φ можно забыть, они больше не потребуются). Теперь А готов ставить свои подписи на документах или сообщениях
+
+
+Пусть абонент А хочет подписать сообщение :math:`m̄ = m 1 , . . . , m_n`. Тогда вначале она вычисляет хеш-функцию:
+
+.. math:: 
+
+  y = h(m_1 , . . . , m_n )
+
+
+**Практически невозможно изменить основной текст** :math:`m̄ = m 1 , . . . , m_n` , не изменив y. Поэтому на следующем шаге Алисе достаточно снабдить
+подписью только число y , и эта подпись будет относиться ко всему сообщению m̄
+
+Абонент А вычисляет число:
+
+.. math:: 
+
+  s = y^{C_A} \bmod N_A
+
+Число s это и есть цифровая подпись. Она просто добавляется к сообщению m̄, и тем самым Абонент А имеет сформированное подписанное сообщение:
+
+.. math:: 
+  
+  < m̄ , s > 
+
+Теперь каждый, кто знает открытые параметры А, ассоциированные с его именем, т.е. числа N и d , может проверить подлинность его подписи. Для этого необходимо, взяв подписанное сообщени, вычислить значение хеш-функции h( m̄), число:
+
+.. math:: 
+
+  w = s^{D_A} \bmod N_A
+
+Если подпись подлинна, то :math:`w = s^{D_A} \bmod N_A = h(m̄)`
+
+Доказательство:
+
+.. math:: 
+
+  w = s^{D} \bmod N = y^{CD} \bmod N = y = h(m̄)
+
+
+Листинг программы:
+
+.. code-block:: java
+
+  public class RSAsign {
+    private long C;
+    private long D;
+    private long N;
+
+    public RSAsign() {
+        RSA rsa = new RSA();
+        C = rsa.getC();
+        D = rsa.getD();
+        N = rsa.getN();
+    }
+
+    public List<Long> signFileMD5(String pathFile) throws IOException, NoSuchAlgorithmException {
+        byte[] byteArray = FileManipulation.getFileBytes(pathFile);
+
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] y = md.digest(byteArray);
+        List<Long> S = new ArrayList<>();
+
+        for (byte b : y) {
+            S.add(powMod.calculate(b, C, N));
+        }
+        writeToFile(S);
+        return S;
+    }
+
+    public void checkSign(String pathFile, List<Long> S, long D, long N) throws IOException, NoSuchAlgorithmException, SignatureException {
+        byte[] byteArray = FileManipulation.getFileBytes(pathFile);
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] y = md.digest(byteArray);
+        List<Long> Y = new ArrayList<>();
+
+        for (byte b : y) {
+            Y.add((long)b);
+        }
+        List<Long> w = new ArrayList<>();
+        for (int i = 0; i < S.size(); i++) {
+            w.add(powMod.calculate(S.get(i), D, N));
+  //            System.out.println(" w ="+w.get(i)+" Y = "+Y.get(i));
+            if (w.get(i).compareTo(Y.get(i)) != 0) {
+                throw new SignatureException("digital signature is invalid");
+            }
+        }
+    }
+    public void writeToFile(List<Long> S) {
+        String path = "files/keys/RSA_signature.txt";
+        try(FileWriter writer = new FileWriter(path, false))
+        {
+            for (Long signature : S) {
+                writer.write(Math.toIntExact(signature));
+            }
+            writer.flush();
+        } catch(IOException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public long getC() {
+        return C;
+    }
+
+    public long getD() {
+        return D;
+    }
+
+    public long getN() {
+        return N;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 Используемая литература
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 `Б.Я. Рябко, А.Н. Фионов. "Криптографические методы защиты информации" <ryabko_fionov_kriptograficheskie_metody_zashchity_i.pdf>`_

@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="ru" >
+<html class="writer-html5" lang="ru" >
 <head>
   <meta charset="utf-8">
   
@@ -27,12 +27,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script type="text/javascript" src="../../_static/translations.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/translations.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -111,13 +111,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id7">Шифр Шамира</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id8">Шифр Эль Гамаля</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#rsa">Шифр RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id9">Шифр Вернама</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id9">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id10">Метод «шаг младенца, шаг великана»</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id10">Глава 2. Методы взлома шифров, основанных на дискретном логарифмировании</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id11">Метод «шаг младенца, шаг великана»</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id11">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id12">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -158,13 +159,19 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Databases/Databases.html">Базы данных</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id2">Реляционные базы данных</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id3">Реляционная алгебра</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id2">Реляционные базы данных. Операции в реляционной алгебре</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id3">Выборка</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id4">Проекция</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id5">Соединение и естественное соединение</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id6">Объединение</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id7">Пересечение</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id8">Удаление</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id9">Декартово произведение</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#sql-structed-query-language">SQL(Structed Query Language)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id4">Нереляционные базы данных</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id5">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id10">Нереляционные базы данных</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id11">Используемая литература</a></li>
 </ul>
 </li>
 </ul>
@@ -237,7 +244,7 @@
 <div class="section" id="id1">
 <h2>Установка LLVM<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h2>
 <ul class="simple">
-<li>Склонировать репозиторий с LLVM:</li>
+<li><p>Склонировать репозиторий с LLVM:</p></li>
 </ul>
 <blockquote>
 <div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">llvm</span><span class="o">/</span><span class="n">llvm</span><span class="o">-</span><span class="n">project</span><span class="o">.</span><span class="n">git</span>
@@ -245,7 +252,7 @@
 </div>
 </div></blockquote>
 <ul class="simple">
-<li>Конфигурирование сборочных файлов:</li>
+<li><p>Конфигурирование сборочных файлов:</p></li>
 </ul>
 <blockquote>
 <div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">llvm</span><span class="o">-</span><span class="n">project</span>
@@ -274,7 +281,7 @@
 </div></blockquote>
 </div></blockquote>
 <ul class="simple">
-<li>Запуск сборки:</li>
+<li><p>Запуск сборки:</p></li>
 </ul>
 <blockquote>
 <div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">--</span><span class="n">build</span> <span class="o">.</span>
@@ -285,12 +292,12 @@
 <p>Примечания:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>Собирать на каком-либо теге</li>
-<li>Можно выкачивать не весь репозиторий, см. опцию - -depth в гите</li>
-<li>При сборке нужно включить проект clang в -DLLVM_ENABLE_PROJECTS</li>
-<li>Собирать Debug версию (по умолчанию)</li>
-<li>Для сборки мне понадоби лось 8 GB Ram + 50 GB файлов подкачки + 70 GB свободного места</li>
-<li>Требуется cmake &gt;= 3.13.4, python &gt;= 2.7, gcc &gt;= 5.1.0, ninja-build</li>
+<li><p>Собирать на каком-либо теге</p></li>
+<li><p>Можно выкачивать не весь репозиторий, см. опцию - -depth в гите</p></li>
+<li><p>При сборке нужно включить проект clang в -DLLVM_ENABLE_PROJECTS</p></li>
+<li><p>Собирать Debug версию (по умолчанию)</p></li>
+<li><p>Для сборки мне понадоби лось 8 GB Ram + 50 GB файлов подкачки + 70 GB свободного места</p></li>
+<li><p>Требуется cmake &gt;= 3.13.4, python &gt;= 2.7, gcc &gt;= 5.1.0, ninja-build</p></li>
 </ol>
 </div></blockquote>
 </div>
@@ -309,9 +316,9 @@
 <p>Части инфраструктуры:</p>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Анализатор исходного кода (frontend «clang»):</strong> Компилятор, выполняющий этап трансляции программ на языках C, C++,.. в промежуточное представление LLVM IR. Включает лексический, синтаксический и семантический анализаторы, а также генератор кода LLVM IR</li>
-<li><strong>Промежуточное представление (IR):</strong> Промежуточное представление LLVM IR имеет две формы: удобночитаемую текстовую форму и двоичную</li>
-<li><strong>Генератор выполняемого кода (backend «asm, JIT»):</strong> Компилятор, преобразующий промежуточное представление LLVM IR программы в конкретный код на языке ассемблера для заданной архитектуры или в двоичный объектный код.</li>
+<li><p><strong>Анализатор исходного кода (frontend «clang»):</strong> Компилятор, выполняющий этап трансляции программ на языках C, C++,.. в промежуточное представление LLVM IR. Включает лексический, синтаксический и семантический анализаторы, а также генератор кода LLVM IR</p></li>
+<li><p><strong>Промежуточное представление (IR):</strong> Промежуточное представление LLVM IR имеет две формы: удобночитаемую текстовую форму и двоичную</p></li>
+<li><p><strong>Генератор выполняемого кода (backend «asm, JIT»):</strong> Компилятор, преобразующий промежуточное представление LLVM IR программы в конкретный код на языке ассемблера для заданной архитектуры или в двоичный объектный код.</p></li>
 </ul>
 </div></blockquote>
 <div class="figure align-center">
@@ -320,8 +327,8 @@
 <p>Все компоненты компилятора взаимодействуют друг с другом 2-мя способами:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><strong>Через структуры в памяти:</strong> Clang использует каждый компонент LLVM как библиотеку и опирается на структуру данных в памяти</li>
-<li><strong>Через файлы:</strong> Пользователь запускает отдельные инструменты и использует их выходные файлы как входные файлы для последующих инструментов</li>
+<li><p><strong>Через структуры в памяти:</strong> Clang использует каждый компонент LLVM как библиотеку и опирается на структуру данных в памяти</p></li>
+<li><p><strong>Через файлы:</strong> Пользователь запускает отдельные инструменты и использует их выходные файлы как входные файлы для последующих инструментов</p></li>
 </ol>
 </div></blockquote>
 </div>
@@ -338,7 +345,7 @@ Thread model: posix
 </pre></div>
 </div>
 <ul class="simple">
-<li>clang -cc1 реализует весь цикл компиляции</li>
+<li><p>clang -cc1 реализует весь цикл компиляции</p></li>
 </ul>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="../../_images/clang.png"><img alt="../../_images/clang.png" src="../../_images/clang.png" style="width: 600px;" /></a>
@@ -349,13 +356,13 @@ Thread model: posix
 <p>Тот же самый процесс компиляции, можно выполнить с использованием автономных инструментов LLVM, передавая вывод одного инструмента на ввод другого. Скорость компиляции уменьшится, но появляется возможность тонкой настройки параметров промежуточных инструментов:</p>
 <blockquote>
 <div><ul class="simple">
-<li><strong>opt:</strong> выполняет оптимизацию программы на уровне промежуточного представления IR. На входе файл с биткодом, на выходе файл того же типа</li>
-<li><strong>llc:</strong> выполняет преобразование биткода в исходный текст на языке ассемблера для данной архитектуры. Принимает аргументы, опредеяющие уровень оптимизации</li>
-<li><strong>llvm-mc:</strong> выполняет трансляцию ассемблерного кода и может создавать объектные файлы (ELF, Mach, PE). Может также дизассемблировать файлы, приводя ассемблерный код во внутренние конструкции LLVM</li>
-<li><strong>lli:</strong> реализует интепретатор и JIT компилятор для IR</li>
-<li><em>llvm-link:</em> выполняет компоновку нескольких файлов с биткодом в один большой файл с биткодом LLVM</li>
-<li><strong>llvm-as:</strong> преобразует файлы с промежуточными представлением IR в текстовом виде (сборки LLVM), в файлы с биткодом LLVM</li>
-<li><strong>llvm-dis:</strong> декодирует биткод LLVM в сборки LLVM</li>
+<li><p><strong>opt:</strong> выполняет оптимизацию программы на уровне промежуточного представления IR. На входе файл с биткодом, на выходе файл того же типа</p></li>
+<li><p><strong>llc:</strong> выполняет преобразование биткода в исходный текст на языке ассемблера для данной архитектуры. Принимает аргументы, опредеяющие уровень оптимизации</p></li>
+<li><p><strong>llvm-mc:</strong> выполняет трансляцию ассемблерного кода и может создавать объектные файлы (ELF, Mach, PE). Может также дизассемблировать файлы, приводя ассемблерный код во внутренние конструкции LLVM</p></li>
+<li><p><strong>lli:</strong> реализует интепретатор и JIT компилятор для IR</p></li>
+<li><p><em>llvm-link:</em> выполняет компоновку нескольких файлов с биткодом в один большой файл с биткодом LLVM</p></li>
+<li><p><strong>llvm-as:</strong> преобразует файлы с промежуточными представлением IR в текстовом виде (сборки LLVM), в файлы с биткодом LLVM</p></li>
+<li><p><strong>llvm-dis:</strong> декодирует биткод LLVM в сборки LLVM</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -434,8 +441,8 @@ def err_invalid_short_spec: Error&lt;”’short %0’ is invalid”&gt;<span cl
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Примечание</p>
-<p class="last">Цель TableGen - помочь человеку разрабатывать и поддерживать
+<p class="admonition-title">Примечание</p>
+<p>Цель TableGen - помочь человеку разрабатывать и поддерживать
 записи информации о предметной области. Поскольку таких
 записей может быть большое количество, он специально
 разработан, чтобы позволить писать гибкие описания и
@@ -455,9 +462,9 @@ TableGen», зависящий от домена. В настоящее врем
 <p>Подобно названию LLVM, имеющему несколько значений, название Clang также может использоваться в трех разных смыслах:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>Анализатор исходного кода</li>
-<li>Драйвер компилятора</li>
-<li>Фактический компилятор (clang -cc1)</li>
+<li><p>Анализатор исходного кода</p></li>
+<li><p>Драйвер компилятора</p></li>
+<li><p>Фактический компилятор (clang -cc1)</p></li>
 </ol>
 </div></blockquote>
 <p>Инструмент clang -cc1 имеет специальный параметр для вывода абстрактного синтаксического дерева (AST)</p>
@@ -469,14 +476,14 @@ clang -сс1 -ast-dump hello.c
 <p>Библиотеки libclang:</p>
 <blockquote>
 <div><ul class="simple">
-<li><strong>linclangLex</strong>: используется для предварительной обработки и лексического анализа</li>
-<li><strong>libclangAST</strong>: содержит функции для построения и управления абстрактных синтаксических деревьев</li>
-<li><strong>libclangParse</strong>: используется для парсинга результатов фазы лексического анализа</li>
-<li><strong>libclangSema</strong>: используется для семантического анализа</li>
-<li><strong>libclangCodeGen</strong>: генерирует код промежуточного представления LLVM IR с использованием информации о целевой архитектуре</li>
-<li><strong>libclangAnalysis</strong>: содержит ресурсы для статического анализа</li>
-<li><strong>libclangRewrite</strong>: содержит инфраструктуру для реализации инструментов рефакторинга кода</li>
-<li><strong>libclangBasic</strong>: содержит множество утилит - абстракции управлния памятью, поиск источников данных и диагностика</li>
+<li><p><strong>linclangLex</strong>: используется для предварительной обработки и лексического анализа</p></li>
+<li><p><strong>libclangAST</strong>: содержит функции для построения и управления абстрактных синтаксических деревьев</p></li>
+<li><p><strong>libclangParse</strong>: используется для парсинга результатов фазы лексического анализа</p></li>
+<li><p><strong>libclangSema</strong>: используется для семантического анализа</p></li>
+<li><p><strong>libclangCodeGen</strong>: генерирует код промежуточного представления LLVM IR с использованием информации о целевой архитектуре</p></li>
+<li><p><strong>libclangAnalysis</strong>: содержит ресурсы для статического анализа</p></li>
+<li><p><strong>libclangRewrite</strong>: содержит инфраструктуру для реализации инструментов рефакторинга кода</p></li>
+<li><p><strong>libclangBasic</strong>: содержит множество утилит - абстракции управлния памятью, поиск источников данных и диагностика</p></li>
 </ul>
 </div></blockquote>
 <div class="section" id="id11">
@@ -501,13 +508,13 @@ clang -сс1 -ast-dump hello.c
 <p>Инструменты на базе libTooling:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Clang Tidy</li>
-<li>Clang Modernizer</li>
-<li>Clang Apply Replacements</li>
-<li>ClangFormat</li>
-<li>Modularize</li>
-<li>PPTrace</li>
-<li>Clang Query</li>
+<li><p>Clang Tidy</p></li>
+<li><p>Clang Modernizer</p></li>
+<li><p>Clang Apply Replacements</p></li>
+<li><p>ClangFormat</p></li>
+<li><p>Modularize</p></li>
+<li><p>PPTrace</p></li>
+<li><p>Clang Query</p></li>
 </ul>
 </div></blockquote>
 <div class="section" id="clang-tidy">
@@ -516,9 +523,9 @@ clang -сс1 -ast-dump hello.c
 стандартов оформления в том числе. Инструмент просматривает дерево AST и действует намного быстрее. В отличие от средств проверки в составе статического анализатора Clang, проверки написанные для clang-tidy, обычно нацелены на определения соответствия или несоответствия определенным соглашениям по оформлению исходного кода:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Переносимость кода между разными компиляторами;</li>
-<li>Следование определенным идиомам;</li>
-<li>Возможность появления ошибок из-за злоупотребления опасными особенностями языка</li>
+<li><p>Переносимость кода между разными компиляторами;</p></li>
+<li><p>Следование определенным идиомам;</p></li>
+<li><p>Возможность появления ошибок из-за злоупотребления опасными особенностями языка</p></li>
 </ul>
 </div></blockquote>
 <p>Проверка исходного кода с помощью Clang-tidy:</p>
@@ -534,8 +541,8 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS<span class="o">=</span>ON ../llvm
 </pre></div>
 </div>
 <div class="admonition tip">
-<p class="first admonition-title">Совет</p>
-<p class="last">Если вы столкнетесь с ошибкой, сообщающей о неизвестном исходном файле и          ссылающейся на файл с реализацией нашего средства проверки, созданный в прерыдущей главе, просто добавьте имя этого файла в <em>CMakeLists.txt</em>. Для этого выполните следующую команду и запустите CMake еще раз</p>
+<p class="admonition-title">Совет</p>
+<p>Если вы столкнетесь с ошибкой, сообщающей о неизвестном исходном файле и          ссылающейся на файл с реализацией нашего средства проверки, созданный в прерыдущей главе, просто добавьте имя этого файла в <em>CMakeLists.txt</em>. Для этого выполните следующую команду и запустите CMake еще раз</p>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim ../llvm/tools/clang/lib/StaticAnalyzer/Checkers/CMakeLists.txt
 </pre></div>
@@ -574,12 +581,12 @@ int main<span class="o">()</span> <span class="o">{</span>
 <p><strong>Clang Modernizer</strong> = это революционный инструмент, цель которого помочь польщователям адаптировать старый код на С++ под новейшие стандарты:</p>
 <blockquote>
 <div><ul class="simple">
-<li><strong>преобразование циклов:</strong> циклы в старом С for (;;), преобразуются в более новые циклы вида: for (auto &amp;…:..)</li>
-<li><strong>преобразование пустых указателей:</strong> константы NULL и 0, используемые для представления пустых указателей, замещаются nullptr (C++11)</li>
-<li><strong>преобразование с добавлением ключевого слова auto:</strong> в некоторые объявляения включается ключевое слово <em>auto</em> для повышения читаемости кода</li>
-<li><strong>преобразование с добавлением ключевого слова override:</strong> добавляет в объявление методов, переопределяющих виртуальные методы родительских классов, спецификатор override</li>
-<li><strong>преобразование передачи аргументов по значению:</strong> передача константных ссылок замещается передачей по значени с выполнением операции копирования</li>
-<li><strong>преобразование с заменой auto_ptr:</strong> замещает старые автоматические указатели std::auto_ptr на std::unique_ptr</li>
+<li><p><strong>преобразование циклов:</strong> циклы в старом С for (;;), преобразуются в более новые циклы вида: for (auto &amp;…:..)</p></li>
+<li><p><strong>преобразование пустых указателей:</strong> константы NULL и 0, используемые для представления пустых указателей, замещаются nullptr (C++11)</p></li>
+<li><p><strong>преобразование с добавлением ключевого слова auto:</strong> в некоторые объявляения включается ключевое слово <em>auto</em> для повышения читаемости кода</p></li>
+<li><p><strong>преобразование с добавлением ключевого слова override:</strong> добавляет в объявление методов, переопределяющих виртуальные методы родительских классов, спецификатор override</p></li>
+<li><p><strong>преобразование передачи аргументов по значению:</strong> передача константных ссылок замещается передачей по значени с выполнением операции копирования</p></li>
+<li><p><strong>преобразование с заменой auto_ptr:</strong> замещает старые автоматические указатели std::auto_ptr на std::unique_ptr</p></li>
 </ul>
 </div></blockquote>
 <p>Пример по использованию clang-modernizer:</p>
@@ -592,7 +599,7 @@ int main<span class="o">()</span> <span class="o">{</span>
 <p>Данный интструмент отвечает за чтение файлов с поправками (Clang Modernize), отсеивает протиречивые и повторяющиеся поправки, и применяет их к файлам с исходными текстами.</p>
 <p>Пример запуска:</p>
 <ul class="simple">
-<li>Чтобы опробовать Clang Apply Replacements нам нужно сначало воспользоваться Clang Modernizer и сохранить его поправки в файл</li>
+<li><p>Чтобы опробовать Clang Apply Replacements нам нужно сначало воспользоваться Clang Modernizer и сохранить его поправки в файл</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
@@ -605,13 +612,13 @@ int main<span class="o">()</span> <span class="o">{</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li>Согласно руководству к Clang-Modernize, этот цикл можно безопасно преобразовать в цикл с помощью auto. Для этого следует выполнить:</li>
+<li><p>Согласно руководству к Clang-Modernize, этот цикл можно безопасно преобразовать в цикл с помощью auto. Для этого следует выполнить:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clang-modernize -loop-convert -serialize-replacements test.cpp --serialize-dir<span class="o">=</span>./
 </pre></div>
 </div>
 <ul class="simple">
-<li>Чтобы применить исправления, надо выполнить команду:</li>
+<li><p>Чтобы применить исправления, надо выполнить команду:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clang-apply-replacements
 </pre></div>
@@ -629,14 +636,14 @@ int main<span class="o">()</span> <span class="o">{</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li>Запускаем команду:</li>
+<li><p>Запускаем команду:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># clang-format -style=LLVM -dump-config &gt; .clang-format</span>
 clang-format --style-LLVM test.cpp
 </pre></div>
 </div>
 <ul class="simple">
-<li>Результат:</li>
+<li><p>Результат:</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
@@ -659,27 +666,27 @@ clang-format --style-LLVM test.cpp
 <p>Целью этого инструмента является оказание помощи в решении задачи внедрения модулей. Он анализирует множество заголовочных файлов и сообщает, если обнаруживает повторяющиеся определения переменных, макросов или определения макросов, которые могут приводить к разным результатам</p>
 <p>Пример запуска:</p>
 <ul class="simple">
-<li>Создадим файл list.txt:</li>
+<li><p>Создадим файл list.txt:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gamelogic.h
 screenlogic.h
 </pre></div>
 </div>
 <ul class="simple">
-<li>Теперь достаточно запустить modularize и передвать ему файл:</li>
+<li><p>Теперь достаточно запустить modularize и передвать ему файл:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>modularize list.txt
 </pre></div>
 </div>
 <ul class="simple">
-<li>Если изменить один из заголовочных файлов, включив в него символы из другого заголовочного файла, modularize сообщит, что проект опирается на небезопасное для модулей поведение, и что следует исправить проблему перед повторной попыткой создать файл module.modulemap</li>
+<li><p>Если изменить один из заголовочных файлов, включив в него символы из другого заголовочного файла, modularize сообщит, что проект опирается на небезопасное для модулей поведение, и что следует исправить проблему перед повторной попыткой создать файл module.modulemap</p></li>
 </ul>
 </div>
 <div class="section" id="module-map-checker">
 <h3>Module Map Checker<a class="headerlink" href="#module-map-checker" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Инструмент исследует файл module.modulemap, проверяя - охватывае ли он все заголовочные файлы в каталоге</p>
 <ul class="simple">
-<li>Пример запуска:</li>
+<li><p>Пример запуска:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module-map-checker module.modulemap
 </pre></div>
@@ -688,7 +695,8 @@ screenlogic.h
 <div class="section" id="pptrace">
 <h3>PPTrace<a class="headerlink" href="#pptrace" title="Ссылка на этот заголовок">¶</a></h3>
 <blockquote class="epigraph">
-<div>«Танцует в тесном контакте с лекическим аназизатором, чтобы обеспечивать эффективнуб предварительную обработку лексем»</div></blockquote>
+<div><p>«Танцует в тесном контакте с лекическим аназизатором, чтобы обеспечивать эффективнуб предварительную обработку лексем»</p>
+</div></blockquote>
 <p>Вывод трассировочной информации о работе препроцессора. Достигается это за счет реализации функций обратного вызова в интерфейсе clang::PPCallbacks</p>
 <p>Он начинает с регистрации самого себя в роли «наблюдателя» за препроцессором и затем запускает анализ файлов. Информация о всех действиях препроцессора, таких как интерпретация директивы #if, импортирование модуля, подключение заголовочного файла и многих других, выводится на экран</p>
 <p>Пример запуска:</p>
@@ -701,7 +709,7 @@ screenlogic.h
 <span class="cp">#else</span>
 <span class="cp">#define WORLD &quot;world&quot;</span>
 <span class="cp">#endif</span>
-<span class="k">extern</span> <span class="kt">int</span> <span class="nf">write</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="n">write</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span>
 <span class="kt">unsigned</span> <span class="kt">long</span><span class="p">);</span>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">write</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Hello, &quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
@@ -712,13 +720,13 @@ screenlogic.h
 </pre></div>
 </div>
 <ul class="simple">
-<li>Запускаем инструмент:</li>
+<li><p>Запускаем инструмент:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pp-trace hello.c
 </pre></div>
 </div>
 <ul class="simple">
-<li>В результате возникает серия событий препроцессора, касающихся определния макросов, еще до того, как начнется фактическая обработка исходного файла:</li>
+<li><p>В результате возникает серия событий препроцессора, касающихся определния макросов, еще до того, как начнется фактическая обработка исходного файла:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-Callback: <span class="k">if</span>
  Loc: <span class="s2">&quot;hello.c:1:2&quot;</span>
@@ -737,7 +745,7 @@ screenlogic.h
 </pre></div>
 </div>
 <ul class="simple">
-<li>После запука, инструмент выведет интерактивное приглашение к вводу, ожидая команд. Теперь можно вести команду match и имя предиката. Например, следующая команда требует от clang-query вывести все узлы типа CallExpr:</li>
+<li><p>После запука, инструмент выведет интерактивное приглашение к вводу, ожидая команд. Теперь можно вести команду match и имя предиката. Например, следующая команда требует от clang-query вывести все узлы типа CallExpr:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clang-query&gt; match callExpr<span class="o">()</span>
 
@@ -749,14 +757,13 @@ hello.c:12:5: note: <span class="s2">&quot;root&quot;</span> node binds here
 </div>
 <p>Cписок команд:</p>
 <ul class="simple">
-<li>help: выводит список доступных команд;</li>
-<li>match &lt;имя предиката&gt; или m &lt;имя предиката&gt;: выполняет обход дерева AST и выполняет поиск узлов, соответствующих указанному предикату;</li>
-<li><dl class="first docutils">
-<dt>set output &lt;(diag | print | dump)&gt;: определяет, как будет выводиться информация о найденных узлах</dt>
-<dd><ul class="first last">
-<li>Параметр diag (действует по умолчанию) обеспечивает вывод диагностических сообщений для найденных узлов.</li>
-<li>Параметр print обеспечивает простой вывод соответствующего фрагмента исходного кода.</li>
-<li>Параметр dump обеспечивает вызов метода dump(),который дополнительно выводит все дочерние узлы</li>
+<li><p>help: выводит список доступных команд;</p></li>
+<li><p>match &lt;имя предиката&gt; или m &lt;имя предиката&gt;: выполняет обход дерева AST и выполняет поиск узлов, соответствующих указанному предикату;</p></li>
+<li><dl class="simple">
+<dt>set output &lt;(diag | print | dump)&gt;: определяет, как будет выводиться информация о найденных узлах</dt><dd><ul>
+<li><p>Параметр diag (действует по умолчанию) обеспечивает вывод диагностических сообщений для найденных узлов.</p></li>
+<li><p>Параметр print обеспечивает простой вывод соответствующего фрагмента исходного кода.</p></li>
+<li><p>Параметр dump обеспечивает вызов метода dump(),который дополнительно выводит все дочерние узлы</p></li>
 </ul>
 </dd>
 </dl>
@@ -776,8 +783,8 @@ hello.c:12:5: note: <span class="s2">&quot;root&quot;</span> node binds here
 <p>Инструмент <em>remove-cstr-calls</em>  - это просто пример инструмента преобразование исходных текстов, то есть, инструмента рефакторинга. Он ищет избыточные вызовы метода c_str() обьектов str::string и удаляет их.</p>
 <p>Такие вызовы считаются избыточными когда:</p>
 <ul class="simple">
-<li>когда новый объект string создается с вызовом метода c_str() другого объекта string. Например <strong>std::string(myString.c_str())</strong>. Эту операцию можно упростить за счет использования конструктора копии: <strong>std::string(myString)</strong></li>
-<li>когда на основе объектов string создаются новые экземпляры классов LLVM StringRef и Twine. В этих случаях предпочтительнее использовать сам обьект string, а не результат вызова c_str(), то есть: <strong>StringRef(myString)</strong> вместо <strong>StringRef(myString).c_str()</strong></li>
+<li><p>когда новый объект string создается с вызовом метода c_str() другого объекта string. Например <strong>std::string(myString.c_str())</strong>. Эту операцию можно упростить за счет использования конструктора копии: <strong>std::string(myString)</strong></p></li>
+<li><p>когда на основе объектов string создаются новые экземпляры классов LLVM StringRef и Twine. В этих случаях предпочтительнее использовать сам обьект string, а не результат вызова c_str(), то есть: <strong>StringRef(myString)</strong> вместо <strong>StringRef(myString).c_str()</strong></p></li>
 </ul>
 </div>
 </div>
@@ -785,14 +792,14 @@ hello.c:12:5: note: <span class="s2">&quot;root&quot;</span> node binds here
 <h2>Создание собственного инструмента<a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Проект Clang предоставляет 3 интерфейса для доступа к функциональным возможностям Clang:</p>
 <ul class="simple">
-<li><strong>libclang:</strong> является основным интерфейсом к механизмам Clang. Поддерживает обратную совместимость, обеспечивая работоспособность существующего ПО после выхода новой версии <em>libclang</em></li>
-<li><strong>Clang Plugins:</strong> позволяет добавлять свои проходы непосредственно в процедуру компиляции</li>
-<li><strong>LibTooling</strong> позволяет создавать самостоятельные инструменты, предназначенные для выполнения рефакторинга кода или проверки синтаксиса. В отличии от libclang менее надежен с точки зрения поддержки обратной совместимости, но зато дает полный доступ к структуре дерева AST</li>
+<li><p><strong>libclang:</strong> является основным интерфейсом к механизмам Clang. Поддерживает обратную совместимость, обеспечивая работоспособность существующего ПО после выхода новой версии <em>libclang</em></p></li>
+<li><p><strong>Clang Plugins:</strong> позволяет добавлять свои проходы непосредственно в процедуру компиляции</p></li>
+<li><p><strong>LibTooling</strong> позволяет создавать самостоятельные инструменты, предназначенные для выполнения рефакторинга кода или проверки синтаксиса. В отличии от libclang менее надежен с точки зрения поддержки обратной совместимости, но зато дает полный доступ к структуре дерева AST</p></li>
 </ul>
 <p>Пример создание инструмента:</p>
 <ol class="arabic simple">
-<li>Найдите каталог <em>llvm-project/clang-tools-extra/</em>. Там лежит <em>tool-template</em>. В нём Cmake и код. Для написания собственного инструмента достаточно написать код на cpp и изменить имя в Cmake. Tool должен лежать тоже в этом каталоге</li>
-<li>Назовем наш инструмент <em>cxxgrep</em>, он будет способен различать конструкции языка <em>C++</em>. Пример опций:</li>
+<li><p>Найдите каталог <em>llvm-project/clang-tools-extra/</em>. Там лежит <em>tool-template</em>. В нём Cmake и код. Для написания собственного инструмента достаточно написать код на cpp и изменить имя в Cmake. Tool должен лежать тоже в этом каталоге</p></li>
+<li><p>Назовем наш инструмент <em>cxxgrep</em>, он будет способен различать конструкции языка <em>C++</em>. Пример опций:</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-function  <span class="c1"># Filter by functions</span>
 -i         <span class="c1"># Make the search case-insensitive</span>
