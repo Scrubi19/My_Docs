@@ -119,10 +119,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#id12">Глава 3. Электронная, или цифровая подпись</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id13">Подпись RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">Электронная подпись RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">Электронная подпись на базе шифра Эль-Гамаля</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">Стандарты на электронную (цифровую) подпись</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id14">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id16">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Compilers/llvm.html">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -154,8 +156,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#c-str">Удаление вызовов c_str() «Самый маленький инструмент для рефакторинга»</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id12">Создание собственного инструмента</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id13">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#libclang">Создание собственного инструмента (libclang)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#llvm-ir">LLVM IR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#ll">Содержание .ll файла</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id12">Определение функций в .ll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id13">Атрибуты</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id14">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
@@ -924,8 +932,8 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 <div class="section" id="id9">
 <h3>Шифр Вернама<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Этот шифр был предложен в 1926 году американским инженером Вернамом (Gilbert Vernam) и использовался на практике, но доказательство его невскрываемости было получено значительно позже Шенноном. Простейший шифр на основе бинарной логики (а именно операции XOR), который обладает абсолютной криптографической стойкостью. Без знания ключа, расшифровать его невозможно Для шифра Вернама часто используется название «одноразовая лента» (one-time pad). Мы опишем этот шифр для случая двоичного алфавита, чтобы упростить обозначения. Пусть множество сообщений M состоит из слов двоичного алфавита длины n , т.е. всего сообщений не более, чем 2 n.</p>
-<table class="docutils align-default" id="id16">
-<caption><span class="caption-text">Таблица истинности XOR</span><a class="headerlink" href="#id16" title="Постоянная ссылка на таблицу">¶</a></caption>
+<table class="docutils align-default" id="id18">
+<caption><span class="caption-text">Таблица истинности XOR</span><a class="headerlink" href="#id18" title="Постоянная ссылка на таблицу">¶</a></caption>
 <colgroup>
 <col style="width: 24%" />
 <col style="width: 29%" />
@@ -1072,7 +1080,7 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 </ul>
 </div></blockquote>
 <div class="section" id="id13">
-<h3>Подпись RSA<a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
+<h3>Электронная подпись RSA<a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Если Абонент А планирует подписывать документы, то он должен вначале выбрать параметры RSA:</p>
 <div class="math notranslate nohighlight">
 \[P, \ Q \  - \ два \ больших \ простых \ числа\]</div>
@@ -1175,9 +1183,34 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 </pre></div>
 </div>
 </div>
-</div>
 <div class="section" id="id14">
-<h2>Используемая литература<a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h2>
+<h3>Электронная подпись на базе шифра Эль-Гамаля<a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Пусть, как и выше, Алиса собирается подписывать документы. Алиса выбирает большое простое число P и число G , такие, что различные степени G суть различные числа по модулю P (см. Диффи-Хэлмана). Эти числа передаются или хранятся в открытом виде и могут быть общими для целой группы пользователей. Алиса выбирает <strong>секретный ключ X</strong>, <span class="math notranslate nohighlight">\(1 &lt; X &lt; p − 1\)</span> . Затем она вычисляет <strong>открытый ключ Y:</strong></p>
+<div class="math notranslate nohighlight">
+\[Y = G^{X} \bmod p\]</div>
+<p>Теперь Алиса может подписывать сообщения. Вначале Алиса вычисляет значение хэш-функции <span class="math notranslate nohighlight">\(h = h(m̄)\)</span>, которое должно удовлетворять равенству <span class="math notranslate nohighlight">\(1 &lt; h &lt; p\)</span>. Затем Алиса выбирает случайно число <span class="math notranslate nohighlight">\(k \ ( 1 &lt; k &lt; p−1 )\)</span> , взаимно простое с <span class="math notranslate nohighlight">\(p−1\)</span>, и вычисляет число</p>
+<div class="math notranslate nohighlight">
+\[r = G^{k} \bmod p\]</div>
+<p>Далее Алиса вычисляет число</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}u = (h -Xr) \bmod (p-1) \\
+s = k^{-1} u \bmod (p-1)\end{split}\]</div>
+<p>Под <span class="math notranslate nohighlight">\(k^{-1}\)</span> подразумевается число, такое что</p>
+<div class="math notranslate nohighlight">
+\[k^{-1}*k \bmod (p-1) = 1\]</div>
+<p>Такое <span class="math notranslate nohighlight">\(k^{-1}\)</span> существует, так как k и <span class="math notranslate nohighlight">\(p − 1\)</span> взаимно просты, и может быть найдено по обобщенному алгоритму Евклида. Наконец, Алиса формирует подписанное сообщение</p>
+<div class="math notranslate nohighlight">
+\[&lt;m̄; r, s&gt;\]</div>
+<p>Получатель подписанного сообщения , прежде всего, заново вычисляет значение хеш-функции <span class="math notranslate nohighlight">\(h = h(m̄)\)</span>. Затем он проверяет подпись, используя равенство</p>
+<div class="math notranslate nohighlight">
+\[Y^{r}r^{s} = G^{h} \bmod p\]</div>
+</div>
+<div class="section" id="id15">
+<h3>Стандарты на электронную (цифровую) подпись<a class="headerlink" href="#id15" title="Ссылка на этот заголовок">¶</a></h3>
+</div>
+</div>
+<div class="section" id="id16">
+<h2>Используемая литература<a class="headerlink" href="#id16" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="ryabko_fionov_kriptograficheskie_metody_zashchity_i.pdf">Б.Я. Рябко, А.Н. Фионов. «Криптографические методы защиты информации»</a></p>
 </div>
 </div>

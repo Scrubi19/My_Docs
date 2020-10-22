@@ -118,7 +118,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id11">Метод «шаг младенца, шаг великана»</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id12">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id12">Глава 3. Электронная, или цифровая подпись</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id13">Электронная подпись RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id14">Электронная подпись на базе шифра Эль-Гамаля</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id15">Стандарты на электронную (цифровую) подпись</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id16">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -150,12 +156,19 @@
 <li class="toctree-l3"><a class="reference internal" href="#c-str">Удаление вызовов c_str() «Самый маленький инструмент для рефакторинга»</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id12">Создание собственного инструмента</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id13">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#libclang">Создание собственного инструмента (libclang)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#llvm-ir">LLVM IR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ll">Содержание .ll файла</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">Определение функций в .ll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">Атрибуты</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Ruby/ruby.html#ubuntu">Установка на Ubuntu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Ruby/ruby.html#id1">Начало</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Databases/Databases.html">Базы данных</a><ul>
@@ -788,8 +801,8 @@ hello.c:12:5: note: <span class="s2">&quot;root&quot;</span> node binds here
 </ul>
 </div>
 </div>
-<div class="section" id="id12">
-<h2>Создание собственного инструмента<a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="libclang">
+<h2>Создание собственного инструмента (libclang)<a class="headerlink" href="#libclang" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Проект Clang предоставляет 3 интерфейса для доступа к функциональным возможностям Clang:</p>
 <ul class="simple">
 <li><p><strong>libclang:</strong> является основным интерфейсом к механизмам Clang. Поддерживает обратную совместимость, обеспечивая работоспособность существующего ПО после выхода новой версии <em>libclang</em></p></li>
@@ -810,8 +823,127 @@ hello.c:12:5: note: <span class="s2">&quot;root&quot;</span> node binds here
 </pre></div>
 </div>
 </div>
+<div class="section" id="llvm-ir">
+<h2>LLVM IR<a class="headerlink" href="#llvm-ir" title="Ссылка на этот заголовок">¶</a></h2>
+<p><strong>LLVM IR</strong> - промежуточное представление, магистраль связываюшая анализаторы исходного кода и генераторы выполняемого кода, которая позволяет LLVM анализировать програму на разных языках программирования и генерировать код для разных целевых архитектур</p>
+<dl class="simple">
+<dt><strong>SSA (Single Static Assignments)</strong></dt><dd><ul class="simple">
+<li><p>трехадресные инструкции</p></li>
+<li><p>бесконечное множество регистров</p></li>
+</ul>
+</dd>
+</dl>
+<p>Имея общее промежуточное представление, можно реализовать комплекс оптимизаций, независимо от поддерживаемых архитектур, но это требует поднять уровень IR</p>
+<p>Промежуточное представление IR имеет три эквивалентные формы:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>представление в памяти (класс <em>Instruction</em>)</p></li>
+<li><p>представление на диске в файле <strong>биткода</strong></p></li>
+<li><p>представление на диске в удобочитаемом <strong>текстовом формате</strong></p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clang name.c -emit-llvm -c -o name.bc <span class="c1">#Генерация биткода файла</span>
+
+clang name.c -emit-llvm -S -c -o name.ll <span class="c1">#Генерация читаемого представления LLVM IR</span>
+
+llvm-as name.ll -o name.bc <span class="c1">#Сборку преобразовать в бит-код</span>
+
+llvm-dis name.bc -o name.ll <span class="c1">#бит-код в сборку</span>
+
+llvm-extract -func<span class="o">=</span>sum sum.bc -o sum-fn.bc <span class="c1">#Извлечь функцию sum из файла sum.bc</span>
+</pre></div>
+</div>
+<p>C/C++ имеют врожденную зависимость от платформы, при подключении заголовочных файлов, неявно подключаются файлы из каталога bits, который является собственным для каждой архитектуры. Если программа использует стандартные заголовочные файлы то уже на этапе AST мы зависим от архитектуры, что усложняет написание независимого IR</p>
+<div class="section" id="ll">
+<h3>Содержание .ll файла<a class="headerlink" href="#ll" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Модуль - это структура данных LLVM IR верхнего уровня. Каждый модуль содержит последовательность функций, каждая из которых состоит из группы базовых блоков, которые в свою очередь содержат последовательности инструкций. Модуль также включает глобальные переменные, определение формата данных, прототипы внешних функций объявление структур данных</p>
+<dl class="simple">
+<dt><strong>Модуль:</strong></dt><dd><ul class="simple">
+<li><p>Глобальные переменные/определение функций</p></li>
+<li><dl class="simple">
+<dt>Функции</dt><dd><ul>
+<li><dl class="simple">
+<dt>Базовые блоки</dt><dd><ul>
+<li><p>Инструкции</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Атрибуты</p></li>
+</ul>
+</dd>
+</dl>
+<p>Локальные значения LLVM являются аналогами регистров в языке ассемблера и могут иметь любые имена, начинающиеся с символа %. Инструкция складывает локальные значения %0 и %1, и сохраняет результат в %add</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%add <span class="o">=</span> add nsw i32 %0, %1
+</pre></div>
+</div>
+<p>Конструкция <em>target datalayout</em> содержит информацию о порядке следования байтов (endianness) и размерах типов для триады <em>target triple</em>, описывающей целевой хост. Некоторые виды оптимизации зависят от формата данных.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">;</span> <span class="nv">ModuleID</span> <span class="o">=</span> <span class="s1">&#39;test.cpp&#39;</span> <span class="c1"># Название модуля</span>
+<span class="nv">source_filename</span> <span class="o">=</span> <span class="s2">&quot;test.cpp&quot;</span> <span class="c1"># Путь к файлу</span>
+target <span class="nv">datalayout</span> <span class="o">=</span>
+<span class="s2">&quot;e-m:e-p:64:64:64-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128&quot;</span>
+target <span class="nv">triple</span> <span class="o">=</span> <span class="s2">&quot;x86_64-unknown-linux-gnu&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Целевой платформой является <strong>Linux</strong> на аппаратной платформе <strong>x86_64</strong>. Данные в памяти хранятся в формате little-endian (e). На архитектурах с big-endian первой будет следовать буева (E)</p></li>
+<li><p>Информация о типах имеет формат: <em>type: &lt;size&gt; : &lt;abi&gt; : &lt;preferred&gt;</em>. Определение <strong>p:64:64:64</strong> в предыдущем примере представляет указатель, имеющий размер 64 бита, <em>abi</em> указыват на минимально необходимое выравнивание для типа, <em>preferred</em> - наибольшее возможное выравнивание.</p></li>
+</ul>
+</div>
+<div class="section" id="id12">
+<h3>Определение функций в .ll<a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>define i32 @sum <span class="o">(</span>i32 %a, i32 %b<span class="o">)</span> <span class="o">{</span>
+</pre></div>
+</div>
+<p>Эта функция возвращает значения типа i32 и принимает два аргумента типа i32, %a и %b. <strong>Локальные идентификаторы всегда должны начинаться с символа %</strong>, а <strong>глобальные - с символа &#64;</strong></p>
+<dl class="simple">
+<dt>Наиболее важные типы данных:</dt><dd><ul class="simple">
+<li><p>целые числа произвольного размера в форме <em>iN</em> (i32, i64)</p></li>
+<li><p>вещественные числа, <em>float</em> 32-разрядные одинарной точности, <em>double</em> 64-разрядные двойной точности</p></li>
+<li><p>векторные типы, определения которых имеет вид: &lt;n_elements x elements_type&gt;. Тип соответсвующий вектору с четырьмя элементами типа i32 определяется как &lt;4 x i32&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</div>
 <div class="section" id="id13">
-<h2>Используемая литература<a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h2>
+<h3>Атрибуты<a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>attributes <span class="c1">#0 = { noinline nounwind optnone uwtable &quot;correctly-rounded-    divide-sqrt-fp-math&quot;=&quot;false&quot;</span>
+<span class="s2">&quot;disable-tail-calls&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;frame-pointer&quot;</span><span class="o">=</span><span class="s2">&quot;all&quot;</span> <span class="s2">&quot;less-precise-fpmad&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;min-legal-vector-width&quot;</span><span class="o">=</span><span class="s2">&quot;0&quot;</span>
+<span class="s2">&quot;no-infs-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;no-jump-tables&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;no-nans-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;no-signed-zeros-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span>
+<span class="s2">&quot;no-trapping-math&quot;</span><span class="o">=</span><span class="s2">&quot;true&quot;</span> <span class="s2">&quot;stack-protector-buffer-size&quot;</span><span class="o">=</span><span class="s2">&quot;8&quot;</span> <span class="s2">&quot;target-cpu&quot;</span><span class="o">=</span><span class="s2">&quot;x86-64&quot;</span>
+<span class="s2">&quot;target-features&quot;</span><span class="o">=</span><span class="s2">&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot;</span> <span class="s2">&quot;tune-cpu&quot;</span><span class="o">=</span><span class="s2">&quot;generic&quot;</span> <span class="s2">&quot;unsafe-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;use-soft-float&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="o">}</span>
+...
+</pre></div>
+</div>
+<p>Тег <em>#0</em> в определении функции отображается в множество атрибутов функции. Множество атрибутов определяется в конце файла</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>noinline - функция которая не встраивается</p></li>
+<li><p>nounwind - функции которые не порождают исключений</p></li>
+<li><p>uwtable - требование раскрутки циклов</p></li>
+<li><p>optnone - большинство проходов оптимизаций пропускают эту функцию</p></li>
+<li><p><a class="reference external" href="https://llvm.org/docs/LangRef.html">https://llvm.org/docs/LangRef.html</a> - можно помотреть множество аттрибутов</p></li>
+</ul>
+</div></blockquote>
+<p>Тело функции явно разделено на <strong>базовые блоки(Basic Blocks, BB)</strong> и каждый новый блок начинается с метки. Метка связана с базовым блоком, точно так же, как и идентификатор значения инструкции. Если метка опущена, ассемблер LLVM сгенерирует её, опираясь на собственные соглашения  об именовании
+Базовый блок - это последовательность инструкций с единственной точкой входа в первой инструкции и единственной точйно выхода в последней инструкции. То есть, когда код выполняет переход к метке, соответсвующей базовому блоку, можно быть уверенными, что будут выполнены все инструкции в этом блоке, от первой до последней, причем последняя инструкция направит поток выполнения к другому блоку. Базовые блоки и соответсвующие им метки должны соответствовать условиям:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>каждый базовый блок должен завершаться инструкцией, выполняющей переход к следующему базовому блоку или возврат из функции</p></li>
+<li><p>первый базовый блок, который еще называют блоком вхожа - играет особую роль в функциях LLVM и не должен использоваться как цель</p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id14">
+<h2>Используемая литература<a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="LLVMbook.pdf">LLVM. Инфраструктура для разработки компиляторов</a></p>
 </div>
 </div>
