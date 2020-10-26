@@ -1303,6 +1303,108 @@ s = k^{-1} u \bmod (p-1)\end{split}\]</div>
 </ul>
 </div></blockquote>
 <p>Если хотя бы одна из проверок на шагах 2 и 5 не дает нужного результата, то подпись считается недействительной. Если же все проверки удачны, то подпись считается подлинной</p>
+<p>Листинг программы:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DSA</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="n">P</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="n">Q</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="n">A</span><span class="p">;</span>
+
+    <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">x</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">y</span><span class="p">;</span>
+
+    <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">r</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">s</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">generateParameters</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">BigInteger</span> <span class="n">b</span><span class="p">,</span> <span class="n">temp_P</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="n">Q</span> <span class="o">=</span> <span class="n">getRandomBigInteger</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+            <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">Q</span><span class="p">.</span><span class="na">isProbablePrime</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="n">P</span> <span class="o">=</span> <span class="n">getRandomBigInteger</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">P</span><span class="p">.</span><span class="na">isProbablePrime</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+
+            <span class="n">b</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="na">subtract</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="mi">1</span><span class="p">)).</span><span class="na">divide</span><span class="p">(</span><span class="n">Q</span><span class="p">);</span>
+            <span class="n">temp_P</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">Q</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+        <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">temp_P</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">P</span><span class="p">));</span>
+
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">getRandomBigInteger</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">A</span><span class="p">.</span><span class="na">modPow</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="n">P</span><span class="p">).</span><span class="na">equals</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">ONE</span><span class="p">)</span> <span class="o">||</span> <span class="n">A</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">ONE</span><span class="p">));</span>
+<span class="c1">//        System.out.println(&quot;p = &quot;+b+&quot; * &quot;+Q+&quot; + 1 = &quot;+P+&quot;\na = &quot;+A);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">DSA</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="p">();</span>
+        <span class="n">srand</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">());</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">srand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(</span><span class="n">Q</span><span class="p">.</span><span class="na">intValue</span><span class="p">())</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="p">;</span>
+           <span class="n">y</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="na">modPow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">P</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="c1">//        System.out.println(&quot;X = &quot;+x+&quot; Y = &quot;+y);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">signFile</span><span class="p">(</span><span class="n">String</span> <span class="n">pathFile</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="p">();</span>
+        <span class="n">srand</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">());</span>
+
+        <span class="n">String</span> <span class="n">checksumMD5</span> <span class="o">=</span> <span class="n">DigestUtils</span><span class="p">.</span><span class="na">md5Hex</span><span class="p">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="p">(</span><span class="n">pathFile</span><span class="p">));</span>
+        <span class="n">BigInteger</span> <span class="n">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">checksumMD5</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+        <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">Q</span><span class="p">)));</span>
+        <span class="kt">long</span> <span class="n">k</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+           <span class="n">k</span> <span class="o">=</span> <span class="n">srand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(</span><span class="n">Q</span><span class="p">.</span><span class="na">intValue</span><span class="p">()</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+           <span class="n">r</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="na">modPow</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">P</span><span class="p">).</span><span class="na">mod</span><span class="p">(</span><span class="n">Q</span><span class="p">);</span>
+           <span class="n">s</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">r</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">hash</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">k</span><span class="p">))).</span><span class="na">mod</span><span class="p">(</span><span class="n">Q</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">ZERO</span><span class="p">)</span> <span class="o">||</span> <span class="n">s</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">ZERO</span><span class="p">));</span>
+        <span class="n">writeDSASignToFile</span><span class="p">(</span><span class="s">&quot;DSA&quot;</span><span class="p">,</span><span class="n">r</span><span class="p">.</span><span class="na">intValue</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="na">intValue</span><span class="p">());</span>
+<span class="c1">//        System.out.println(&quot; k = &quot;+k+&quot; r = &quot;+r+&quot; s = &quot;+s);</span>
+    <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkSign</span><span class="p">(</span><span class="n">String</span> <span class="n">pathFile</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">r_sign</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">s_sign</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">y_open</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="p">,</span> <span class="n">SignatureException</span> <span class="p">{</span>
+        <span class="n">String</span> <span class="n">checksumMD5</span> <span class="o">=</span> <span class="n">DigestUtils</span><span class="p">.</span><span class="na">md5Hex</span><span class="p">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="p">(</span><span class="n">pathFile</span><span class="p">));</span>
+        <span class="n">BigInteger</span> <span class="n">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">checksumMD5</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+        <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">Q</span><span class="p">)));</span>
+
+        <span class="k">if</span> <span class="p">(</span> <span class="n">r_sign</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">s_sign</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+           <span class="k">throw</span> <span class="k">new</span> <span class="n">SignatureException</span><span class="p">(</span><span class="s">&quot;digital signature DSA is invalid&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kt">long</span><span class="o">[]</span> <span class="n">EuclidResult</span><span class="p">;</span>
+        <span class="n">BigInteger</span> <span class="n">h_1</span><span class="p">;</span>
+
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">EuclidResult</span> <span class="o">=</span>  <span class="n">Euclid</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">hash</span><span class="p">.</span><span class="na">longValue</span><span class="p">(),</span> <span class="n">Q</span><span class="p">.</span><span class="na">longValue</span><span class="p">());</span>
+            <span class="n">h_1</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">EuclidResult</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="n">Q</span><span class="p">.</span><span class="na">longValue</span><span class="p">()));</span>
+        <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">hash</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">h_1</span><span class="p">).</span><span class="na">mod</span><span class="p">(</span><span class="n">Q</span><span class="p">).</span><span class="na">equals</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">ONE</span><span class="p">)</span> <span class="p">);</span>
+
+        <span class="n">BigInteger</span> <span class="n">u1</span> <span class="o">=</span> <span class="n">s_sign</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">h_1</span><span class="p">).</span><span class="na">mod</span><span class="p">(</span><span class="n">Q</span><span class="p">);</span>
+        <span class="n">BigInteger</span> <span class="n">u2</span> <span class="o">=</span> <span class="n">r_sign</span><span class="p">.</span><span class="na">negate</span><span class="p">().</span><span class="na">multiply</span><span class="p">(</span><span class="n">h_1</span><span class="p">).</span><span class="na">mod</span><span class="p">(</span><span class="n">Q</span><span class="p">);</span>
+
+        <span class="n">BigInteger</span> <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="na">pow</span><span class="p">(</span><span class="n">u1</span><span class="p">.</span><span class="na">intValue</span><span class="p">()).</span><span class="na">multiply</span><span class="p">(</span><span class="n">y_open</span><span class="p">.</span><span class="na">pow</span><span class="p">(</span><span class="n">u2</span><span class="p">.</span><span class="na">intValue</span><span class="p">())).</span><span class="na">mod</span><span class="p">(</span><span class="n">P</span><span class="p">)).</span><span class="na">mod</span><span class="p">(</span><span class="n">Q</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="na">compareTo</span><span class="p">(</span><span class="n">r_sign</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;r = &quot;</span><span class="o">+</span><span class="n">r_sign</span><span class="o">+</span><span class="s">&quot; v = &quot;</span><span class="o">+</span><span class="n">v</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">SignatureException</span><span class="p">(</span><span class="s">&quot;digital signature DSA is invalid&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="nf">getRandomBigInteger</span><span class="p">(</span><span class="kt">int</span> <span class="n">numBits</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">BigInteger</span> <span class="n">number</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">numBits</span><span class="p">,</span> <span class="k">new</span> <span class="n">Random</span><span class="p">());</span> <span class="c1">//Give you a number between 0 and 2^numBits - 1</span>
+        <span class="k">return</span> <span class="n">number</span><span class="p">.</span><span class="na">setBit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getR</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getS</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getY</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">y</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="id16">
