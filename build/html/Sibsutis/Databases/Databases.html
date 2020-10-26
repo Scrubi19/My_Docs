@@ -117,7 +117,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id11">Метод «шаг младенца, шаг великана»</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id12">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id12">Глава 3. Электронная, или цифровая подпись</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id13">Электронная подпись RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id14">Электронная подпись на базе шифра Эль-Гамаля</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id15">Стандарты на цифровую подпись (ГОСТ Р34.10-94)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id16">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Compilers/llvm.html">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -149,12 +155,21 @@
 <li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#c-str">Удаление вызовов c_str() «Самый маленький инструмент для рефакторинга»</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id12">Создание собственного инструмента</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id13">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#libclang">Создание собственного инструмента (libclang)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#llvm-ir">LLVM IR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#ll">Содержание .ll файла</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id12">Определение функций в .ll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id13">Атрибуты</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id14">Инструкции</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id15">Оптимизации времени компиляции и времени компоновки</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id16">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Ruby/ruby.html#ubuntu">Установка на Ubuntu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Ruby/ruby.html#id1">Начало</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Базы данных</a><ul>
@@ -166,11 +181,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#id7">Пересечение</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id8">Удаление</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id9">Декартово произведение</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sql-structed-query-language">SQL(Structed Query Language)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id10">Нереляционные базы данных</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id11">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mysql">Установка MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">Основы MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">Используемая литература</a></li>
 </ul>
 </li>
 </ul>
@@ -263,8 +278,8 @@
 <a class="reference internal image-reference" href="../../_images/sql_operation.png"><img alt="../../_images/sql_operation.png" src="../../_images/sql_operation.png" style="width: 600px;" /></a>
 </div>
 <p>Для описания каждой операции приведем пример таблиц:</p>
-<table class="docutils align-default" id="id12">
-<caption><span class="caption-text">таблица PRODUCTS (1.1)</span><a class="headerlink" href="#id12" title="Постоянная ссылка на таблицу">¶</a></caption>
+<table class="docutils align-default" id="id13">
+<caption><span class="caption-text">таблица PRODUCTS (1.1)</span><a class="headerlink" href="#id13" title="Постоянная ссылка на таблицу">¶</a></caption>
 <colgroup>
 <col style="width: 9%" />
 <col style="width: 25%" />
@@ -301,8 +316,8 @@
 </tr>
 </tbody>
 </table>
-<table class="docutils align-default" id="id13">
-<caption><span class="caption-text">Таблица DRIVERS (1.2)</span><a class="headerlink" href="#id13" title="Постоянная ссылка на таблицу">¶</a></caption>
+<table class="docutils align-default" id="id14">
+<caption><span class="caption-text">Таблица DRIVERS (1.2)</span><a class="headerlink" href="#id14" title="Постоянная ссылка на таблицу">¶</a></caption>
 <colgroup>
 <col style="width: 66%" />
 <col style="width: 34%" />
@@ -327,8 +342,8 @@
 </tr>
 </tbody>
 </table>
-<table class="docutils align-default" id="id14">
-<caption><span class="caption-text">Таблица Sellers (1.3)</span><a class="headerlink" href="#id14" title="Постоянная ссылка на таблицу">¶</a></caption>
+<table class="docutils align-default" id="id15">
+<caption><span class="caption-text">Таблица Sellers (1.3)</span><a class="headerlink" href="#id15" title="Постоянная ссылка на таблицу">¶</a></caption>
 <colgroup>
 <col style="width: 24%" />
 <col style="width: 76%" />
@@ -664,15 +679,38 @@
 <a class="reference internal image-reference" href="../../_images/sellers.png"><img alt="../../_images/sellers.png" src="../../_images/sellers.png" style="width: 200px;" /></a>
 </div>
 </div>
-<div class="section" id="sql-structed-query-language">
-<h3>SQL(Structed Query Language)<a class="headerlink" href="#sql-structed-query-language" title="Ссылка на этот заголовок">¶</a></h3>
+</div>
+<div class="section" id="mysql">
+<h2>Установка MySQL<a class="headerlink" href="#mysql" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt install mysql-server mysql-client
+
+ <span class="c1">#проверка, запущена ли служба</span>
+sudo systemctl status mysql
+
+<span class="c1">#заходим под root и создаем нового пользователя</span>
+mysql -u root -p
+CREATE USER <span class="s1">&#39;test_user&#39;</span>@<span class="s1">&#39;localhost&#39;</span> IDENTIFIED BY <span class="s1">&#39;password&#39;</span><span class="p">;</span>
+
+<span class="c1"># Чтобы предоставить права суперпользователя</span>
+GRANT ALL PRIVILEGES ON * . * TO <span class="s1">&#39;test_user&#39;</span>@<span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="id10">
-<h2>Нереляционные базы данных<a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h2>
+<h2>Основы MySQL<a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">create</span> <span class="k">database</span> <span class="n">bank</span><span class="p">;</span> <span class="cm">/* создание базы данных */</span>
+
+<span class="n">use</span> <span class="n">bank</span><span class="p">;</span> <span class="cm">/* выбор базы данных */</span>
+</pre></div>
 </div>
-<div class="section" id="id11">
-<h2>Используемая литература<a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Для работы потребуются тестовые данные. Скачать их можно <a class="reference external" href="https://resources.oreilly.com/examples/9780596520847/blob/master/LearningSQLExample.sql">здесь</a></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">source</span> <span class="n">path_to_example</span><span class="p">.</span><span class="k">sql</span> <span class="cm">/* загрузка данных */</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id12">
+<h2>Используемая литература<a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h2>
+<p><a class="reference external" href="Alan_Beaulieu-Learning_SQL-RU.pdf">Alan Beaulieu «Learning SQL»</a></p>
 </div>
 </div>
 

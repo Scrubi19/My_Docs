@@ -224,24 +224,45 @@
 
 
 
-SQL(Structed Query Language)
-""""""""""""""""""""""""""""""
+Установка MySQL
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+  sudo apt install mysql-server mysql-client
+
+   #проверка, запущена ли служба 
+  sudo systemctl status mysql
+
+  #заходим под root и создаем нового пользователя
+  mysql -u root -p
+  CREATE USER 'test_user'@'localhost' IDENTIFIED BY 'password';
+
+  # Чтобы предоставить права суперпользователя
+  GRANT ALL PRIVILEGES ON * . * TO 'test_user'@'localhost';
 
 
+Основы MySQL
+~~~~~~~~~~~~~~~
+
+.. code-block:: sql
+
+  create database bank; /* создание базы данных */
+
+  use bank; /* выбор базы данных */
 
 
+Для работы потребуются тестовые данные. Скачать их можно `здесь <https://resources.oreilly.com/examples/9780596520847/blob/master/LearningSQLExample.sql>`_
 
 
+.. code-block:: sql
+  
+  source path_to_example.sql /* загрузка данных */
 
-
-
-
-
-
-Нереляционные базы данных
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
 Используемая литература
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`Alan Beaulieu "Learning SQL" <Alan_Beaulieu-Learning_SQL-RU.pdf>`_

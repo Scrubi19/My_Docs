@@ -121,7 +121,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#id12">Глава 3. Электронная, или цифровая подпись</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id13">Электронная подпись RSA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id14">Электронная подпись на базе шифра Эль-Гамаля</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id15">Стандарты на электронную (цифровую) подпись</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">Стандарты на цифровую подпись (ГОСТ Р34.10-94)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#id16">Используемая литература</a></li>
@@ -161,9 +161,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#ll">Содержание .ll файла</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id12">Определение функций в .ll</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id13">Атрибуты</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Compilers/llvm.html#id14">Инструкции</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id14">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id15">Оптимизации времени компиляции и времени компоновки</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id16">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
@@ -180,11 +182,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id7">Пересечение</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id8">Удаление</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id9">Декартово произведение</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#sql-structed-query-language">SQL(Structed Query Language)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id10">Нереляционные базы данных</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id11">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#mysql">Установка MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id10">Основы MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id12">Используемая литература</a></li>
 </ul>
 </li>
 </ul>
@@ -1111,74 +1113,49 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[w = s^{D} \bmod N = y^{CD} \bmod N = y = h(m̄)\]</div>
 <p>Листинг программы:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RSAsign</span> <span class="p">{</span>
-  <span class="kd">private</span> <span class="kt">long</span> <span class="n">C</span><span class="p">;</span>
-  <span class="kd">private</span> <span class="kt">long</span> <span class="n">D</span><span class="p">;</span>
-  <span class="kd">private</span> <span class="kt">long</span> <span class="n">N</span><span class="p">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span>  <span class="kd">public</span> <span class="kd">class</span> <span class="nc">RSAsign</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">C</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">D</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">N</span><span class="p">;</span>
 
-  <span class="kd">public</span> <span class="nf">RSAsign</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">RSA</span> <span class="n">rsa</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RSA</span><span class="p">();</span>
-      <span class="n">C</span> <span class="o">=</span> <span class="n">rsa</span><span class="p">.</span><span class="na">getC</span><span class="p">();</span>
-      <span class="n">D</span> <span class="o">=</span> <span class="n">rsa</span><span class="p">.</span><span class="na">getD</span><span class="p">();</span>
-      <span class="n">N</span> <span class="o">=</span> <span class="n">rsa</span><span class="p">.</span><span class="na">getN</span><span class="p">();</span>
-  <span class="p">}</span>
+    <span class="kd">public</span> <span class="nf">RSAsign</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">RSA</span> <span class="n">rsa</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RSA</span><span class="p">();</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">rsa</span><span class="p">.</span><span class="na">getC</span><span class="p">();</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">rsa</span><span class="p">.</span><span class="na">getD</span><span class="p">();</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">rsa</span><span class="p">.</span><span class="na">getN</span><span class="p">();</span>
+    <span class="p">}</span>
 
-  <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">signFileMD5</span><span class="p">(</span><span class="n">String</span> <span class="n">pathFile</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="p">,</span> <span class="n">NoSuchAlgorithmException</span> <span class="p">{</span>
-      <span class="kt">byte</span><span class="o">[]</span> <span class="n">byteArray</span> <span class="o">=</span> <span class="n">FileManipulation</span><span class="p">.</span><span class="na">getFileBytes</span><span class="p">(</span><span class="n">pathFile</span><span class="p">);</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">signFileMD5</span><span class="p">(</span><span class="n">String</span> <span class="n">pathFile</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="p">,</span> <span class="n">NoSuchAlgorithmException</span> <span class="p">{</span>
+        <span class="n">String</span> <span class="n">checksumMD5</span> <span class="o">=</span> <span class="n">DigestUtils</span><span class="p">.</span><span class="na">md5Hex</span><span class="p">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="p">(</span><span class="n">pathFile</span><span class="p">));</span>
+        <span class="n">BigInteger</span> <span class="n">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">checksumMD5</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+        <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">N</span><span class="p">)));</span>
 
-      <span class="n">MessageDigest</span> <span class="n">md</span> <span class="o">=</span> <span class="n">MessageDigest</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">&quot;MD5&quot;</span><span class="p">);</span>
-      <span class="kt">byte</span><span class="o">[]</span> <span class="n">y</span> <span class="o">=</span> <span class="n">md</span><span class="p">.</span><span class="na">digest</span><span class="p">(</span><span class="n">byteArray</span><span class="p">);</span>
-      <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">S</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+        <span class="kt">long</span> <span class="n">S</span> <span class="o">=</span> <span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">hash</span><span class="p">.</span><span class="na">longValue</span><span class="p">(),</span> <span class="n">C</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+        <span class="n">writeIntSignToFile</span><span class="p">(</span><span class="s">&quot;RSA&quot;</span><span class="p">,(</span><span class="kt">int</span><span class="p">)</span><span class="n">S</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">S</span><span class="p">;</span>
+    <span class="p">}</span>
 
-      <span class="k">for</span> <span class="p">(</span><span class="kt">byte</span> <span class="n">b</span> <span class="p">:</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">S</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">N</span><span class="p">));</span>
-      <span class="p">}</span>
-      <span class="n">writeToFile</span><span class="p">(</span><span class="n">S</span><span class="p">);</span>
-      <span class="k">return</span> <span class="n">S</span><span class="p">;</span>
-  <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkSign</span><span class="p">(</span><span class="n">String</span> <span class="n">pathFile</span><span class="p">,</span> <span class="kt">long</span> <span class="n">S</span><span class="p">,</span> <span class="kt">long</span> <span class="n">D</span><span class="p">,</span> <span class="kt">long</span> <span class="n">N</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="p">,</span> <span class="n">SignatureException</span> <span class="p">{</span>
+        <span class="n">String</span> <span class="n">checksumMD5</span> <span class="o">=</span> <span class="n">DigestUtils</span><span class="p">.</span><span class="na">md5Hex</span><span class="p">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="p">(</span><span class="n">pathFile</span><span class="p">));</span>
+        <span class="n">BigInteger</span> <span class="n">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">checksumMD5</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+        <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">N</span><span class="p">)));</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkSign</span><span class="p">(</span><span class="n">String</span> <span class="n">pathFile</span><span class="p">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">,</span> <span class="kt">long</span> <span class="n">D</span><span class="p">,</span> <span class="kt">long</span> <span class="n">N</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="p">,</span> <span class="n">NoSuchAlgorithmException</span><span class="p">,</span> <span class="n">SignatureException</span> <span class="p">{</span>
-      <span class="kt">byte</span><span class="o">[]</span> <span class="n">byteArray</span> <span class="o">=</span> <span class="n">FileManipulation</span><span class="p">.</span><span class="na">getFileBytes</span><span class="p">(</span><span class="n">pathFile</span><span class="p">);</span>
-      <span class="n">MessageDigest</span> <span class="n">md</span> <span class="o">=</span> <span class="n">MessageDigest</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">&quot;MD5&quot;</span><span class="p">);</span>
-      <span class="kt">byte</span><span class="o">[]</span> <span class="n">y</span> <span class="o">=</span> <span class="n">md</span><span class="p">.</span><span class="na">digest</span><span class="p">(</span><span class="n">byteArray</span><span class="p">);</span>
-      <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">Y</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+        <span class="kt">long</span> <span class="n">w</span> <span class="o">=</span> <span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
 
-      <span class="k">for</span> <span class="p">(</span><span class="kt">byte</span> <span class="n">b</span> <span class="p">:</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">Y</span><span class="p">.</span><span class="na">add</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="n">b</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">w</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">S</span><span class="p">.</span><span class="na">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">w</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">S</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">D</span><span class="p">,</span> <span class="n">N</span><span class="p">));</span>
-<span class="c1">//            System.out.println(&quot; w =&quot;+w.get(i)+&quot; Y = &quot;+Y.get(i));</span>
-          <span class="k">if</span> <span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="na">compareTo</span><span class="p">(</span><span class="n">Y</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-              <span class="k">throw</span> <span class="k">new</span> <span class="n">SignatureException</span><span class="p">(</span><span class="s">&quot;digital signature is invalid&quot;</span><span class="p">);</span>
-          <span class="p">}</span>
-      <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">writeToFile</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;files/keys/RSA_signature.txt&quot;</span><span class="p">;</span>
-      <span class="k">try</span><span class="p">(</span><span class="n">FileWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWriter</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="kc">false</span><span class="p">))</span>
-      <span class="p">{</span>
-          <span class="k">for</span> <span class="p">(</span><span class="n">Long</span> <span class="n">signature</span> <span class="p">:</span> <span class="n">S</span><span class="p">)</span> <span class="p">{</span>
-              <span class="n">writer</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="n">Math</span><span class="p">.</span><span class="na">toIntExact</span><span class="p">(</span><span class="n">signature</span><span class="p">));</span>
-          <span class="p">}</span>
-          <span class="n">writer</span><span class="p">.</span><span class="na">flush</span><span class="p">();</span>
-      <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="p">){</span>
-          <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">ex</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
-      <span class="p">}</span>
-  <span class="p">}</span>
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;message = &quot;</span><span class="o">+</span><span class="n">hash</span><span class="o">+</span><span class="s">&quot; check = &quot;</span><span class="o">+</span><span class="n">w</span><span class="p">);</span>
 
-  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getC</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">C</span><span class="p">;</span>
-  <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">w</span> <span class="o">!=</span> <span class="n">hash</span><span class="p">.</span><span class="na">longValue</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">SignatureException</span><span class="p">(</span><span class="s">&quot;digital signature RSA is invalid&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getD</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">D</span><span class="p">;</span>
-  <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getD</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">D</span><span class="p">;</span>
+    <span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getN</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">N</span><span class="p">;</span>
-  <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getN</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">N</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1203,10 +1180,129 @@ s = k^{-1} u \bmod (p-1)\end{split}\]</div>
 \[&lt;m̄; r, s&gt;\]</div>
 <p>Получатель подписанного сообщения , прежде всего, заново вычисляет значение хеш-функции <span class="math notranslate nohighlight">\(h = h(m̄)\)</span>. Затем он проверяет подпись, используя равенство</p>
 <div class="math notranslate nohighlight">
-\[Y^{r}r^{s} = G^{h} \bmod p\]</div>
+\[Y^{r}r^{s} \bmod p = G^{h} \bmod p\]</div>
+<p>Листинг программы:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ElGamalSign</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">P</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">G</span><span class="p">;</span>
+
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">X</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">Y</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">r</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">S</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">generateParameters</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">DiffieHellman</span> <span class="n">diffieHellman</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">DiffieHellman</span><span class="p">();</span>
+        <span class="n">diffieHellman</span><span class="p">.</span><span class="na">generateParameters</span><span class="p">();</span>
+        <span class="n">setP</span><span class="p">(</span><span class="n">diffieHellman</span><span class="p">.</span><span class="na">getP</span><span class="p">());</span>
+        <span class="n">setG</span><span class="p">(</span><span class="n">diffieHellman</span><span class="p">.</span><span class="na">getG</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">ElGamalSign</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="p">();</span>
+        <span class="n">srand</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">());</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">srand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(((</span><span class="kt">int</span><span class="p">)</span><span class="n">P</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">P</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">signFile</span><span class="p">(</span><span class="n">String</span> <span class="n">pathFile</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="kt">long</span> <span class="n">k</span><span class="p">,</span> <span class="n">k_1</span><span class="p">;</span>
+        <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="p">();</span>
+        <span class="n">srand</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">());</span>
+
+        <span class="n">String</span> <span class="n">checksumMD5</span> <span class="o">=</span> <span class="n">DigestUtils</span><span class="p">.</span><span class="na">md5Hex</span><span class="p">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="p">(</span><span class="n">pathFile</span><span class="p">));</span>
+        <span class="n">BigInteger</span> <span class="n">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">checksumMD5</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+        <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">P</span><span class="p">)));</span>
+
+        <span class="kt">long</span><span class="o">[]</span> <span class="n">EuclidResult</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+             <span class="k">do</span> <span class="p">{</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">srand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">P</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">;</span>
+               <span class="n">EuclidResult</span> <span class="o">=</span>  <span class="n">Euclid</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">P</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+             <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="n">EuclidResult</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">);</span>
+            <span class="n">k_1</span> <span class="o">=</span> <span class="n">EuclidResult</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">P</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">k_1</span><span class="o">%</span><span class="p">(</span><span class="n">P</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">);</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">P</span><span class="p">);</span>
+        <span class="n">BigInteger</span> <span class="n">u</span> <span class="o">=</span> <span class="n">hash</span><span class="p">.</span><span class="na">subtract</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="n">r</span><span class="p">)).</span><span class="na">mod</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">P</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">u</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">k_1</span><span class="p">)).</span><span class="na">mod</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">P</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+        <span class="n">writeIntSignToFile</span><span class="p">(</span><span class="s">&quot;ElGamal&quot;</span><span class="p">,</span><span class="n">S</span><span class="p">.</span><span class="na">intValue</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">checkSign</span><span class="p">(</span><span class="n">String</span> <span class="n">pathFile</span><span class="p">,</span> <span class="kt">long</span> <span class="n">Y_open</span><span class="p">,</span> <span class="kt">long</span> <span class="n">r_open</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">S</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span><span class="p">,</span> <span class="n">SignatureException</span> <span class="p">{</span>
+        <span class="n">String</span> <span class="n">checksumMD5</span> <span class="o">=</span> <span class="n">DigestUtils</span><span class="p">.</span><span class="na">md5Hex</span><span class="p">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="p">(</span><span class="n">pathFile</span><span class="p">));</span>
+        <span class="n">BigInteger</span> <span class="n">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">checksumMD5</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+        <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">P</span><span class="p">)));</span>
+
+        <span class="n">BigInteger</span> <span class="n">Y_R</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">Y_open</span><span class="p">)));</span>
+        <span class="n">Y_R</span> <span class="o">=</span> <span class="n">Y_R</span><span class="p">.</span><span class="na">modPow</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span> <span class="n">r_open</span><span class="p">),</span> <span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">P</span><span class="p">));</span>
+
+        <span class="n">BigInteger</span> <span class="n">R_S</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">r_open</span><span class="p">));</span>
+        <span class="n">R_S</span> <span class="o">=</span> <span class="n">R_S</span><span class="p">.</span><span class="na">modPow</span><span class="p">(</span><span class="n">S</span> <span class="p">,</span> <span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">P</span><span class="p">));</span>
+
+        <span class="n">BigInteger</span> <span class="n">check</span> <span class="o">=</span> <span class="n">Y_R</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">R_S</span><span class="p">).</span><span class="na">mod</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">P</span><span class="p">));</span>
+
+        <span class="kt">long</span> <span class="n">message</span> <span class="o">=</span> <span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">hash</span><span class="p">.</span><span class="na">longValue</span><span class="p">(),</span> <span class="n">P</span><span class="p">);</span>
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;message = &quot;</span><span class="o">+</span><span class="n">message</span><span class="o">+</span><span class="s">&quot; check = &quot;</span><span class="o">+</span><span class="n">check</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">check</span><span class="p">.</span><span class="na">longValue</span><span class="p">()</span> <span class="o">!=</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">SignatureException</span><span class="p">(</span><span class="s">&quot;digital signature ElGamal is invalid&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+     <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setP</span><span class="p">(</span><span class="kt">long</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">P</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setG</span><span class="p">(</span><span class="kt">long</span> <span class="n">g</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">g</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getY</span><span class="p">()</span> <span class="p">{</span>
+       <span class="k">return</span> <span class="n">Y</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getR</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getS</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">S</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="id15">
-<h3>Стандарты на электронную (цифровую) подпись<a class="headerlink" href="#id15" title="Ссылка на этот заголовок">¶</a></h3>
+<h3>Стандарты на цифровую подпись (ГОСТ Р34.10-94)<a class="headerlink" href="#id15" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Российский стандарт, как следует из его обозначения, был принят в 1994 году. В основе стандарта лежит по сути алгоритм, называемый DSA (Digital Signature Algorithm) и являющийся вариацией подписи Эль-Гамаля</p>
+<p>Вначале для некоторого сообщества пользователей выбираются общие несекретные параметры. Прежде всего необходимо найти два простых числа, <em>q</em> длиной 256 бит и <em>p</em> длиной 1024 бита, между которыми выполняется соотношение</p>
+<div class="math notranslate nohighlight">
+\[p = bq + 1\]</div>
+<p>для некоторого целого <em>b</em>. Старшие биты в <em>p</em> и <em>q</em> должны быть равны
+единице. Затем выбирается число <span class="math notranslate nohighlight">\(a &gt; 1\)</span>, такое, что</p>
+<div class="math notranslate nohighlight">
+\[a^{q} \bmod p = 1\]</div>
+<p>Далее, каждый пользователь выбирает случайно число x, удовлетворяющее неравенству <span class="math notranslate nohighlight">\(0 &lt; x &lt; q\)</span> , и вычисляет</p>
+<div class="math notranslate nohighlight">
+\[y = a^{x} \bmod p\]</div>
+<p><strong>Число x будет секретным ключом пользователя, а число y — открытым ключом</strong></p>
+<ol class="arabic simple">
+<li><p>Вычисляем значение хеш-функции <span class="math notranslate nohighlight">\(h = h(m̄)\)</span> для сообщения m , значение хеш-функции должно лежать в пределах <span class="math notranslate nohighlight">\(0 &lt; h &lt; q\)</span> (в российском варианте хеш-функция определяется ГОСТом Р34.11-94)</p></li>
+<li><p>Формируем случайное число k , <span class="math notranslate nohighlight">\(0 &lt; k &lt; q\)</span></p></li>
+<li><p>Вычисляем <span class="math notranslate nohighlight">\(r = (a^{k} \bmod p) \bmod q\)</span> . Если оказывается так, что <span class="math notranslate nohighlight">\(r = 0\)</span>, то возвращаемся к шагу 2</p></li>
+<li><p>Вычисляем <span class="math notranslate nohighlight">\(s = (kh + xr) \bmod q\)</span>. Если s = 0, то возвращаемся к шагу 2</p></li>
+<li><p>Получаем подписанное сообщение <span class="math notranslate nohighlight">\(&lt;m̄; r, s&gt;\)</span>. Для проверки подписи делаем следующее:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>Вычисляем хеш-функцию для сообщения <span class="math notranslate nohighlight">\(h = h(m̄)\)</span></p></li>
+<li><p>Проверяем выполнение неравенств <span class="math notranslate nohighlight">\(0 &lt; r &lt; q , \ 0 &lt; s &lt; q\)</span></p></li>
+<li><p>Вычисляем <span class="math notranslate nohighlight">\(u_1 = s · h^{−1} \bmod q , \ u_2 = −r · h^{−1} \bmod q\)</span></p></li>
+<li><p>Вычисляем <span class="math notranslate nohighlight">\(v = (a^{u_1} y^{u_2} \bmod p) \bmod q\)</span></p></li>
+<li><p>Проверяем выполнение равенства <span class="math notranslate nohighlight">\(u = r\)</span></p></li>
+</ul>
+</div></blockquote>
+<p>Если хотя бы одна из проверок на шагах 2 и 5 не дает нужного результата, то подпись считается недействительной. Если же все проверки удачны, то подпись считается подлинной</p>
 </div>
 </div>
 <div class="section" id="id16">

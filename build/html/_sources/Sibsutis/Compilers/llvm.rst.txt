@@ -670,6 +670,51 @@ C/C++ имеют врожденную зависимость от платфор
 Содержание .ll файла
 """"""""""""""""""""""
 
+Подготовим .ll файл
+
+.. code-block:: c
+
+  int sum(int a, int b) {
+    return a + b;
+  }
+
+.. code-block:: c
+
+  clang -c example.cpp  -O0 --target=xcore -emit-llvm -S -o add_o0.ll
+
+
+.. code-block:: bash
+
+  ; ModuleID = 'example.cpp'
+  source_filename = "example.cpp"
+  target datalayout = "e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-i64:32-f64:32-a:0:32-n32"
+  target triple = "xcore"
+  
+  ; Function Attrs: noinline nounwind optnone
+  define dso_local i32 @_Z3sumii(i32 %a, i32 %b) #0 {
+  entry:
+    %a.addr = alloca i32, align 4
+    %b.addr = alloca i32, align 4
+    store i32 %a, i32* %a.addr, align 4
+    store i32 %b, i32* %b.addr, align 4
+    %0 = load i32, i32* %a.addr, align 4
+    %1 = load i32, i32* %b.addr, align 4
+    %add = add nsw i32 %0, %1
+    ret i32 %add
+  }
+  
+  attributes #0 = { noinline nounwind optnone "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }
+  
+  !llvm.module.flags = !{!0}
+  !llvm.ident = !{!1}
+
+  !0 = !{i32 1, !"wchar_size", i32 1}
+  !1 = !{!"clang version 10.0.1 (https://github.com/llvm/llvm-project.git ef32c611aa214dea855364efd7ba451ec5ec3f74)"}
+
+
+
+Для примера было выбрано ядро процессора xcore, так как он не имеет каких-либо сложных особенностей при компиляции в IR-код, поэтому является идеальным объектом для исследований. Это ядро имеет разрядность 32, и clang выравнивает все переменные по границам 32-битных слов
+
 Модуль - это структура данных LLVM IR верхнего уровня. Каждый модуль содержит последовательность функций, каждая из которых состоит из группы базовых блоков, которые в свою очередь содержат последовательности инструкций. Модуль также включает глобальные переменные, определение формата данных, прототипы внешних функций объявление структур данных
 
 **Модуль:**
@@ -690,22 +735,23 @@ C/C++ имеют врожденную зависимость от платфор
 
 .. code-block:: bash
 
-  ; ModuleID = 'test.cpp' # Название модуля
-  source_filename = "test.cpp" # Путь к файлу
-  target datalayout =
-  "e-m:e-p:64:64:64-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
-  target triple = "x86_64-unknown-linux-gnu"
+  ; ModuleID = 'example.cpp' # название модуля
+  source_filename = "example.cpp" # путь к файлу
+  target datalayout = "e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-i64:32-f64:32-a:0:32-n32"
+  target triple = "xcore"
 
 
-* Целевой платформой является **Linux** на аппаратной платформе **x86_64**. Данные в памяти хранятся в формате little-endian (e). На архитектурах с big-endian первой будет следовать буева (E)
-* Информация о типах имеет формат: *type: <size> : <abi> : <preferred>*. Определение **p:64:64:64** в предыдущем примере представляет указатель, имеющий размер 64 бита, *abi* указыват на минимально необходимое выравнивание для типа, *preferred* - наибольшее возможное выравнивание.
+* Целевой платформой является **xcore**. Данные в памяти хранятся в формате little-endian (e). На архитектурах с big-endian первой будет следовать буева (E)
+* Информация о типах имеет формат: *type: <size> : <abi> : <preferred>*. Определение **p:32:32** в предыдущем примере представляет указатель, имеющий размер 32 бита, *abi* указыват на минимально необходимое выравнивание для типа, *preferred* - наибольшее возможное выравнивание.
 
 Определение функций в .ll
 """""""""""""""""""""""""""
 
 .. code-block:: bash
 
-  define i32 @sum (i32 %a, i32 %b) {
+  define i32 @sum (i32 %a, i32 %b) { # упрощенная форма
+  define dso_local i32 @_Z3sumii(i32 %a, i32 %b) #0 { # сгенерированая форма из примера
+
 
 Эта функция возвращает значения типа i32 и принимает два аргумента типа i32, %a и %b. **Локальные идентификаторы всегда должны начинаться с символа %**, а **глобальные - с символа @**
 
@@ -719,12 +765,10 @@ C/C++ имеют врожденную зависимость от платфор
 
 .. code-block:: bash
 
-  attributes #0 = { noinline nounwind optnone uwtable "correctly-rounded-    divide-sqrt-fp-math"="false"
-  "disable-tail-calls"="false" "frame-pointer"="all" "less-precise-fpmad"="false" "min-legal-vector-width"="0"
-  "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false"
-  "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64"
-  "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" "unsafe-fp-math"="false" "use-soft-float"="false" }
-  ...
+   attributes #0 = { noinline nounwind optnone "correctly-rounded-divide-sqrt-fp-math"="false"
+   "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "min-legal-vector-width"="0"
+   "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false"
+   "no-trapping-math"="false" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }
 
 Тег *#0* в определении функции отображается в множество атрибутов функции. Множество атрибутов определяется в конце файла
 
@@ -740,8 +784,123 @@ C/C++ имеют врожденную зависимость от платфор
  * каждый базовый блок должен завершаться инструкцией, выполняющей переход к следующему базовому блоку или возврат из функции
  * первый базовый блок, который еще называют блоком вхожа - играет особую роль в функциях LLVM и не должен использоваться как цель
 
-.. code-block:: java
-  
+Инструкции
+"""""""""""""
+
+.. code-block:: c
+
+  entry:
+      %a.addr = alloca i32, align 4
+      %b.addr = alloca i32, align 4
+      store i32 %a, i32* %a.addr, align 4
+      store i32 %b, i32* %b.addr, align 4
+      %0 = load i32, i32* %a.addr, align 4
+      %1 = load i32, i32* %b.addr, align 4
+      %add = add nsw i32 %0, %1
+      ret i32 %add
+
+* Инструкция **alloca** резервирует пространство в кадре стека текущей функции. Обьем пространства определяется размером типа элемента с учетом указанного выравнивания. Первая инструкция * %a.addr = alloca i32, align 4*, выделяет место на стеке для 4-байтного элемента с выравниванием по границе 4 байт. Указатель на элемент в стеке сохраняется в локальном идентификаторе *%a.addr*
+
+* Аргументы %a и %b сохраняются на стеке, по адресам %a.addr и %b.addr с помощью инструкии **store**
+* Загрузка значений выполняется инструкциями **load**
+* Эти значения используются в операции сложения *%add = add nsw i32 %0, %1*. И результат функции add, возвращается из функции **ret**. Флаг *nsw* указывает, что данная операция сложения не должна проверять перенос в знаковый бит (no signed wrap)
+* Инструкции *load* и *store* являются избыточными - аргументы функции можно использовать в инструкции *add* непосредственно. Сlang использует по умолчанию уровень оптимизации -O0, поэтому избыточные инструкции не удаляться. А если скомпилировать с -O1, на выходе получится более простой код:
+
+Пример файла с циклом:
+
+.. code-block:: bash
+
+  define i32 @sum(i32 %a, i32 %b) {
+  entry:
+    %add = add nsw i32 %b, %a
+    ret i32 %add
+  }
+
+Пример файла с циклом:
+
+.. code-block:: c
+
+  int for_loop(int x[]) {
+    int sum = 0;
+    for(int i = 0; i < 10; ++i) {
+      sum += x[i];
+    }
+    return sum;
+  }
+
+.. code-block:: bash
+
+  clang -c example.cpp  -O0 --target=xcore -emit-llvm -S -o add_o0.ll
+
+.. code-block:: bash
+
+  ; ModuleID = 'example.cpp'
+  source_filename = "example.cpp"
+  target datalayout = "e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-i64:32-f64:32-a:0:32-n32"
+  target triple = "xcore"
+
+  ; Function Attrs: noinline nounwind optnone
+  define dso_local i32 @_Z8for_loopPi(i32* %x) #0 {
+  entry:
+    %x.addr = alloca i32*, align 4
+    %sum = alloca i32, align 4
+    %i = alloca i32, align 4
+    store i32* %x, i32** %x.addr, align 4
+    store i32 0, i32* %sum, align 4
+    store i32 0, i32* %i, align 4
+    br label %for.cond
+
+  for.cond:                                         ; preds = %for.inc, %entry
+    %0 = load i32, i32* %i, align 4
+    %cmp = icmp slt i32 %0, 10
+    br i1 %cmp, label %for.body, label %for.end
+
+  for.body:                                    ; preds = %for.cond
+    %1 = load i32*, i32** %x.addr, align 4
+    %2 = load i32, i32* %i, align 4
+    %arrayidx = getelementptr inbounds i32, i32* %1, i32 %2
+    %3 = load i32, i32* %arrayidx, align 4
+    %4 = load i32, i32* %sum, align 4
+    %add = add nsw i32 %4, %3
+    store i32 %add, i32* %sum, align 4
+    br label %for.inc
+
+  for.inc:                                   ; preds = %for.body
+    %5 = load i32, i32* %i, align 4
+    %inc = add nsw i32 %5, 1
+    store i32 %inc, i32* %i, align 4
+    br label %for.cond
+
+  for.end:                                   ; preds = %for.cond
+    %6 = load i32, i32* %sum, align 4
+    ret i32 %6
+  }
+
+  attributes #0 = { noinline nounwind optnone ... }
+
+  !llvm.module.flags = !{!0}
+  !llvm.ident = !{!1}
+
+  !0 = !{i32 1, !"wchar_size", i32 1}
+  !1 = !{!"clang version 10.0.1 (https://github.com/llvm/llvm-project.git ef32c611aa214dea855364efd7ba451ec5ec3f74)"}
+
+
+* **Финода**- конструкция для определения значения переменной в зависимости от какого-то условия. В контексте SSA в зависимости от блока из которого мы пришли. *phi i32 [ 0, %0 ], [ %5, %1 ]*. Это означает, что функция примет значение 0, если переход произошёл с базового блока %0 (первый базовый блок в функции), и значение переменной %5, если переход произошёл с базового блока %1 (т.е. с выходной точки этого же базового блока)
+
+
+Оптимизации времени компиляции и времени компоновки
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Clang и Opt: -O0, -O1, -O2, -O3, -Os, -Oz
+
+Дополнительный уровень оптимизации Clang -O4
+
+* -O4 - влаг оптимизаций типа -O3 с дополнительным флагом -flto (оптимизации времени компоновки)
+* -Ox - определяет уровень оптимизаций
+* -O0 - отсутствие оптимизаций
+* -Os и -Oz - Такие же как и -O2 с дополнительными оптимизациями для уменьшения объема выполняемого кода
+* -O2 - уровень умеренной оптимизации, включает в себя большинство из доступных
+* -O3 - Такой же как -O2, дополнительно включающий оптимизации на которые требуется больше времени или которые приводят к увеличению объема кода.
 
 
 Используемая литература

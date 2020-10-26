@@ -1025,75 +1025,51 @@
 
 .. code-block:: java
 
-  public class RSAsign {
-    private long C;
-    private long D;
-    private long N;
+    public class RSAsign {
+      private long C;
+      private long D;
+      private long N;
 
-    public RSAsign() {
-        RSA rsa = new RSA();
-        C = rsa.getC();
-        D = rsa.getD();
-        N = rsa.getN();
-    }
+      public RSAsign() {
+          RSA rsa = new RSA();
+          C = rsa.getC();
+          D = rsa.getD();
+          N = rsa.getN();
+      }
+  
+      public long signFileMD5(String pathFile) throws IOException, NoSuchAlgorithmException {
+          String checksumMD5 = DigestUtils.md5Hex(new FileInputStream(pathFile));
+          BigInteger hash = new BigInteger(checksumMD5, 16);
+          hash = hash.mod(new BigInteger(String.valueOf(N)));
+  
+          long S = powMod.calculate(hash.longValue(), C, N);
+          writeIntSignToFile("RSA",(int)S);
+          return S;
+      }
 
-    public List<Long> signFileMD5(String pathFile) throws IOException, NoSuchAlgorithmException {
-        byte[] byteArray = FileManipulation.getFileBytes(pathFile);
+      public void checkSign(String pathFile, long S, long D, long N) throws IOException, SignatureException {
+          String checksumMD5 = DigestUtils.md5Hex(new FileInputStream(pathFile));
+          BigInteger hash = new BigInteger(checksumMD5, 16);
+          hash = hash.mod(new BigInteger(String.valueOf(N)));
+  
+          long w = powMod.calculate(S, D, N);
 
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] y = md.digest(byteArray);
-        List<Long> S = new ArrayList<>();
+          System.out.println("message = "+hash+" check = "+w);
 
-        for (byte b : y) {
-            S.add(powMod.calculate(b, C, N));
-        }
-        writeToFile(S);
-        return S;
-    }
-
-    public void checkSign(String pathFile, List<Long> S, long D, long N) throws IOException, NoSuchAlgorithmException, SignatureException {
-        byte[] byteArray = FileManipulation.getFileBytes(pathFile);
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] y = md.digest(byteArray);
-        List<Long> Y = new ArrayList<>();
-
-        for (byte b : y) {
-            Y.add((long)b);
-        }
-        List<Long> w = new ArrayList<>();
-        for (int i = 0; i < S.size(); i++) {
-            w.add(powMod.calculate(S.get(i), D, N));
-  //            System.out.println(" w ="+w.get(i)+" Y = "+Y.get(i));
-            if (w.get(i).compareTo(Y.get(i)) != 0) {
-                throw new SignatureException("digital signature is invalid");
-            }
-        }
-    }
-    public void writeToFile(List<Long> S) {
-        String path = "files/keys/RSA_signature.txt";
-        try(FileWriter writer = new FileWriter(path, false))
-        {
-            for (Long signature : S) {
-                writer.write(Math.toIntExact(signature));
-            }
-            writer.flush();
-        } catch(IOException ex){
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    public long getC() {
-        return C;
-    }
-
-    public long getD() {
-        return D;
-    }
-
-    public long getN() {
-        return N;
-    }
+          if (w != hash.longValue()) {
+              throw new SignatureException("digital signature RSA is invalid");
+          }
+      }
+  
+      public long getD() {
+          return D;
+      }
+  
+      public long getN() {
+          return N;
+      }
   }
+
 
 
 Электронная подпись на базе шифра Эль-Гамаля
@@ -1129,22 +1105,145 @@
 Получатель подписанного сообщения , прежде всего, заново вычисляет значение хеш-функции :math:`h = h(m̄)`. Затем он проверяет подпись, используя равенство 
 
 .. math:: 
-  Y^{r}r^{s} = G^{h} \bmod p
+  Y^{r}r^{s} \bmod p = G^{h} \bmod p
+
+
+
+Листинг программы:
+
+.. code-block:: java
+
+  public class ElGamalSign {
+      private static long P;
+      private static long G;
+  
+      private long X;
+      private long Y;
+      private long r;
+      private BigInteger S;
+  
+      public static void generateParameters() {
+          DiffieHellman diffieHellman =  new DiffieHellman();
+          diffieHellman.generateParameters();
+          setP(diffieHellman.getP());
+          setG(diffieHellman.getG());
+      }
+  
+      public ElGamalSign() {
+          SecureRandom srand = new SecureRandom();
+          srand.setSeed(System.currentTimeMillis());
+          X = srand.nextInt(((int)P-2)+1);
+          Y = powMod.calculate(G, X, P);
+      }
+
+      public void signFile(String pathFile) throws IOException {
+          long k, k_1;
+          SecureRandom srand = new SecureRandom();
+          srand.setSeed(System.currentTimeMillis());
+
+          String checksumMD5 = DigestUtils.md5Hex(new FileInputStream(pathFile));
+          BigInteger hash = new BigInteger(checksumMD5, 16);
+          hash = hash.mod(new BigInteger(String.valueOf(P)));
+
+          long[] EuclidResult;
+          do {
+               do {
+                  k = srand.nextInt((int)P-3)+2;
+                 EuclidResult =  Euclid.calculate(k, P-1);
+               } while(EuclidResult[0] != 1);
+              k_1 = EuclidResult[2] + (P-1);
+          } while(k*k_1%(P-1) != 1);
+
+          r = powMod.calculate(G, k, P);
+          BigInteger u = hash.subtract(BigInteger.valueOf(X*r)).mod(BigInteger.valueOf(P-1));
+          S = u.multiply(BigInteger.valueOf(k_1)).mod(BigInteger.valueOf(P-1));
+          writeIntSignToFile("ElGamal",S.intValue());
+      }
+
+      public void checkSign(String pathFile, long Y_open, long r_open, BigInteger S) throws IOException, SignatureException {
+          String checksumMD5 = DigestUtils.md5Hex(new FileInputStream(pathFile));
+          BigInteger hash = new BigInteger(checksumMD5, 16);
+          hash = hash.mod(new BigInteger(String.valueOf(P)));
+
+          BigInteger Y_R = new BigInteger(String.valueOf(BigInteger.valueOf(Y_open)));
+          Y_R = Y_R.modPow(BigInteger.valueOf( r_open), BigInteger.valueOf(P));
+  
+          BigInteger R_S = new BigInteger(String.valueOf(r_open));
+          R_S = R_S.modPow(S , BigInteger.valueOf(P));
+
+          BigInteger check = Y_R.multiply(R_S).mod(BigInteger.valueOf(P));
+
+          long message = powMod.calculate(G, hash.longValue(), P);
+          System.out.println("message = "+message+" check = "+check);
+          if (check.longValue() != message) {
+              throw new SignatureException("digital signature ElGamal is invalid");
+          }
+       }
+
+      public static void setP(long p) {
+         P = p;
+      }
+
+      public static void setG(long g) {
+          G = g;
+      }
+
+      public long getY() {
+         return Y;
+      }
+
+      public long getR() {
+          return r;
+      }
+
+      public BigInteger getS() {
+          return S;
+      }
+  }
 
 
 
 
+Стандарты на цифровую подпись (ГОСТ Р34.10-94)
+"""""""""""""""""""""""""""""""""""""""""""""""""
 
+Российский стандарт, как следует из его обозначения, был принят в 1994 году. В основе стандарта лежит по сути алгоритм, называемый DSA (Digital Signature Algorithm) и являющийся вариацией подписи Эль-Гамаля
 
+Вначале для некоторого сообщества пользователей выбираются общие несекретные параметры. Прежде всего необходимо найти два простых числа, *q* длиной 256 бит и *p* длиной 1024 бита, между которыми выполняется соотношение
 
+.. math:: 
+  p = bq + 1
 
+для некоторого целого *b*. Старшие биты в *p* и *q* должны быть равны
+единице. Затем выбирается число :math:`a > 1`, такое, что
 
+.. math:: 
+  a^{q} \bmod p = 1
 
+Далее, каждый пользователь выбирает случайно число x, удовлетворяющее неравенству :math:`0 < x < q` , и вычисляет
 
-Стандарты на электронную (цифровую) подпись
-"""""""""""""""""""""""""""""""""""""""""""""""
+.. math:: 
+  y = a^{x} \bmod p
 
+**Число x будет секретным ключом пользователя, а число y — открытым ключом**
 
+1. Вычисляем значение хеш-функции :math:`h = h(m̄)` для сообщения m , значение хеш-функции должно лежать в пределах :math:`0 < h < q` (в российском варианте хеш-функция определяется ГОСТом Р34.11-94)
+
+2. Формируем случайное число k , :math:`0 < k < q`
+
+3. Вычисляем :math:`r = (a^{k} \bmod p) \bmod q` . Если оказывается так, что :math:`r = 0`, то возвращаемся к шагу 2
+
+4. Вычисляем :math:`s = (kh + xr) \bmod q`. Если s = 0, то возвращаемся к шагу 2
+
+5. Получаем подписанное сообщение :math:`<m̄; r, s>`. Для проверки подписи делаем следующее:
+
+ * Вычисляем хеш-функцию для сообщения :math:`h = h(m̄)`
+ * Проверяем выполнение неравенств :math:`0 < r < q , \ 0 < s < q`
+ * Вычисляем :math:`u_1 = s · h^{−1} \bmod q , \ u_2 = −r · h^{−1} \bmod q`
+ * Вычисляем :math:`v = (a^{u_1} y^{u_2} \bmod p) \bmod q`
+ * Проверяем выполнение равенства :math:`u = r`
+
+Если хотя бы одна из проверок на шагах 2 и 5 не дает нужного результата, то подпись считается недействительной. Если же все проверки удачны, то подпись считается подлинной
 
 
 

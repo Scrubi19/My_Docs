@@ -121,7 +121,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id12">Глава 3. Электронная, или цифровая подпись</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id13">Электронная подпись RSA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id14">Электронная подпись на базе шифра Эль-Гамаля</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id15">Стандарты на электронную (цифровую) подпись</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id15">Стандарты на цифровую подпись (ГОСТ Р34.10-94)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id16">Используемая литература</a></li>
@@ -161,9 +161,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#ll">Содержание .ll файла</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id12">Определение функций в .ll</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id13">Атрибуты</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">Инструкции</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id14">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">Оптимизации времени компиляции и времени компоновки</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id16">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
@@ -856,6 +858,43 @@ llvm-extract -func<span class="o">=</span>sum sum.bc -o sum-fn.bc <span class="c
 <p>C/C++ имеют врожденную зависимость от платформы, при подключении заголовочных файлов, неявно подключаются файлы из каталога bits, который является собственным для каждой архитектуры. Если программа использует стандартные заголовочные файлы то уже на этапе AST мы зависим от архитектуры, что усложняет написание независимого IR</p>
 <div class="section" id="ll">
 <h3>Содержание .ll файла<a class="headerlink" href="#ll" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Подготовим .ll файл</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">clang</span> <span class="o">-</span><span class="n">c</span> <span class="n">example</span><span class="p">.</span><span class="n">cpp</span>  <span class="o">-</span><span class="n">O0</span> <span class="o">--</span><span class="n">target</span><span class="o">=</span><span class="n">xcore</span> <span class="o">-</span><span class="n">emit</span><span class="o">-</span><span class="n">llvm</span> <span class="o">-</span><span class="n">S</span> <span class="o">-</span><span class="n">o</span> <span class="n">add_o0</span><span class="p">.</span><span class="n">ll</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">;</span> <span class="nv">ModuleID</span> <span class="o">=</span> <span class="s1">&#39;example.cpp&#39;</span>
+<span class="nv">source_filename</span> <span class="o">=</span> <span class="s2">&quot;example.cpp&quot;</span>
+target <span class="nv">datalayout</span> <span class="o">=</span> <span class="s2">&quot;e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-i64:32-f64:32-a:0:32-n32&quot;</span>
+target <span class="nv">triple</span> <span class="o">=</span> <span class="s2">&quot;xcore&quot;</span>
+
+<span class="p">;</span> Function Attrs: noinline nounwind optnone
+define dso_local i32 @_Z3sumii<span class="o">(</span>i32 %a, i32 %b<span class="o">)</span> <span class="c1">#0 {</span>
+entry:
+  %a.addr <span class="o">=</span> alloca i32, align <span class="m">4</span>
+  %b.addr <span class="o">=</span> alloca i32, align <span class="m">4</span>
+  store i32 %a, i32* %a.addr, align <span class="m">4</span>
+  store i32 %b, i32* %b.addr, align <span class="m">4</span>
+  %0 <span class="o">=</span> load i32, i32* %a.addr, align <span class="m">4</span>
+  %1 <span class="o">=</span> load i32, i32* %b.addr, align <span class="m">4</span>
+  %add <span class="o">=</span> add nsw i32 %0, %1
+  ret i32 %add
+<span class="o">}</span>
+
+attributes <span class="c1">#0 = { noinline nounwind optnone &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot; &quot;disable-tail-calls&quot;=&quot;false&quot; &quot;frame-pointer&quot;=&quot;none&quot; &quot;less-precise-fpmad&quot;=&quot;false&quot; &quot;min-legal-vector-width&quot;=&quot;0&quot; &quot;no-infs-fp-math&quot;=&quot;false&quot; &quot;no-jump-tables&quot;=&quot;false&quot; &quot;no-nans-fp-math&quot;=&quot;false&quot; &quot;no-signed-zeros-fp-math&quot;=&quot;false&quot; &quot;no-trapping-math&quot;=&quot;false&quot; &quot;stack-protector-buffer-size&quot;=&quot;8&quot; &quot;unsafe-fp-math&quot;=&quot;false&quot; &quot;use-soft-float&quot;=&quot;false&quot; }</span>
+
+!llvm.module.flags <span class="o">=</span> !<span class="o">{</span>!0<span class="o">}</span>
+!llvm.ident <span class="o">=</span> !<span class="o">{</span>!1<span class="o">}</span>
+
+!0 <span class="o">=</span> !<span class="o">{</span>i32 <span class="m">1</span>, !<span class="s2">&quot;wchar_size&quot;</span>, i32 <span class="m">1</span><span class="o">}</span>
+!1 <span class="o">=</span> !<span class="o">{</span>!<span class="s2">&quot;clang version 10.0.1 (https://github.com/llvm/llvm-project.git ef32c611aa214dea855364efd7ba451ec5ec3f74)&quot;</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>Для примера было выбрано ядро процессора xcore, так как он не имеет каких-либо сложных особенностей при компиляции в IR-код, поэтому является идеальным объектом для исследований. Это ядро имеет разрядность 32, и clang выравнивает все переменные по границам 32-битных слов</p>
 <p>Модуль - это структура данных LLVM IR верхнего уровня. Каждый модуль содержит последовательность функций, каждая из которых состоит из группы базовых блоков, которые в свою очередь содержат последовательности инструкций. Модуль также включает глобальные переменные, определение формата данных, прототипы внешних функций объявление структур данных</p>
 <dl class="simple">
 <dt><strong>Модуль:</strong></dt><dd><ul class="simple">
@@ -882,21 +921,21 @@ llvm-extract -func<span class="o">=</span>sum sum.bc -o sum-fn.bc <span class="c
 </pre></div>
 </div>
 <p>Конструкция <em>target datalayout</em> содержит информацию о порядке следования байтов (endianness) и размерах типов для триады <em>target triple</em>, описывающей целевой хост. Некоторые виды оптимизации зависят от формата данных.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">;</span> <span class="nv">ModuleID</span> <span class="o">=</span> <span class="s1">&#39;test.cpp&#39;</span> <span class="c1"># Название модуля</span>
-<span class="nv">source_filename</span> <span class="o">=</span> <span class="s2">&quot;test.cpp&quot;</span> <span class="c1"># Путь к файлу</span>
-target <span class="nv">datalayout</span> <span class="o">=</span>
-<span class="s2">&quot;e-m:e-p:64:64:64-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128&quot;</span>
-target <span class="nv">triple</span> <span class="o">=</span> <span class="s2">&quot;x86_64-unknown-linux-gnu&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">;</span> <span class="nv">ModuleID</span> <span class="o">=</span> <span class="s1">&#39;example.cpp&#39;</span> <span class="c1"># название модуля</span>
+<span class="nv">source_filename</span> <span class="o">=</span> <span class="s2">&quot;example.cpp&quot;</span> <span class="c1"># путь к файлу</span>
+target <span class="nv">datalayout</span> <span class="o">=</span> <span class="s2">&quot;e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-i64:32-f64:32-a:0:32-n32&quot;</span>
+target <span class="nv">triple</span> <span class="o">=</span> <span class="s2">&quot;xcore&quot;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Целевой платформой является <strong>Linux</strong> на аппаратной платформе <strong>x86_64</strong>. Данные в памяти хранятся в формате little-endian (e). На архитектурах с big-endian первой будет следовать буева (E)</p></li>
-<li><p>Информация о типах имеет формат: <em>type: &lt;size&gt; : &lt;abi&gt; : &lt;preferred&gt;</em>. Определение <strong>p:64:64:64</strong> в предыдущем примере представляет указатель, имеющий размер 64 бита, <em>abi</em> указыват на минимально необходимое выравнивание для типа, <em>preferred</em> - наибольшее возможное выравнивание.</p></li>
+<li><p>Целевой платформой является <strong>xcore</strong>. Данные в памяти хранятся в формате little-endian (e). На архитектурах с big-endian первой будет следовать буева (E)</p></li>
+<li><p>Информация о типах имеет формат: <em>type: &lt;size&gt; : &lt;abi&gt; : &lt;preferred&gt;</em>. Определение <strong>p:32:32</strong> в предыдущем примере представляет указатель, имеющий размер 32 бита, <em>abi</em> указыват на минимально необходимое выравнивание для типа, <em>preferred</em> - наибольшее возможное выравнивание.</p></li>
 </ul>
 </div>
 <div class="section" id="id12">
 <h3>Определение функций в .ll<a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>define i32 @sum <span class="o">(</span>i32 %a, i32 %b<span class="o">)</span> <span class="o">{</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>define i32 @sum <span class="o">(</span>i32 %a, i32 %b<span class="o">)</span> <span class="o">{</span> <span class="c1"># упрощенная форма</span>
+define dso_local i32 @_Z3sumii<span class="o">(</span>i32 %a, i32 %b<span class="o">)</span> <span class="c1">#0 { # сгенерированая форма из примера</span>
 </pre></div>
 </div>
 <p>Эта функция возвращает значения типа i32 и принимает два аргумента типа i32, %a и %b. <strong>Локальные идентификаторы всегда должны начинаться с символа %</strong>, а <strong>глобальные - с символа &#64;</strong></p>
@@ -911,12 +950,10 @@ target <span class="nv">triple</span> <span class="o">=</span> <span class="s2">
 </div>
 <div class="section" id="id13">
 <h3>Атрибуты<a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>attributes <span class="c1">#0 = { noinline nounwind optnone uwtable &quot;correctly-rounded-    divide-sqrt-fp-math&quot;=&quot;false&quot;</span>
-<span class="s2">&quot;disable-tail-calls&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;frame-pointer&quot;</span><span class="o">=</span><span class="s2">&quot;all&quot;</span> <span class="s2">&quot;less-precise-fpmad&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;min-legal-vector-width&quot;</span><span class="o">=</span><span class="s2">&quot;0&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>attributes <span class="c1">#0 = { noinline nounwind optnone &quot;correctly-rounded-divide-sqrt-fp-math&quot;=&quot;false&quot;</span>
+<span class="s2">&quot;disable-tail-calls&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;frame-pointer&quot;</span><span class="o">=</span><span class="s2">&quot;none&quot;</span> <span class="s2">&quot;less-precise-fpmad&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;min-legal-vector-width&quot;</span><span class="o">=</span><span class="s2">&quot;0&quot;</span>
 <span class="s2">&quot;no-infs-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;no-jump-tables&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;no-nans-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;no-signed-zeros-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span>
-<span class="s2">&quot;no-trapping-math&quot;</span><span class="o">=</span><span class="s2">&quot;true&quot;</span> <span class="s2">&quot;stack-protector-buffer-size&quot;</span><span class="o">=</span><span class="s2">&quot;8&quot;</span> <span class="s2">&quot;target-cpu&quot;</span><span class="o">=</span><span class="s2">&quot;x86-64&quot;</span>
-<span class="s2">&quot;target-features&quot;</span><span class="o">=</span><span class="s2">&quot;+cx8,+fxsr,+mmx,+sse,+sse2,+x87&quot;</span> <span class="s2">&quot;tune-cpu&quot;</span><span class="o">=</span><span class="s2">&quot;generic&quot;</span> <span class="s2">&quot;unsafe-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;use-soft-float&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="o">}</span>
-...
+<span class="s2">&quot;no-trapping-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;stack-protector-buffer-size&quot;</span><span class="o">=</span><span class="s2">&quot;8&quot;</span> <span class="s2">&quot;unsafe-fp-math&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="s2">&quot;use-soft-float&quot;</span><span class="o">=</span><span class="s2">&quot;false&quot;</span> <span class="o">}</span>
 </pre></div>
 </div>
 <p>Тег <em>#0</em> в определении функции отображается в множество атрибутов функции. Множество атрибутов определяется в конце файла</p>
@@ -937,13 +974,119 @@ target <span class="nv">triple</span> <span class="o">=</span> <span class="s2">
 <li><p>первый базовый блок, который еще называют блоком вхожа - играет особую роль в функциях LLVM и не должен использоваться как цель</p></li>
 </ul>
 </div></blockquote>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
 </div>
 <div class="section" id="id14">
-<h2>Используемая литература<a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h2>
+<h3>Инструкции<a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="nl">entry</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">a</span><span class="p">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">alloca</span> <span class="n">i32</span><span class="p">,</span> <span class="n">align</span> <span class="mi">4</span>
+    <span class="o">%</span><span class="n">b</span><span class="p">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">alloca</span> <span class="n">i32</span><span class="p">,</span> <span class="n">align</span> <span class="mi">4</span>
+    <span class="n">store</span> <span class="n">i32</span> <span class="o">%</span><span class="n">a</span><span class="p">,</span> <span class="n">i32</span><span class="o">*</span> <span class="o">%</span><span class="n">a</span><span class="p">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">align</span> <span class="mi">4</span>
+    <span class="n">store</span> <span class="n">i32</span> <span class="o">%</span><span class="n">b</span><span class="p">,</span> <span class="n">i32</span><span class="o">*</span> <span class="o">%</span><span class="n">b</span><span class="p">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">align</span> <span class="mi">4</span>
+    <span class="o">%</span><span class="mi">0</span> <span class="o">=</span> <span class="n">load</span> <span class="n">i32</span><span class="p">,</span> <span class="n">i32</span><span class="o">*</span> <span class="o">%</span><span class="n">a</span><span class="p">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">align</span> <span class="mi">4</span>
+    <span class="o">%</span><span class="mi">1</span> <span class="o">=</span> <span class="n">load</span> <span class="n">i32</span><span class="p">,</span> <span class="n">i32</span><span class="o">*</span> <span class="o">%</span><span class="n">b</span><span class="p">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">align</span> <span class="mi">4</span>
+    <span class="o">%</span><span class="n">add</span> <span class="o">=</span> <span class="n">add</span> <span class="n">nsw</span> <span class="n">i32</span> <span class="o">%</span><span class="mi">0</span><span class="p">,</span> <span class="o">%</span><span class="mi">1</span>
+    <span class="n">ret</span> <span class="n">i32</span> <span class="o">%</span><span class="n">add</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Инструкция <strong>alloca</strong> резервирует пространство в кадре стека текущей функции. Обьем пространства определяется размером типа элемента с учетом указанного выравнивания. Первая инструкция * %a.addr = alloca i32, align 4*, выделяет место на стеке для 4-байтного элемента с выравниванием по границе 4 байт. Указатель на элемент в стеке сохраняется в локальном идентификаторе <em>%a.addr</em></p></li>
+<li><p>Аргументы %a и %b сохраняются на стеке, по адресам %a.addr и %b.addr с помощью инструкии <strong>store</strong></p></li>
+<li><p>Загрузка значений выполняется инструкциями <strong>load</strong></p></li>
+<li><p>Эти значения используются в операции сложения <em>%add = add nsw i32 %0, %1</em>. И результат функции add, возвращается из функции <strong>ret</strong>. Флаг <em>nsw</em> указывает, что данная операция сложения не должна проверять перенос в знаковый бит (no signed wrap)</p></li>
+<li><p>Инструкции <em>load</em> и <em>store</em> являются избыточными - аргументы функции можно использовать в инструкции <em>add</em> непосредственно. Сlang использует по умолчанию уровень оптимизации -O0, поэтому избыточные инструкции не удаляться. А если скомпилировать с -O1, на выходе получится более простой код:</p></li>
+</ul>
+<p>Пример файла с циклом:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>define i32 @sum<span class="o">(</span>i32 %a, i32 %b<span class="o">)</span> <span class="o">{</span>
+entry:
+  %add <span class="o">=</span> add nsw i32 %b, %a
+  ret i32 %add
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Пример файла с циклом:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">for_loop</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">sum</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clang -c example.cpp  -O0 --target<span class="o">=</span>xcore -emit-llvm -S -o add_o0.ll
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">;</span> <span class="nv">ModuleID</span> <span class="o">=</span> <span class="s1">&#39;example.cpp&#39;</span>
+<span class="nv">source_filename</span> <span class="o">=</span> <span class="s2">&quot;example.cpp&quot;</span>
+target <span class="nv">datalayout</span> <span class="o">=</span> <span class="s2">&quot;e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-i64:32-f64:32-a:0:32-n32&quot;</span>
+target <span class="nv">triple</span> <span class="o">=</span> <span class="s2">&quot;xcore&quot;</span>
+
+<span class="p">;</span> Function Attrs: noinline nounwind optnone
+define dso_local i32 @_Z8for_loopPi<span class="o">(</span>i32* %x<span class="o">)</span> <span class="c1">#0 {</span>
+entry:
+  %x.addr <span class="o">=</span> alloca i32*, align <span class="m">4</span>
+  %sum <span class="o">=</span> alloca i32, align <span class="m">4</span>
+  %i <span class="o">=</span> alloca i32, align <span class="m">4</span>
+  store i32* %x, i32** %x.addr, align <span class="m">4</span>
+  store i32 <span class="m">0</span>, i32* %sum, align <span class="m">4</span>
+  store i32 <span class="m">0</span>, i32* %i, align <span class="m">4</span>
+  br label %for.cond
+
+<span class="k">for</span>.cond:                                         <span class="p">;</span> <span class="nv">preds</span> <span class="o">=</span> %for.inc, %entry
+  %0 <span class="o">=</span> load i32, i32* %i, align <span class="m">4</span>
+  %cmp <span class="o">=</span> icmp slt i32 %0, <span class="m">10</span>
+  br i1 %cmp, label %for.body, label %for.end
+
+<span class="k">for</span>.body:                                    <span class="p">;</span> <span class="nv">preds</span> <span class="o">=</span> %for.cond
+  %1 <span class="o">=</span> load i32*, i32** %x.addr, align <span class="m">4</span>
+  %2 <span class="o">=</span> load i32, i32* %i, align <span class="m">4</span>
+  %arrayidx <span class="o">=</span> getelementptr inbounds i32, i32* %1, i32 %2
+  %3 <span class="o">=</span> load i32, i32* %arrayidx, align <span class="m">4</span>
+  %4 <span class="o">=</span> load i32, i32* %sum, align <span class="m">4</span>
+  %add <span class="o">=</span> add nsw i32 %4, %3
+  store i32 %add, i32* %sum, align <span class="m">4</span>
+  br label %for.inc
+
+<span class="k">for</span>.inc:                                   <span class="p">;</span> <span class="nv">preds</span> <span class="o">=</span> %for.body
+  %5 <span class="o">=</span> load i32, i32* %i, align <span class="m">4</span>
+  %inc <span class="o">=</span> add nsw i32 %5, <span class="m">1</span>
+  store i32 %inc, i32* %i, align <span class="m">4</span>
+  br label %for.cond
+
+<span class="k">for</span>.end:                                   <span class="p">;</span> <span class="nv">preds</span> <span class="o">=</span> %for.cond
+  %6 <span class="o">=</span> load i32, i32* %sum, align <span class="m">4</span>
+  ret i32 %6
+<span class="o">}</span>
+
+attributes <span class="c1">#0 = { noinline nounwind optnone ... }</span>
+
+!llvm.module.flags <span class="o">=</span> !<span class="o">{</span>!0<span class="o">}</span>
+!llvm.ident <span class="o">=</span> !<span class="o">{</span>!1<span class="o">}</span>
+
+!0 <span class="o">=</span> !<span class="o">{</span>i32 <span class="m">1</span>, !<span class="s2">&quot;wchar_size&quot;</span>, i32 <span class="m">1</span><span class="o">}</span>
+!1 <span class="o">=</span> !<span class="o">{</span>!<span class="s2">&quot;clang version 10.0.1 (https://github.com/llvm/llvm-project.git ef32c611aa214dea855364efd7ba451ec5ec3f74)&quot;</span><span class="o">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Финода</strong>- конструкция для определения значения переменной в зависимости от какого-то условия. В контексте SSA в зависимости от блока из которого мы пришли. <em>phi i32 [ 0, %0 ], [ %5, %1 ]</em>. Это означает, что функция примет значение 0, если переход произошёл с базового блока %0 (первый базовый блок в функции), и значение переменной %5, если переход произошёл с базового блока %1 (т.е. с выходной точки этого же базового блока)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id15">
+<h2>Оптимизации времени компиляции и времени компоновки<a class="headerlink" href="#id15" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Clang и Opt: -O0, -O1, -O2, -O3, -Os, -Oz</p>
+<p>Дополнительный уровень оптимизации Clang -O4</p>
+<ul class="simple">
+<li><p>-O4 - влаг оптимизаций типа -O3 с дополнительным флагом -flto (оптимизации времени компоновки)</p></li>
+<li><p>-Ox - определяет уровень оптимизаций</p></li>
+<li><p>-O0 - отсутствие оптимизаций</p></li>
+<li><p>-Os и -Oz - Такие же как и -O2 с дополнительными оптимизациями для уменьшения объема выполняемого кода</p></li>
+<li><p>-O2 - уровень умеренной оптимизации, включает в себя большинство из доступных</p></li>
+<li><p>-O3 - Такой же как -O2, дополнительно включающий оптимизации на которые требуется больше времени или которые приводят к увеличению объема кода.</p></li>
+</ul>
+</div>
+<div class="section" id="id16">
+<h2>Используемая литература<a class="headerlink" href="#id16" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="LLVMbook.pdf">LLVM. Инфраструктура для разработки компиляторов</a></p>
 </div>
 </div>
