@@ -5,9 +5,11 @@ LLVM: инфраструктура для разработки компилят�
 ~~~~~~~~~~~~~~~
 * Склонировать репозиторий с LLVM:
 
- :: 
+.. code-block :: bash 
 
   git clone https://github.com/llvm/llvm-project.git
+  #git clone --branch llmorg-10.0.1 --depth 1 https://github.com/llvm/llvm-project.git
+  
 
 * Конфигурирование сборочных файлов:
 
