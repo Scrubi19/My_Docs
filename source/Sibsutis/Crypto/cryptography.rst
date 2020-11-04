@@ -1350,6 +1350,350 @@
   }
 
 
+Глава 5. Криптографические протоколы
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ментальный покер(Пример на основе двух пользователей)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Рассмотрим задачу проведения честной игры в карты, когда партнеры находятся далеко друг от друга, но связаны компьютерной сетью. Мы рассмотрим предельно упрощенную постановку задачи, где участвуют всего два игрока и всего три карты. Однако все основные идеи будут продемонстрированы, а обобщения на другие случаи очевидны
+
+Задача ставится следующим образом. Имеются два игрока Алиса и Боб и три карты α , β , γ . Необходимо раздать карты следующим образом: Алиса должна получить одну карту, Боб — также одну, а одна карта должна остаться в прикупе. При этом необходимо, чтобы
+ * каждый игрок мог получить с равными вероятностями любую из трех карт α, или γ, а одна карта оказалась в прикупе
+ * каждый игрок знал только свою карту, но не знал карту противника и карту в прикупе
+ * в случае спора возможно было пригласить судью и выяснить, кто прав, кто виноват
+ * при раздаче карт с помощью компьютерной сети никто не знал, кому какая карта досталась (хотя раздача происходит по открытой линии связи и Ева может записать все передаваемые сообщения)
+
+На предварительном этапе необходимо вычислить несекретное большое просто число :math:`P`. Затем каждый абонент выбирает случайное число :math:`C`, взаимно простое с :math:`P-1` и вычисляет по обобщенному алгоритму Евклида (инверсия числа :math:`С`) число :math:`D`, так что
+
+.. math::
+  C*D \bmod (P-1) = 1
+
+Эти числа каждый игрок держит в секрете. Затем Алиса выбирает случайно три (различных) числа :math:`α_p, β_p, γ_p` в промежутке от 1 до P − 1, в открытом виде передает их Бобу и сообщает, что :math:`α_p` соответствует α (т. е., например, число 3756 соответствует тузу и т.д)
+
+Далее начинается раздача карт:
+
+**Шаг 1.** Алиса вычисляет числа и предварительно перемешав их высылает Бобу
+
+.. math::
+  u_1 = α_p^{C_A} \bmod p,  \\
+  u_2 = β_p^{C_A} \bmod p,  \\
+  u_3 = γ_p^{C_A} \bmod p, 
+
+**Шаг 2.** Боб получив числа, выбирает случайно одно из них и отправляет его Алисе. Это и будет карта, которая достанется ей в процессе раздачи
+
+.. math::
+  u_p = u_2^{D_A} \bmod p = β_p^{C_A*D_A} \bmod p = β_p
+
+**Шаг 3.** Боб продолжает свои действия. Он вычисляет оставшиеся числа, предварительно перемешав
+
+.. math::
+  v_1 = u_1^{C_B} \bmod p, \\
+  v_3 = u_3^{C_B} \bmod p, 
+
+**Шаг 4.** Алиса выбирает случайно одно из полученных чисел и вычисляет w и отправляет число Бобу
+
+.. math::
+  w_1 = v_1^{D_A} \bmod p
+
+**Шаг 5.** Боб вычисляет cвою карту. Последняя карта γ идет в прикуп
+
+.. math::
+  z = w_1^{D_B} \bmod p = w_1^{D_B} \bmod p = v_1^{D_A*D_B} \bmod p = u_1^{C_B*D_B*D_A} \bmod p = α_p^{C_A*C_B*D_B*D_A} \bmod p = α_p
+
+
+**Схема взаимодействия** α^ = :math:`α_p`, β^ = :math:`β_p`, γ^ = :math:`γ_p`:
+
+ .. figure:: img/poker1.png
+    :width: 600 px
+    :align: center
+    :alt: memtal_poker
+
+Многопользовательный ментальный покер
+""""""""""""""""""""""""""""""""""""""""
+
+**Схема взаимодействия** (выбор 1 карты пользователем А) α^ = :math:`α_p`, β^ = :math:`β_p`, γ^ = :math:`γ_p`:
+
+ .. figure:: img/poker2.png
+    :width: 600 px
+    :align: center
+    :alt: memtal_poker
+
+В данной схеме используюется *Крупье*
+
+**Шаг 1.** Крупье перемешав колоду, шифрует карту открытыми ключами С каждого пользователя. И передает их игрокам
+
+.. math::
+  u_i = α_p^{C_A*C_B*C_C} \bmod p
+  
+**Шаг 2.** Далее пользователь А передает свою карту всем игрокам, чтобы те расшифровали их своих ключом. Далее они возвращают карту владельцу
+
+.. math::
+  u_B = u_i^{D_B} \bmod p \ - \ Пользователь \ B \\
+  u_{BC} = u_B^{D_C} \bmod p \ - \ Пользователь \ C
+
+**Шаг 3.** Пользователь А расшифровывает карту своим ключом и получает карту
+
+.. math::
+  u_{ABC} = u_{BC}^{D_A} \bmod p = α_p
+
+
+Листинг программы:
+
+.. code-block:: java
+
+  // Class Player
+  package laba4_mental_poker;
+
+  import laba1.Euclid;
+
+  import java.math.BigInteger;
+  import java.util.ArrayList;
+  import java.util.Collections;
+  import java.util.Random;
+
+  public class Player {
+    private String[] cards;
+    public String name;
+
+    private static BigInteger P;
+    private BigInteger C;
+    private BigInteger D;
+
+    public Cards chargedDeck;
+
+    public static void generateBigPrimeP() {
+        do {
+            P = getRandomBigInteger(30);
+        } while(!P.isProbablePrime(100));
+    }
+
+    public Player( String name, Cards deck) {
+        cards = new String[2];
+        this.name = name;
+        chargedDeck = deck;
+        long[] EuclidResult;
+        BigInteger temp_P = P.subtract(BigInteger.valueOf(1));
+        do {
+            do {
+                C = getRandomBigInteger(30);
+                EuclidResult = Euclid.calculate(C.longValue(), temp_P.longValue());
+            } while (EuclidResult[0] != 1);
+            D = new BigInteger((String.valueOf(EuclidResult[2] + temp_P.longValue())));
+        } while(!C.multiply(D).mod(BigInteger.valueOf(temp_P.longValue())).equals(BigInteger.ONE));
+    }
+
+    public ArrayList<BigInteger> decryptCards(ArrayList<BigInteger> cards) {
+        ArrayList<BigInteger> uDeck = new ArrayList<>(cards.size());
+        for (BigInteger card : cards) {
+            uDeck.add(card.modPow(getD(), P));
+        }
+        Collections.shuffle(uDeck);
+        return uDeck;
+    }
+
+    public void seeCards(ArrayList<BigInteger> cards) {
+        System.out.println("\tPlayer "+name+": key = "+getD());
+        for (int i = 0; i < cards.size(); i++) {
+            this.cards[i] = chargedDeck.deckInterpreter(chargedDeck.deck, cards.get(i));
+            System.out.print(" < "+this.cards[i]+" >");
+        }
+        System.out.println("\n");
+    }
+
+    /**
+     *
+     * @param numBits number of bits
+     * @return number between 0 and 2^(numBits) - 1
+     */
+    public static BigInteger getRandomBigInteger(int numBits) {
+        BigInteger number = new BigInteger(numBits, new Random());
+        return number.setBit(0);
+    }
+
+    public BigInteger getC() {
+        return C;
+    }
+    public BigInteger getD() {
+        return D;
+    }
+    public static BigInteger getP() {
+        return P;
+    }
+    public String[] getCards() {
+        return cards;
+    }
+    public void setCards(String[] cards) {
+        this.cards = cards;
+    }
+    public void setKeyForCroupier(Croupier croupier, BigInteger key) {
+        croupier.setKeys(key);
+    }
+  }
+
+  // Class Cards
+  package laba4_mental_poker;
+
+  import java.math.BigInteger;
+  import java.security.SecureRandom;
+  import java.util.ArrayList;
+
+  public class Cards {
+    public static int NUM_OF_CARDS = 52;
+    public static int NUM_OF_SUITS = 4;
+    public static int NUM_OF_VALUES = 13;
+
+    public ArrayList<String> suitName = new ArrayList<>(NUM_OF_SUITS);
+    public ArrayList<String> valuesName = new ArrayList<>(NUM_OF_VALUES);
+
+    public ArrayList<BigInteger> deck = new ArrayList<BigInteger>(NUM_OF_CARDS);
+
+    public Cards() {
+        suitName.add("Hearts");
+        suitName.add("Diamonds");
+        suitName.add("Spades");
+        suitName.add("Clubs");
+
+        valuesName.add("two");
+        valuesName.add("three");
+        valuesName.add("four");
+        valuesName.add("five");
+        valuesName.add("six");
+        valuesName.add("seven");
+        valuesName.add("eight");
+        valuesName.add("nine");
+        valuesName.add("ten");
+        valuesName.add("jack");
+        valuesName.add("queen");
+        valuesName.add("king");
+        valuesName.add("ace");
+    }
+
+    public void initDeck(BigInteger P) {
+        SecureRandom srand = new SecureRandom();
+        srand.setSeed(System.currentTimeMillis());
+        for (int i = 0; i < NUM_OF_CARDS; i++) {
+            deck.add(new BigInteger(String.valueOf(srand.nextInt(P.intValue()-2)+1)));
+        }
+    }
+
+    public String deckInterpreter(ArrayList<BigInteger> cardDeck, BigInteger cardValue) {
+        int suit,value;
+        String cardName;
+        for (int i = 0; i < NUM_OF_CARDS; i++) {
+            if (cardDeck.get(i).equals(cardValue)) {
+                suit = i / NUM_OF_VALUES;
+                value = i % NUM_OF_VALUES;
+                cardName = valuesName.get(value)+" "+suitName.get(suit);
+                return cardName;
+            }
+        }
+        return null;
+    }
+  }
+
+  // Class Croupier
+  package laba4_mental_poker;
+
+  import java.math.BigInteger;
+  import java.security.SecureRandom;
+  import java.util.ArrayList;
+
+  public class Croupier {
+
+    public BigInteger P;
+    public Cards chargedDeck;
+    private String[] buyIn;
+    private ArrayList<BigInteger> keys = new ArrayList<>();
+
+    public Croupier(Cards deck, BigInteger P) {
+        this.P = P;
+        buyIn = new String[5];
+        chargedDeck = deck;
+    }
+
+    public ArrayList<BigInteger> encryptCards() {
+        ArrayList<BigInteger> uDeck = new ArrayList<>(chargedDeck.deck.size());
+        BigInteger commonCKey = new BigInteger(String.valueOf(BigInteger.ONE));
+        for (BigInteger key : keys) {
+            commonCKey = commonCKey.multiply(key);
+        }
+        for (int i = 0; i < chargedDeck.deck.size(); i++) {
+            uDeck.add(chargedDeck.deck.get(i).modPow(commonCKey, P));
+        }
+        return uDeck;
+    }
+
+    public ArrayList<BigInteger> chooseCard (ArrayList<BigInteger> cards, int numOfCards) {
+        ArrayList<BigInteger> selectedCards = new ArrayList<>(numOfCards);
+        int randomInteger;
+        SecureRandom srand = new SecureRandom();
+        srand.setSeed(System.currentTimeMillis());
+
+        for (int i = 0; i < numOfCards; i++) {
+            randomInteger = srand.nextInt(cards.size());
+            selectedCards.add(cards.get(randomInteger));
+            cards.remove(randomInteger);
+        }
+        return selectedCards;
+    }
+    public void seeBuyIN(ArrayList<BigInteger> cards) {
+        System.out.println("\t\tTable Deck ");
+        for (int i = 0; i < cards.size(); i++) {
+            this.buyIn[i] = chargedDeck.deckInterpreter(chargedDeck.deck, cards.get(i));
+            System.out.println(" < "+this.buyIn[i]+" >");
+        }
+        System.out.println("\n");
+    }
+
+    public void setKeys(BigInteger key) {
+        this.keys.add(key);
+    }
+
+  // Main
+  package laba4_mental_poker;
+
+  import java.math.BigInteger;
+  import java.util.ArrayList;
+
+  public class Main {
+    public static void main(String[] args) {
+        int numPlayers = 5;
+        ArrayList<BigInteger> uiDeck, buyIn;
+        Player.generateBigPrimeP();
+
+        Cards cards = new Cards();
+        cards.initDeck(Player.getP());
+
+        Croupier croupier = new Croupier(cards, Player.getP());
+
+        Player[] players = new Player[numPlayers];
+
+        for (int i = 0; i < numPlayers; i++) {
+            players[i] = new Player(String.valueOf(i+1), cards);
+            players[i].setKeyForCroupier(croupier, players[i].getC());
+        }
+
+        ArrayList<BigInteger> uDeck = croupier.encryptCards();
+
+        for (int i = 0; i < numPlayers; i++) {
+            uiDeck = croupier.chooseCard(uDeck, 2);
+            for (int j = (i+1)%numPlayers; j != i; j = (j+1)%numPlayers) {
+                uiDeck =  players[j].decryptCards(uiDeck);
+            }
+            players[i].seeCards(players[i].decryptCards(uiDeck));
+        }
+
+        buyIn = croupier.chooseCard(uDeck, 5);
+        for (int i = 0; i < numPlayers; i++) {
+            buyIn =  players[i].decryptCards(buyIn);
+        }
+        croupier.seeBuyIN(buyIn);
+    }
+  }
+
+
+
 
 
 

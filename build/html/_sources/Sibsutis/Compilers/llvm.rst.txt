@@ -636,6 +636,201 @@ Clang-Check позволяет выполнять парсинг исходно�
  -record    # Filter by records (class/struct)
  -variable  # Filter by variables
 
+Использованные источники:
+
+ * `clang_createIndex/clang_disposeIndex <https://clang.llvm.org/doxygen/group__CINDEX.html#ga51eb9b38c18743bf2d824c6230e61f93>`_ — создать/уничтожить контекст для парсинга единиц трансляции.
+ * `clang_parseTranslationUnit/clang_disposeTranslationUnit <https://clang.llvm.org/doxygen/group__CINDEX__TRANSLATION__UNIT.html#ga2baf83f8c3299788234c8bce55e4472e>`_ — распарсить/уничтожить единицу трансляции
+ * `обход по AST дереву <https://shaharmike.com/cpp/libclang/>`_
+
+
+Листинг программы:
+
+.. code-block:: c
+
+  #include <stdio.h>
+  #include <iostream>
+  #include <fstream>
+  #include <string>
+  #include <cstring>
+  #include <cctype>
+  #include <algorithm>
+  #include <clang-c/Index.h>
+
+  std::string filename, search;
+
+  struct flags {
+    bool FUNC_F   = false;
+    bool CASE_I_F = false;
+    bool MEMBER_F = false;
+    bool PARAM_F  = false;
+    bool REC_F    = false;
+    bool VAR_F    = false;
+  } flags;
+
+  struct coordinates {
+    unsigned int row;
+    unsigned int col;
+    std::string str;
+  };
+
+  std::ostream& operator<<(std::ostream& stream, const CXString& str) {
+    stream << clang_getCString(str);
+    clang_disposeString(str);
+    return stream;
+  }
+
+  bool flag_intepretator (CXCursorKind input) {
+    if (flags.FUNC_F && input == CXCursor_FunctionDecl) {
+        return true;
+    } else if (flags.MEMBER_F && input == CXCursor_MemberRef) {
+        return true;
+    } else if (flags.PARAM_F && input == CXCursor_ParmDecl) {
+        return true;
+    } else if (flags.REC_F && (input == CXCursor_ClassDecl || input == CXCursor_StructDecl) ) {
+        return true;
+    } else if (flags.VAR_F && input == CXCursor_VarDecl) {
+        return true;
+    }
+    return false;
+  }
+
+  void getCursorPosition(const char *filename, unsigned int pos, struct coordinates *loc){
+    std::ifstream fin;
+    fin.open(filename);
+    char buf[150];
+    fin.getline(buf, 150);
+    char *p = buf;
+    loc->row = 1;
+    loc->col = 0;
+    for(int i = 0; i < pos; i++) {
+        ++loc->col;
+        if (*p == '\0') {
+            ++loc->row;
+            loc->col = 0;
+            fin.getline(buf, 150);
+            p = buf;
+        } else ++p;
+    }
+    loc->str = buf;
+  }
+
+
+  int main(int argc, char** argv) {
+
+    int i = 0;
+    std::string argument;
+
+    CXIndex index = clang_createIndex (
+        false, // excludeDeclarationFromPCH
+        true   // displayDiagnostics
+    );
+
+    CXTranslationUnit unit = clang_parseTranslationUnit (
+        index,                          
+        0,        //argv[3]           // source_filename
+        argv+1,   //argv + 1  ,      // command_line_args
+        argc-1,  //argc - 1         // num_command_line_args
+        0,                         // unsave_files
+        0,                        // num_unsaved_files
+        CXTranslationUnit_None   // options
+    );
+
+    if ( !unit ) {
+        std::cout << "Translation unit was not created (file doesn't exist)\n";
+        return -1;
+    }
+
+    if (argc != 1) {
+        while(argv[i]) {
+            argument = argv[i];
+            if(std::strcmp(argv[i], "-function") == 0) {
+                flags.FUNC_F = true;
+            } else if(std::strcmp(argv[i], "-i") == 0) {
+                flags.CASE_I_F = true;
+            } else if(std::strcmp(argv[i], "-member") == 0) {
+                flags.MEMBER_F = true;
+            } else if(std::strcmp(argv[i], "-parameter") == 0) {
+                flags.PARAM_F = true;
+            } else if(std::strcmp(argv[i], "-record") == 0) {
+                flags.REC_F = true;
+            } else if(std::strcmp(argv[i], "-variable") == 0) {
+                flags.VAR_F = true;
+            } else if (argument.find("-") > 100 && argument.find(".") > 100)  {
+                search = argument;
+            } else if (argument.find(".cpp") < 100) {
+                filename = argv[i];
+            } else if(std::strcmp(argv[i], "-help") == 0) {
+                std::cout << "Avaialable flags:\n-function  - Filter by functions \n" <<
+                "-i         - Make the search case-insensitive\n" <<
+                "-member    - Filter by members\n" <<
+                "-parameter - Filter by function parameter\n" <<
+                "-record    - Filter by records (class/struct)\n" <<
+                "-variable  - Filter by variables\n";
+                return 0;
+            }
+            i++;
+        }
+    }
+
+    CXCursor cursor = clang_getTranslationUnitCursor(unit);
+
+    if (flags.CASE_I_F) {
+       transform(search.begin(), search.end(), search.begin(), ::tolower);
+    }
+
+    clang_visitChildren(cursor, [](CXCursor c, CXCursor parent, CXClientData client_data) {
+        std::string ast_line = clang_getCString(clang_getCursorSpelling(c));
+        if(flags.CASE_I_F) {
+            int j = 0;
+            while (ast_line[j]) {
+                ast_line[j] = (char)std::tolower(ast_line[j]); 
+                j++;
+            }
+        }
+        if(std::strcmp(ast_line.c_str(), search.c_str()) == 0 && flag_intepretator(clang_getCursorKind(c))){
+            struct coordinates position;
+            getCursorPosition(filename.c_str(), clang_getCursorLocation(c).int_data, &position);
+            std::cout << position.row << ":" << position.col << " " << position.str << "\n";
+        }
+        return CXChildVisit_Recurse;
+    },
+    nullptr);
+
+    clang_disposeTranslationUnit(unit);
+    clang_disposeIndex(index);
+  }
+
+**Сборка проекта (cmake):**
+
+.. code-block:: cmake
+
+  cmake_minimum_required (VERSION 3.8)
+
+  project (cxxgrep)
+
+  add_executable (cxxgrep src/cxxgrep.cpp )
+
+  target_link_libraries(cxxgrep clang)
+
+**Или сборка проекта (make):**
+
+.. code-block:: make
+
+  LIBSPATH = -I usr/local/include
+  CXXFLAGS = --std=c++14
+  LDLIBS = -lclang -lLLVMSupport -lpthread -fno-rtti
+
+  all:
+	  clang++  src/cxxgrep.cpp -o cxxgrep $(LIBSPATH) $(CXXFLAGS) $(LDLIBS)
+
+  clean:
+	  rm -rf cxxgrep
+
+
+
+
+
+
 LLVM IR
 ~~~~~~~~~~~~~~
 

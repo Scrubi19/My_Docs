@@ -124,7 +124,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id15">Стандарты на цифровую подпись (ГОСТ Р34.10-94)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id16">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id16">Глава 5. Криптографические протоколы</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id17">Ментальный покер(Пример на основе двух пользователей)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id18">Многопользовательный ментальный покер</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id19">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -821,6 +826,191 @@ hello.c:12:5: note: <span class="s2">&quot;root&quot;</span> node binds here
 -parameter <span class="c1"># Filter by function parameter</span>
 -record    <span class="c1"># Filter by records (class/struct)</span>
 -variable  <span class="c1"># Filter by variables</span>
+</pre></div>
+</div>
+<p>Использованные источники:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://clang.llvm.org/doxygen/group__CINDEX.html#ga51eb9b38c18743bf2d824c6230e61f93">clang_createIndex/clang_disposeIndex</a> — создать/уничтожить контекст для парсинга единиц трансляции.</p></li>
+<li><p><a class="reference external" href="https://clang.llvm.org/doxygen/group__CINDEX__TRANSLATION__UNIT.html#ga2baf83f8c3299788234c8bce55e4472e">clang_parseTranslationUnit/clang_disposeTranslationUnit</a> — распарсить/уничтожить единицу трансляции</p></li>
+<li><p><a class="reference external" href="https://shaharmike.com/cpp/libclang/">обход по AST дереву</a></p></li>
+</ul>
+</div></blockquote>
+<p>Листинг программы:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cctype&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;clang-c/Index.h&gt;</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span><span class="p">,</span> <span class="n">search</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="nc">flags</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">FUNC_F</span>   <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">CASE_I_F</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">MEMBER_F</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">PARAM_F</span>  <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">REC_F</span>    <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">VAR_F</span>    <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">flags</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="nc">coordinates</span> <span class="p">{</span>
+  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">row</span><span class="p">;</span>
+  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">col</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">stream</span><span class="p">,</span> <span class="k">const</span> <span class="n">CXString</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">stream</span> <span class="o">&lt;&lt;</span> <span class="n">clang_getCString</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+  <span class="n">clang_disposeString</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">stream</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">flag_intepretator</span> <span class="p">(</span><span class="n">CXCursorKind</span> <span class="n">input</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">FUNC_F</span> <span class="o">&amp;&amp;</span> <span class="n">input</span> <span class="o">==</span> <span class="n">CXCursor_FunctionDecl</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">MEMBER_F</span> <span class="o">&amp;&amp;</span> <span class="n">input</span> <span class="o">==</span> <span class="n">CXCursor_MemberRef</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">PARAM_F</span> <span class="o">&amp;&amp;</span> <span class="n">input</span> <span class="o">==</span> <span class="n">CXCursor_ParmDecl</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">REC_F</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">input</span> <span class="o">==</span> <span class="n">CXCursor_ClassDecl</span> <span class="o">||</span> <span class="n">input</span> <span class="o">==</span> <span class="n">CXCursor_StructDecl</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">VAR_F</span> <span class="o">&amp;&amp;</span> <span class="n">input</span> <span class="o">==</span> <span class="n">CXCursor_VarDecl</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">getCursorPosition</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">pos</span><span class="p">,</span> <span class="k">struct</span> <span class="nc">coordinates</span> <span class="o">*</span><span class="n">loc</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">fin</span><span class="p">;</span>
+  <span class="n">fin</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span>
+  <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">150</span><span class="p">];</span>
+  <span class="n">fin</span><span class="p">.</span><span class="n">getline</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span>
+  <span class="n">loc</span><span class="o">-&gt;</span><span class="n">row</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">loc</span><span class="o">-&gt;</span><span class="n">col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">pos</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="o">++</span><span class="n">loc</span><span class="o">-&gt;</span><span class="n">col</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;\0&#39;</span><span class="p">)</span> <span class="p">{</span>
+          <span class="o">++</span><span class="n">loc</span><span class="o">-&gt;</span><span class="n">row</span><span class="p">;</span>
+          <span class="n">loc</span><span class="o">-&gt;</span><span class="n">col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="n">fin</span><span class="p">.</span><span class="n">getline</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
+          <span class="n">p</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="o">++</span><span class="n">p</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">loc</span><span class="o">-&gt;</span><span class="n">str</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">argument</span><span class="p">;</span>
+
+  <span class="n">CXIndex</span> <span class="n">index</span> <span class="o">=</span> <span class="n">clang_createIndex</span> <span class="p">(</span>
+      <span class="nb">false</span><span class="p">,</span> <span class="c1">// excludeDeclarationFromPCH</span>
+      <span class="nb">true</span>   <span class="c1">// displayDiagnostics</span>
+  <span class="p">);</span>
+
+  <span class="n">CXTranslationUnit</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">clang_parseTranslationUnit</span> <span class="p">(</span>
+      <span class="n">index</span><span class="p">,</span>
+      <span class="mi">0</span><span class="p">,</span>        <span class="c1">//argv[3]           // source_filename</span>
+      <span class="n">argv</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>   <span class="c1">//argv + 1  ,      // command_line_args</span>
+      <span class="n">argc</span><span class="mi">-1</span><span class="p">,</span>  <span class="c1">//argc - 1         // num_command_line_args</span>
+      <span class="mi">0</span><span class="p">,</span>                         <span class="c1">// unsave_files</span>
+      <span class="mi">0</span><span class="p">,</span>                        <span class="c1">// num_unsaved_files</span>
+      <span class="n">CXTranslationUnit_None</span>   <span class="c1">// options</span>
+  <span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">unit</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Translation unit was not created (file doesn&#39;t exist)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="k">return</span> <span class="mi">-1</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">while</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+          <span class="n">argument</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+          <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&quot;-function&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">flags</span><span class="p">.</span><span class="n">FUNC_F</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&quot;-i&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">flags</span><span class="p">.</span><span class="n">CASE_I_F</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&quot;-member&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">flags</span><span class="p">.</span><span class="n">MEMBER_F</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&quot;-parameter&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">flags</span><span class="p">.</span><span class="n">PARAM_F</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&quot;-record&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">flags</span><span class="p">.</span><span class="n">REC_F</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&quot;-variable&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">flags</span><span class="p">.</span><span class="n">VAR_F</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">argument</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="o">&amp;&amp;</span> <span class="n">argument</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span>  <span class="p">{</span>
+              <span class="n">search</span> <span class="o">=</span> <span class="n">argument</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">argument</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;.cpp&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">filename</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&quot;-help&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Avaialable flags:</span><span class="se">\n</span><span class="s">-function  - Filter by functions </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span>
+              <span class="s">&quot;-i         - Make the search case-insensitive</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span>
+              <span class="s">&quot;-member    - Filter by members</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span>
+              <span class="s">&quot;-parameter - Filter by function parameter</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span>
+              <span class="s">&quot;-record    - Filter by records (class/struct)</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span>
+              <span class="s">&quot;-variable  - Filter by variables</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+              <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">CXCursor</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">clang_getTranslationUnitCursor</span><span class="p">(</span><span class="n">unit</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">CASE_I_F</span><span class="p">)</span> <span class="p">{</span>
+     <span class="n">transform</span><span class="p">(</span><span class="n">search</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">search</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">search</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="o">::</span><span class="n">tolower</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">clang_visitChildren</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="p">[](</span><span class="n">CXCursor</span> <span class="n">c</span><span class="p">,</span> <span class="n">CXCursor</span> <span class="n">parent</span><span class="p">,</span> <span class="n">CXClientData</span> <span class="n">client_data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">ast_line</span> <span class="o">=</span> <span class="n">clang_getCString</span><span class="p">(</span><span class="n">clang_getCursorSpelling</span><span class="p">(</span><span class="n">c</span><span class="p">));</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">flags</span><span class="p">.</span><span class="n">CASE_I_F</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">while</span> <span class="p">(</span><span class="n">ast_line</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+              <span class="n">ast_line</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">std</span><span class="o">::</span><span class="n">tolower</span><span class="p">(</span><span class="n">ast_line</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+              <span class="n">j</span><span class="o">++</span><span class="p">;</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strcmp</span><span class="p">(</span><span class="n">ast_line</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">search</span><span class="p">.</span><span class="n">c_str</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">flag_intepretator</span><span class="p">(</span><span class="n">clang_getCursorKind</span><span class="p">(</span><span class="n">c</span><span class="p">))){</span>
+          <span class="k">struct</span> <span class="nc">coordinates</span> <span class="n">position</span><span class="p">;</span>
+          <span class="n">getCursorPosition</span><span class="p">(</span><span class="n">filename</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">clang_getCursorLocation</span><span class="p">(</span><span class="n">c</span><span class="p">).</span><span class="n">int_data</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">position</span><span class="p">);</span>
+          <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">position</span><span class="p">.</span><span class="n">row</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">position</span><span class="p">.</span><span class="n">col</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">position</span><span class="p">.</span><span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="n">CXChildVisit_Recurse</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="n">nullptr</span><span class="p">);</span>
+
+  <span class="n">clang_disposeTranslationUnit</span><span class="p">(</span><span class="n">unit</span><span class="p">);</span>
+  <span class="n">clang_disposeIndex</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Сборка проекта (cmake):</strong></p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span> <span class="p">(</span><span class="s">VERSION</span> <span class="s">3.8</span><span class="p">)</span>
+
+<span class="nb">project</span> <span class="p">(</span><span class="s">cxxgrep</span><span class="p">)</span>
+
+<span class="nb">add_executable</span> <span class="p">(</span><span class="s">cxxgrep</span> <span class="s">src/cxxgrep.cpp</span> <span class="p">)</span>
+
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">cxxgrep</span> <span class="s">clang</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Или сборка проекта (make):</strong></p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">LIBSPATH</span> <span class="o">=</span> -I usr/local/include
+<span class="nv">CXXFLAGS</span> <span class="o">=</span> --std<span class="o">=</span>c++14
+<span class="nv">LDLIBS</span> <span class="o">=</span> -lclang -lLLVMSupport -lpthread -fno-rtti
+
+<span class="nf">all</span><span class="o">:</span>
+        clang++  src/cxxgrep.cpp -o cxxgrep <span class="k">$(</span>LIBSPATH<span class="k">)</span> <span class="k">$(</span>CXXFLAGS<span class="k">)</span> <span class="k">$(</span>LDLIBS<span class="k">)</span>
+
+<span class="nf">clean</span><span class="o">:</span>
+        rm -rf cxxgrep
 </pre></div>
 </div>
 </div>
