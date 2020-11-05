@@ -1414,25 +1414,31 @@
 
 **Схема взаимодействия** (выбор 1 карты пользователем А) α^ = :math:`α_p`, β^ = :math:`β_p`, γ^ = :math:`γ_p`:
 
- .. figure:: img/poker2.png
+ .. figure:: img/Poker.png
     :width: 600 px
     :align: center
-    :alt: memtal_poker
+    :alt: mental_poker
 
 В данной схеме используюется *Крупье*
 
-**Шаг 1.** Крупье перемешав колоду, шифрует карту открытыми ключами С каждого пользователя. И передает их игрокам
+**Шаг 1.** Каждый игрок шифрует колоду ключом С
 
 .. math::
-  u_i = α_p^{C_A*C_B*C_C} \bmod p
+  A: \ u_A = α_p^{C_A} \bmod p,  \\
+  B: \ u_{AB} = u_A^{C_B} \bmod p,  \\
+  C: \ u_{ABC} = u_{AB}^{C_C} \bmod p, 
   
-**Шаг 2.** Далее пользователь А передает свою карту всем игрокам, чтобы те расшифровали их своих ключом. Далее они возвращают карту владельцу
+**Шаг 2.** Далее игроки передают зашифрованную колоду Крупье и крупье выдает карты (:math:`u_i`), предварительно перемешав
+
+
+**Шаг 3.** Игрок А передает свою карту(:math:`u_i`) другим игрокам для расшифровки
 
 .. math::
   u_B = u_i^{D_B} \bmod p \ - \ Пользователь \ B \\
   u_{BC} = u_B^{D_C} \bmod p \ - \ Пользователь \ C
 
-**Шаг 3.** Пользователь А расшифровывает карту своим ключом и получает карту
+
+**Шаг 3.** Игрок А получив карту расшифровывает карту своим ключом и получает значение карты
 
 .. math::
   u_{ABC} = u_{BC}^{D_A} \bmod p = α_p
@@ -1483,6 +1489,15 @@
         } while(!C.multiply(D).mod(BigInteger.valueOf(temp_P.longValue())).equals(BigInteger.ONE));
     }
 
+    public ArrayList<BigInteger> encryptCards(ArrayList<BigInteger> cards) {
+        ArrayList<BigInteger> uDeck = new ArrayList<>(cards.size());
+        for (BigInteger card : cards) {
+            uDeck.add(card.modPow(getC(), P));
+        }
+        Collections.shuffle(uDeck);
+        return uDeck;
+    }
+
     public ArrayList<BigInteger> decryptCards(ArrayList<BigInteger> cards) {
         ArrayList<BigInteger> uDeck = new ArrayList<>(cards.size());
         for (BigInteger card : cards) {
@@ -1501,11 +1516,7 @@
         System.out.println("\n");
     }
 
-    /**
-     *
-     * @param numBits number of bits
-     * @return number between 0 and 2^(numBits) - 1
-     */
+   
     public static BigInteger getRandomBigInteger(int numBits) {
         BigInteger number = new BigInteger(numBits, new Random());
         return number.setBit(0);
@@ -1526,10 +1537,8 @@
     public void setCards(String[] cards) {
         this.cards = cards;
     }
-    public void setKeyForCroupier(Croupier croupier, BigInteger key) {
-        croupier.setKeys(key);
-    }
   }
+
 
   // Class Cards
   package laba4_mental_poker;
@@ -1604,24 +1613,11 @@
     public BigInteger P;
     public Cards chargedDeck;
     private String[] buyIn;
-    private ArrayList<BigInteger> keys = new ArrayList<>();
 
     public Croupier(Cards deck, BigInteger P) {
         this.P = P;
         buyIn = new String[5];
         chargedDeck = deck;
-    }
-
-    public ArrayList<BigInteger> encryptCards() {
-        ArrayList<BigInteger> uDeck = new ArrayList<>(chargedDeck.deck.size());
-        BigInteger commonCKey = new BigInteger(String.valueOf(BigInteger.ONE));
-        for (BigInteger key : keys) {
-            commonCKey = commonCKey.multiply(key);
-        }
-        for (int i = 0; i < chargedDeck.deck.size(); i++) {
-            uDeck.add(chargedDeck.deck.get(i).modPow(commonCKey, P));
-        }
-        return uDeck;
     }
 
     public ArrayList<BigInteger> chooseCard (ArrayList<BigInteger> cards, int numOfCards) {
@@ -1645,13 +1641,10 @@
         }
         System.out.println("\n");
     }
-
-    public void setKeys(BigInteger key) {
-        this.keys.add(key);
-    }
+  }
 
   // Main
-  package laba4_mental_poker;
+ package laba4_mental_poker;
 
   import java.math.BigInteger;
   import java.util.ArrayList;
@@ -1665,16 +1658,18 @@
         Cards cards = new Cards();
         cards.initDeck(Player.getP());
 
-        Croupier croupier = new Croupier(cards, Player.getP());
-
         Player[] players = new Player[numPlayers];
+        Croupier croupier = new Croupier(cards, Player.getP());
 
         for (int i = 0; i < numPlayers; i++) {
             players[i] = new Player(String.valueOf(i+1), cards);
-            players[i].setKeyForCroupier(croupier, players[i].getC());
         }
 
-        ArrayList<BigInteger> uDeck = croupier.encryptCards();
+        ArrayList<BigInteger> uDeck = cards.deck;
+
+        for (int i = 0; i < numPlayers; i++) {
+            uDeck = players[i].encryptCards(uDeck);
+        }
 
         for (int i = 0; i < numPlayers; i++) {
             uiDeck = croupier.chooseCard(uDeck, 2);
@@ -1691,6 +1686,7 @@
         croupier.seeBuyIN(buyIn);
     }
   }
+
 
 
 

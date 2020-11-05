@@ -1461,270 +1461,262 @@ v_3 = u_3^{C_B} \bmod p,\end{split}\]</div>
 <p><strong>Схема взаимодействия</strong> (выбор 1 карты пользователем А) α^ = <span class="math notranslate nohighlight">\(α_p\)</span>, β^ = <span class="math notranslate nohighlight">\(β_p\)</span>, γ^ = <span class="math notranslate nohighlight">\(γ_p\)</span>:</p>
 <blockquote>
 <div><div class="figure align-center">
-<a class="reference internal image-reference" href="../../_images/poker2.png"><img alt="memtal_poker" src="../../_images/poker2.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../../_images/Poker.png"><img alt="mental_poker" src="../../_images/Poker.png" style="width: 600px;" /></a>
 </div>
 </div></blockquote>
 <p>В данной схеме используюется <em>Крупье</em></p>
-<p><strong>Шаг 1.</strong> Крупье перемешав колоду, шифрует карту открытыми ключами С каждого пользователя. И передает их игрокам</p>
+<p><strong>Шаг 1.</strong> Каждый игрок шифрует колоду ключом С</p>
 <div class="math notranslate nohighlight">
-\[u_i = α_p^{C_A*C_B*C_C} \bmod p\]</div>
-<p><strong>Шаг 2.</strong> Далее пользователь А передает свою карту всем игрокам, чтобы те расшифровали их своих ключом. Далее они возвращают карту владельцу</p>
+\[\begin{split}A: \ u_A = α_p^{C_A} \bmod p,  \\
+B: \ u_{AB} = u_A^{C_B} \bmod p,  \\
+C: \ u_{ABC} = u_{AB}^{C_C} \bmod p,\end{split}\]</div>
+<p><strong>Шаг 2.</strong> Далее игроки передают зашифрованную колоду Крупье и крупье выдает карты (<span class="math notranslate nohighlight">\(u_i\)</span>), предварительно перемешав</p>
+<p><strong>Шаг 3.</strong> Игрок А передает свою карту(<span class="math notranslate nohighlight">\(u_i\)</span>) другим игрокам для расшифровки</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}u_B = u_i^{D_B} \bmod p \ - \ Пользователь \ B \\
 u_{BC} = u_B^{D_C} \bmod p \ - \ Пользователь \ C\end{split}\]</div>
-<p><strong>Шаг 3.</strong> Пользователь А расшифровывает карту своим ключом и получает карту</p>
+<p><strong>Шаг 3.</strong> Игрок А получив карту расшифровывает карту своим ключом и получает значение карты</p>
 <div class="math notranslate nohighlight">
 \[u_{ABC} = u_{BC}^{D_A} \bmod p = α_p\]</div>
 <p>Листинг программы:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// Class Player</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span> <span class="c1">// Class Player</span>
+ <span class="kn">package</span> <span class="nn">laba4_mental_poker</span><span class="p">;</span>
+
+ <span class="kn">import</span> <span class="nn">laba1.Euclid</span><span class="p">;</span>
+
+ <span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.util.Collections</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.util.Random</span><span class="p">;</span>
+
+ <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Player</span> <span class="p">{</span>
+   <span class="kd">private</span> <span class="n">String</span><span class="o">[]</span> <span class="n">cards</span><span class="p">;</span>
+   <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+
+   <span class="kd">private</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="n">P</span><span class="p">;</span>
+   <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">C</span><span class="p">;</span>
+   <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">D</span><span class="p">;</span>
+
+   <span class="kd">public</span> <span class="n">Cards</span> <span class="n">chargedDeck</span><span class="p">;</span>
+
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">generateBigPrimeP</span><span class="p">()</span> <span class="p">{</span>
+       <span class="k">do</span> <span class="p">{</span>
+           <span class="n">P</span> <span class="o">=</span> <span class="n">getRandomBigInteger</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+       <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">P</span><span class="p">.</span><span class="na">isProbablePrime</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="nf">Player</span><span class="p">(</span> <span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">Cards</span> <span class="n">deck</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">cards</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">;</span>
+       <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+       <span class="n">chargedDeck</span> <span class="o">=</span> <span class="n">deck</span><span class="p">;</span>
+       <span class="kt">long</span><span class="o">[]</span> <span class="n">EuclidResult</span><span class="p">;</span>
+       <span class="n">BigInteger</span> <span class="n">temp_P</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="na">subtract</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+       <span class="k">do</span> <span class="p">{</span>
+           <span class="k">do</span> <span class="p">{</span>
+               <span class="n">C</span> <span class="o">=</span> <span class="n">getRandomBigInteger</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+               <span class="n">EuclidResult</span> <span class="o">=</span> <span class="n">Euclid</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">C</span><span class="p">.</span><span class="na">longValue</span><span class="p">(),</span> <span class="n">temp_P</span><span class="p">.</span><span class="na">longValue</span><span class="p">());</span>
+           <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">EuclidResult</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">);</span>
+           <span class="n">D</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">((</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">EuclidResult</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="n">temp_P</span><span class="p">.</span><span class="na">longValue</span><span class="p">())));</span>
+       <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">C</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">D</span><span class="p">).</span><span class="na">mod</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">temp_P</span><span class="p">.</span><span class="na">longValue</span><span class="p">())).</span><span class="na">equals</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">ONE</span><span class="p">));</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="nf">encryptCards</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">uDeck</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+       <span class="k">for</span> <span class="p">(</span><span class="n">BigInteger</span> <span class="n">card</span> <span class="p">:</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">uDeck</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">card</span><span class="p">.</span><span class="na">modPow</span><span class="p">(</span><span class="n">getC</span><span class="p">(),</span> <span class="n">P</span><span class="p">));</span>
+       <span class="p">}</span>
+       <span class="n">Collections</span><span class="p">.</span><span class="na">shuffle</span><span class="p">(</span><span class="n">uDeck</span><span class="p">);</span>
+       <span class="k">return</span> <span class="n">uDeck</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="nf">decryptCards</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">uDeck</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+       <span class="k">for</span> <span class="p">(</span><span class="n">BigInteger</span> <span class="n">card</span> <span class="p">:</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">uDeck</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">card</span><span class="p">.</span><span class="na">modPow</span><span class="p">(</span><span class="n">getD</span><span class="p">(),</span> <span class="n">P</span><span class="p">));</span>
+       <span class="p">}</span>
+       <span class="n">Collections</span><span class="p">.</span><span class="na">shuffle</span><span class="p">(</span><span class="n">uDeck</span><span class="p">);</span>
+       <span class="k">return</span> <span class="n">uDeck</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">seeCards</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\tPlayer &quot;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s">&quot;: key = &quot;</span><span class="o">+</span><span class="n">getD</span><span class="p">());</span>
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="k">this</span><span class="p">.</span><span class="na">cards</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">chargedDeck</span><span class="p">.</span><span class="na">deckInterpreter</span><span class="p">(</span><span class="n">chargedDeck</span><span class="p">.</span><span class="na">deck</span><span class="p">,</span> <span class="n">cards</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+           <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot; &lt; &quot;</span><span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="na">cards</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="s">&quot; &gt;&quot;</span><span class="p">);</span>
+       <span class="p">}</span>
+       <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+   <span class="p">}</span>
+
+
+   <span class="kd">public</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="nf">getRandomBigInteger</span><span class="p">(</span><span class="kt">int</span> <span class="n">numBits</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">BigInteger</span> <span class="n">number</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">numBits</span><span class="p">,</span> <span class="k">new</span> <span class="n">Random</span><span class="p">());</span>
+       <span class="k">return</span> <span class="n">number</span><span class="p">.</span><span class="na">setBit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getC</span><span class="p">()</span> <span class="p">{</span>
+       <span class="k">return</span> <span class="n">C</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getD</span><span class="p">()</span> <span class="p">{</span>
+       <span class="k">return</span> <span class="n">D</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="nf">getP</span><span class="p">()</span> <span class="p">{</span>
+       <span class="k">return</span> <span class="n">P</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getCards</span><span class="p">()</span> <span class="p">{</span>
+       <span class="k">return</span> <span class="n">cards</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCards</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">this</span><span class="p">.</span><span class="na">cards</span> <span class="o">=</span> <span class="n">cards</span><span class="p">;</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+
+
+ <span class="c1">// Class Cards</span>
+ <span class="kn">package</span> <span class="nn">laba4_mental_poker</span><span class="p">;</span>
+
+ <span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.security.SecureRandom</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+
+ <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Cards</span> <span class="p">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">NUM_OF_CARDS</span> <span class="o">=</span> <span class="mi">52</span><span class="p">;</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">NUM_OF_SUITS</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">NUM_OF_VALUES</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+
+   <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">suitName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">NUM_OF_SUITS</span><span class="p">);</span>
+   <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">valuesName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">NUM_OF_VALUES</span><span class="p">);</span>
+
+   <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">deck</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NUM_OF_CARDS</span><span class="p">);</span>
+
+   <span class="kd">public</span> <span class="nf">Cards</span><span class="p">()</span> <span class="p">{</span>
+       <span class="n">suitName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;Hearts&quot;</span><span class="p">);</span>
+       <span class="n">suitName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;Diamonds&quot;</span><span class="p">);</span>
+       <span class="n">suitName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;Spades&quot;</span><span class="p">);</span>
+       <span class="n">suitName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;Clubs&quot;</span><span class="p">);</span>
+
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;two&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;three&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;four&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;five&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;six&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;seven&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;eight&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;nine&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;ten&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;jack&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;queen&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;king&quot;</span><span class="p">);</span>
+       <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;ace&quot;</span><span class="p">);</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">initDeck</span><span class="p">(</span><span class="n">BigInteger</span> <span class="n">P</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="p">();</span>
+       <span class="n">srand</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">());</span>
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM_OF_CARDS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">deck</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">srand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(</span><span class="n">P</span><span class="p">.</span><span class="na">intValue</span><span class="p">()</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)));</span>
+       <span class="p">}</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="n">String</span> <span class="nf">deckInterpreter</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cardDeck</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">cardValue</span><span class="p">)</span> <span class="p">{</span>
+       <span class="kt">int</span> <span class="n">suit</span><span class="p">,</span><span class="n">value</span><span class="p">;</span>
+       <span class="n">String</span> <span class="n">cardName</span><span class="p">;</span>
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM_OF_CARDS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="k">if</span> <span class="p">(</span><span class="n">cardDeck</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="na">equals</span><span class="p">(</span><span class="n">cardValue</span><span class="p">))</span> <span class="p">{</span>
+               <span class="n">suit</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">NUM_OF_VALUES</span><span class="p">;</span>
+               <span class="n">value</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">NUM_OF_VALUES</span><span class="p">;</span>
+               <span class="n">cardName</span> <span class="o">=</span> <span class="n">valuesName</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">suitName</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">suit</span><span class="p">);</span>
+               <span class="k">return</span> <span class="n">cardName</span><span class="p">;</span>
+           <span class="p">}</span>
+       <span class="p">}</span>
+       <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+
+ <span class="c1">// Class Croupier</span>
+ <span class="kn">package</span> <span class="nn">laba4_mental_poker</span><span class="p">;</span>
+
+ <span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.security.SecureRandom</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+
+ <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Croupier</span> <span class="p">{</span>
+
+   <span class="kd">public</span> <span class="n">BigInteger</span> <span class="n">P</span><span class="p">;</span>
+   <span class="kd">public</span> <span class="n">Cards</span> <span class="n">chargedDeck</span><span class="p">;</span>
+   <span class="kd">private</span> <span class="n">String</span><span class="o">[]</span> <span class="n">buyIn</span><span class="p">;</span>
+
+   <span class="kd">public</span> <span class="nf">Croupier</span><span class="p">(</span><span class="n">Cards</span> <span class="n">deck</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">P</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">this</span><span class="p">.</span><span class="na">P</span> <span class="o">=</span> <span class="n">P</span><span class="p">;</span>
+       <span class="n">buyIn</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">;</span>
+       <span class="n">chargedDeck</span> <span class="o">=</span> <span class="n">deck</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="nf">chooseCard</span> <span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numOfCards</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">selectedCards</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">numOfCards</span><span class="p">);</span>
+       <span class="kt">int</span> <span class="n">randomInteger</span><span class="p">;</span>
+       <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="p">();</span>
+       <span class="n">srand</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">());</span>
+
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numOfCards</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">randomInteger</span> <span class="o">=</span> <span class="n">srand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(</span><span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
+           <span class="n">selectedCards</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">cards</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">randomInteger</span><span class="p">));</span>
+           <span class="n">cards</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">randomInteger</span><span class="p">);</span>
+       <span class="p">}</span>
+       <span class="k">return</span> <span class="n">selectedCards</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">seeBuyIN</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\t\tTable Deck &quot;</span><span class="p">);</span>
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="k">this</span><span class="p">.</span><span class="na">buyIn</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">chargedDeck</span><span class="p">.</span><span class="na">deckInterpreter</span><span class="p">(</span><span class="n">chargedDeck</span><span class="p">.</span><span class="na">deck</span><span class="p">,</span> <span class="n">cards</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+           <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot; &lt; &quot;</span><span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="na">buyIn</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="s">&quot; &gt;&quot;</span><span class="p">);</span>
+       <span class="p">}</span>
+       <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+
+ <span class="c1">// Main</span>
 <span class="kn">package</span> <span class="nn">laba4_mental_poker</span><span class="p">;</span>
 
-<span class="kn">import</span> <span class="nn">laba1.Euclid</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
-<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.Collections</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.Random</span><span class="p">;</span>
+ <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="p">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+       <span class="kt">int</span> <span class="n">numPlayers</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+       <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">uiDeck</span><span class="p">,</span> <span class="n">buyIn</span><span class="p">;</span>
+       <span class="n">Player</span><span class="p">.</span><span class="na">generateBigPrimeP</span><span class="p">();</span>
 
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Player</span> <span class="p">{</span>
-  <span class="kd">private</span> <span class="n">String</span><span class="o">[]</span> <span class="n">cards</span><span class="p">;</span>
-  <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+       <span class="n">Cards</span> <span class="n">cards</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Cards</span><span class="p">();</span>
+       <span class="n">cards</span><span class="p">.</span><span class="na">initDeck</span><span class="p">(</span><span class="n">Player</span><span class="p">.</span><span class="na">getP</span><span class="p">());</span>
 
-  <span class="kd">private</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="n">P</span><span class="p">;</span>
-  <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">C</span><span class="p">;</span>
-  <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">D</span><span class="p">;</span>
+       <span class="n">Player</span><span class="o">[]</span> <span class="n">players</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Player</span><span class="o">[</span><span class="n">numPlayers</span><span class="o">]</span><span class="p">;</span>
+       <span class="n">Croupier</span> <span class="n">croupier</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Croupier</span><span class="p">(</span><span class="n">cards</span><span class="p">,</span> <span class="n">Player</span><span class="p">.</span><span class="na">getP</span><span class="p">());</span>
 
-  <span class="kd">public</span> <span class="n">Cards</span> <span class="n">chargedDeck</span><span class="p">;</span>
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Player</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">cards</span><span class="p">);</span>
+       <span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">generateBigPrimeP</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">do</span> <span class="p">{</span>
-          <span class="n">P</span> <span class="o">=</span> <span class="n">getRandomBigInteger</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
-      <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">P</span><span class="p">.</span><span class="na">isProbablePrime</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
-  <span class="p">}</span>
+       <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">uDeck</span> <span class="o">=</span> <span class="n">cards</span><span class="p">.</span><span class="na">deck</span><span class="p">;</span>
 
-  <span class="kd">public</span> <span class="nf">Player</span><span class="p">(</span> <span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">Cards</span> <span class="n">deck</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">cards</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
-      <span class="n">chargedDeck</span> <span class="o">=</span> <span class="n">deck</span><span class="p">;</span>
-      <span class="kt">long</span><span class="o">[]</span> <span class="n">EuclidResult</span><span class="p">;</span>
-      <span class="n">BigInteger</span> <span class="n">temp_P</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="na">subtract</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
-      <span class="k">do</span> <span class="p">{</span>
-          <span class="k">do</span> <span class="p">{</span>
-              <span class="n">C</span> <span class="o">=</span> <span class="n">getRandomBigInteger</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
-              <span class="n">EuclidResult</span> <span class="o">=</span> <span class="n">Euclid</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">C</span><span class="p">.</span><span class="na">longValue</span><span class="p">(),</span> <span class="n">temp_P</span><span class="p">.</span><span class="na">longValue</span><span class="p">());</span>
-          <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">EuclidResult</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">);</span>
-          <span class="n">D</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">((</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">EuclidResult</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="n">temp_P</span><span class="p">.</span><span class="na">longValue</span><span class="p">())));</span>
-      <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">C</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">D</span><span class="p">).</span><span class="na">mod</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">temp_P</span><span class="p">.</span><span class="na">longValue</span><span class="p">())).</span><span class="na">equals</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">ONE</span><span class="p">));</span>
-  <span class="p">}</span>
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">uDeck</span> <span class="o">=</span> <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">encryptCards</span><span class="p">(</span><span class="n">uDeck</span><span class="p">);</span>
+       <span class="p">}</span>
 
-  <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="nf">decryptCards</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">uDeck</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
-      <span class="k">for</span> <span class="p">(</span><span class="n">BigInteger</span> <span class="n">card</span> <span class="p">:</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">uDeck</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">card</span><span class="p">.</span><span class="na">modPow</span><span class="p">(</span><span class="n">getD</span><span class="p">(),</span> <span class="n">P</span><span class="p">));</span>
-      <span class="p">}</span>
-      <span class="n">Collections</span><span class="p">.</span><span class="na">shuffle</span><span class="p">(</span><span class="n">uDeck</span><span class="p">);</span>
-      <span class="k">return</span> <span class="n">uDeck</span><span class="p">;</span>
-  <span class="p">}</span>
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">uiDeck</span> <span class="o">=</span> <span class="n">croupier</span><span class="p">.</span><span class="na">chooseCard</span><span class="p">(</span><span class="n">uDeck</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+           <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">numPlayers</span><span class="p">;</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">numPlayers</span><span class="p">)</span> <span class="p">{</span>
+               <span class="n">uiDeck</span> <span class="o">=</span>  <span class="n">players</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">.</span><span class="na">decryptCards</span><span class="p">(</span><span class="n">uiDeck</span><span class="p">);</span>
+           <span class="p">}</span>
+           <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">seeCards</span><span class="p">(</span><span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">decryptCards</span><span class="p">(</span><span class="n">uiDeck</span><span class="p">));</span>
+       <span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">seeCards</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\tPlayer &quot;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s">&quot;: key = &quot;</span><span class="o">+</span><span class="n">getD</span><span class="p">());</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="na">cards</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">chargedDeck</span><span class="p">.</span><span class="na">deckInterpreter</span><span class="p">(</span><span class="n">chargedDeck</span><span class="p">.</span><span class="na">deck</span><span class="p">,</span> <span class="n">cards</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
-          <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot; &lt; &quot;</span><span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="na">cards</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="s">&quot; &gt;&quot;</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="cm">/**</span>
-<span class="cm">   *</span>
-<span class="cm">   * @param numBits number of bits</span>
-<span class="cm">   * @return number between 0 and 2^(numBits) - 1</span>
-<span class="cm">   */</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="nf">getRandomBigInteger</span><span class="p">(</span><span class="kt">int</span> <span class="n">numBits</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">BigInteger</span> <span class="n">number</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">numBits</span><span class="p">,</span> <span class="k">new</span> <span class="n">Random</span><span class="p">());</span>
-      <span class="k">return</span> <span class="n">number</span><span class="p">.</span><span class="na">setBit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getC</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">C</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getD</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">D</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="n">BigInteger</span> <span class="nf">getP</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">P</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getCards</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">cards</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCards</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="na">cards</span> <span class="o">=</span> <span class="n">cards</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setKeyForCroupier</span><span class="p">(</span><span class="n">Croupier</span> <span class="n">croupier</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">croupier</span><span class="p">.</span><span class="na">setKeys</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1">// Class Cards</span>
-<span class="kn">package</span> <span class="nn">laba4_mental_poker</span><span class="p">;</span>
-
-<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.security.SecureRandom</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Cards</span> <span class="p">{</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">NUM_OF_CARDS</span> <span class="o">=</span> <span class="mi">52</span><span class="p">;</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">NUM_OF_SUITS</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">NUM_OF_VALUES</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
-
-  <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">suitName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">NUM_OF_SUITS</span><span class="p">);</span>
-  <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">valuesName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">NUM_OF_VALUES</span><span class="p">);</span>
-
-  <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">deck</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NUM_OF_CARDS</span><span class="p">);</span>
-
-  <span class="kd">public</span> <span class="nf">Cards</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">suitName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;Hearts&quot;</span><span class="p">);</span>
-      <span class="n">suitName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;Diamonds&quot;</span><span class="p">);</span>
-      <span class="n">suitName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;Spades&quot;</span><span class="p">);</span>
-      <span class="n">suitName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;Clubs&quot;</span><span class="p">);</span>
-
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;two&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;three&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;four&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;five&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;six&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;seven&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;eight&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;nine&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;ten&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;jack&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;queen&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;king&quot;</span><span class="p">);</span>
-      <span class="n">valuesName</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;ace&quot;</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">initDeck</span><span class="p">(</span><span class="n">BigInteger</span> <span class="n">P</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="p">();</span>
-      <span class="n">srand</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">());</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM_OF_CARDS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">deck</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">srand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(</span><span class="n">P</span><span class="p">.</span><span class="na">intValue</span><span class="p">()</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)));</span>
-      <span class="p">}</span>
-  <span class="p">}</span>
-
-  <span class="kd">public</span> <span class="n">String</span> <span class="nf">deckInterpreter</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cardDeck</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">cardValue</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kt">int</span> <span class="n">suit</span><span class="p">,</span><span class="n">value</span><span class="p">;</span>
-      <span class="n">String</span> <span class="n">cardName</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM_OF_CARDS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="n">cardDeck</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="na">equals</span><span class="p">(</span><span class="n">cardValue</span><span class="p">))</span> <span class="p">{</span>
-              <span class="n">suit</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">NUM_OF_VALUES</span><span class="p">;</span>
-              <span class="n">value</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">NUM_OF_VALUES</span><span class="p">;</span>
-              <span class="n">cardName</span> <span class="o">=</span> <span class="n">valuesName</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">suitName</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">suit</span><span class="p">);</span>
-              <span class="k">return</span> <span class="n">cardName</span><span class="p">;</span>
-          <span class="p">}</span>
-      <span class="p">}</span>
-      <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1">// Class Croupier</span>
-<span class="kn">package</span> <span class="nn">laba4_mental_poker</span><span class="p">;</span>
-
-<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.security.SecureRandom</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Croupier</span> <span class="p">{</span>
-
-  <span class="kd">public</span> <span class="n">BigInteger</span> <span class="n">P</span><span class="p">;</span>
-  <span class="kd">public</span> <span class="n">Cards</span> <span class="n">chargedDeck</span><span class="p">;</span>
-  <span class="kd">private</span> <span class="n">String</span><span class="o">[]</span> <span class="n">buyIn</span><span class="p">;</span>
-  <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">keys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-
-  <span class="kd">public</span> <span class="nf">Croupier</span><span class="p">(</span><span class="n">Cards</span> <span class="n">deck</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">P</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="na">P</span> <span class="o">=</span> <span class="n">P</span><span class="p">;</span>
-      <span class="n">buyIn</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">;</span>
-      <span class="n">chargedDeck</span> <span class="o">=</span> <span class="n">deck</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="nf">encryptCards</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">uDeck</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">chargedDeck</span><span class="p">.</span><span class="na">deck</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
-      <span class="n">BigInteger</span> <span class="n">commonCKey</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">BigInteger</span><span class="p">.</span><span class="na">ONE</span><span class="p">));</span>
-      <span class="k">for</span> <span class="p">(</span><span class="n">BigInteger</span> <span class="n">key</span> <span class="p">:</span> <span class="n">keys</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">commonCKey</span> <span class="o">=</span> <span class="n">commonCKey</span><span class="p">.</span><span class="na">multiply</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">chargedDeck</span><span class="p">.</span><span class="na">deck</span><span class="p">.</span><span class="na">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">uDeck</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">chargedDeck</span><span class="p">.</span><span class="na">deck</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="na">modPow</span><span class="p">(</span><span class="n">commonCKey</span><span class="p">,</span> <span class="n">P</span><span class="p">));</span>
-      <span class="p">}</span>
-      <span class="k">return</span> <span class="n">uDeck</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="nf">chooseCard</span> <span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numOfCards</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">selectedCards</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">numOfCards</span><span class="p">);</span>
-      <span class="kt">int</span> <span class="n">randomInteger</span><span class="p">;</span>
-      <span class="n">SecureRandom</span> <span class="n">srand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecureRandom</span><span class="p">();</span>
-      <span class="n">srand</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">());</span>
-
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numOfCards</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">randomInteger</span> <span class="o">=</span> <span class="n">srand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(</span><span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">());</span>
-          <span class="n">selectedCards</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">cards</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">randomInteger</span><span class="p">));</span>
-          <span class="n">cards</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">randomInteger</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="k">return</span> <span class="n">selectedCards</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">seeBuyIN</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">cards</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\t\tTable Deck &quot;</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cards</span><span class="p">.</span><span class="na">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="na">buyIn</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">chargedDeck</span><span class="p">.</span><span class="na">deckInterpreter</span><span class="p">(</span><span class="n">chargedDeck</span><span class="p">.</span><span class="na">deck</span><span class="p">,</span> <span class="n">cards</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
-          <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot; &lt; &quot;</span><span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="na">buyIn</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="s">&quot; &gt;&quot;</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setKeys</span><span class="p">(</span><span class="n">BigInteger</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="na">keys</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-  <span class="p">}</span>
-
-<span class="c1">// Main</span>
-<span class="kn">package</span> <span class="nn">laba4_mental_poker</span><span class="p">;</span>
-
-<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="p">{</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kt">int</span> <span class="n">numPlayers</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-      <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">uiDeck</span><span class="p">,</span> <span class="n">buyIn</span><span class="p">;</span>
-      <span class="n">Player</span><span class="p">.</span><span class="na">generateBigPrimeP</span><span class="p">();</span>
-
-      <span class="n">Cards</span> <span class="n">cards</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Cards</span><span class="p">();</span>
-      <span class="n">cards</span><span class="p">.</span><span class="na">initDeck</span><span class="p">(</span><span class="n">Player</span><span class="p">.</span><span class="na">getP</span><span class="p">());</span>
-
-      <span class="n">Croupier</span> <span class="n">croupier</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Croupier</span><span class="p">(</span><span class="n">cards</span><span class="p">,</span> <span class="n">Player</span><span class="p">.</span><span class="na">getP</span><span class="p">());</span>
-
-      <span class="n">Player</span><span class="o">[]</span> <span class="n">players</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Player</span><span class="o">[</span><span class="n">numPlayers</span><span class="o">]</span><span class="p">;</span>
-
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Player</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">cards</span><span class="p">);</span>
-          <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">setKeyForCroupier</span><span class="p">(</span><span class="n">croupier</span><span class="p">,</span> <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">getC</span><span class="p">());</span>
-      <span class="p">}</span>
-
-      <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BigInteger</span><span class="o">&gt;</span> <span class="n">uDeck</span> <span class="o">=</span> <span class="n">croupier</span><span class="p">.</span><span class="na">encryptCards</span><span class="p">();</span>
-
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">uiDeck</span> <span class="o">=</span> <span class="n">croupier</span><span class="p">.</span><span class="na">chooseCard</span><span class="p">(</span><span class="n">uDeck</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-          <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">numPlayers</span><span class="p">;</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">numPlayers</span><span class="p">)</span> <span class="p">{</span>
-              <span class="n">uiDeck</span> <span class="o">=</span>  <span class="n">players</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">.</span><span class="na">decryptCards</span><span class="p">(</span><span class="n">uiDeck</span><span class="p">);</span>
-          <span class="p">}</span>
-          <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">seeCards</span><span class="p">(</span><span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">decryptCards</span><span class="p">(</span><span class="n">uiDeck</span><span class="p">));</span>
-      <span class="p">}</span>
-
-      <span class="n">buyIn</span> <span class="o">=</span> <span class="n">croupier</span><span class="p">.</span><span class="na">chooseCard</span><span class="p">(</span><span class="n">uDeck</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">buyIn</span> <span class="o">=</span>  <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">decryptCards</span><span class="p">(</span><span class="n">buyIn</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="n">croupier</span><span class="p">.</span><span class="na">seeBuyIN</span><span class="p">(</span><span class="n">buyIn</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+       <span class="n">buyIn</span> <span class="o">=</span> <span class="n">croupier</span><span class="p">.</span><span class="na">chooseCard</span><span class="p">(</span><span class="n">uDeck</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+       <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">buyIn</span> <span class="o">=</span>  <span class="n">players</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">decryptCards</span><span class="p">(</span><span class="n">buyIn</span><span class="p">);</span>
+       <span class="p">}</span>
+       <span class="n">croupier</span><span class="p">.</span><span class="na">seeBuyIN</span><span class="p">(</span><span class="n">buyIn</span><span class="p">);</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
 </pre></div>
 </div>
 </div>
