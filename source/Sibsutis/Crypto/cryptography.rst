@@ -1687,6 +1687,219 @@
     }
   }
 
+Электронные деньги (Слепая подпись)
+""""""""""""""""""""""""""""""""""""""
+
+**Первая плохая схема**
+
+Во многих странах люди оплачивают покупки при помощи электронных карточек, заказывают авиабилеты через Интернет, покупают самые разнообразные товары в Интернет-магазинах. Сведения о покупках накапливаются в магазинах и банках. Поэтому появилась новая проблема, иногда называемая «проблема Большого Брата». Суть проблемы состоит в том, что исчезает анонимность процесса покупки, т.е. информация о покупках любого человека может стать известной третьим лицам и использоваться против него
+
+Мы рассмотрим две «плохие» схемы, а затем «хорошую», чтобы было легче понять суть метода. Вначале дадим более точную постановку задачи. Имеются три
+участника: банк, покупатель и магазин. Покупатель и магазин имеют соответствующие счета в банке, и покупатель хочет купить некоторый товар в магазине. Покупка осуществляется в виде трехступенчатого процесса:
+
+1) покупатель снимает нужную сумму со своего счета в банке
+2) покупатель «пересылает» деньги в магазин
+3) магазин сообщает об этом в банк, соответствующая сумма денег зачисляется на счет магазина, а покупатель забирает товар(или последний ему доставляется)
+
+Наша цель — разработать такую схему, чтобы
+
+ * она была надежна
+ * чтобы банк не знал, кто купил товар, т.е. была сохранена ано нимность обычных дене
+
+Опишем первую «плохую» схему (она базируется на RSA). Банк имеет следующую информацию: секретные числа P , Q, C и открытые
+
+.. math::
+  N = PQ, \\
+  d = c^{-1} \bmod (P-1)(Q-1)
+
+Допустим, покупатель решил израсходовать некоторую заранее оговоренную с банком сумму (например, 100$). (Мы сначала рассмотрим случай, когда может использоваться «банкнота» только одного номинала (скажем, 100$).) Покупатель высылает в банк число n , которое будет номером банкноты (обычно требуется, чтобы генерировалось случайное число в промежутке [2, N − 1]). 
+Банк вычисляет число:
+
+.. math::
+  s = n^{C} \bmod N
+
+и формирует банкноту :math:`<n, s>`, которую возвращает покупателю, предварительно уменьшив его счет на 100$. Параметр s в банкноте это подпись банка. Никто не может подделать подпись, так как число c секретно. Покупатель предъявляет банкноту :math:`<n, s>` в магазине, чтобы купить товар. Магазин отправляет эту банкноту в банк для проверки. Прежде всего, банк проверяет правильность подписи (эту проверку мог бы сделать и магазин, используя открытые ключи банка). Но кроме этого банк хранит все номера возвратившихся к нему банк-нот и проверяет, нет ли числа n в этом списке. Если n есть в списке, то платеж не принимается (кто-то пытается использовать банкноту повторно), и банк сообщает об этом магазину. Если же все проверки прошли успешно, то банк добавляет 100$ на счет магазина, а магазин отпускает товар покупателю.
+
+Недостаток этой схемы — отсутствует анонимность. Банк, а также все, кто имеет доступ к открытым линиям связи, могут запомнить, какому покупателю соответствует число n , и тем самым выяснить, кто купил товар.
+
+**Вторая плохая схема**
+
+Рассмотрим вторую «плохую» схему, которая уже обеспечивает анонимность. Эта схема базируется на так называемой «слепой подписи». Снова покупатель хочет купить товар. Он генерирует число n ,которое теперь не будет посылаться в банк. Затем он генерирует случайное число r , взаимно простое с N , и вычисляет число
+
+.. math::
+  n̂ = (n*r^{d}) \bmod N
+
+Число n̂ покупатель отправляет в банк.
+Банк вычисляет число
+
+.. math::
+  ŝ = (n̂^{c}) \bmod N
+
+
+и отправляет ŝ обратно покупателю (не забыв при этом снять 100$ с его счета). Покупатель находит число :math:`r^{-1}` mod N и вычисляет
+
+.. math::
+  s = (ŝ*r^{-1}) \bmod N
+  s = n̂ * r^{-1}
+
+Мы получили подпись банка к n , но самого числа n ни банк, ни кто либо другой не видел. Вычисление называется «слепой подписью», так как реальное сообщение ( n ) подписывающий не видит и узнать не может. Таким образом, покупатель имеет число n , которое никому неизвестно и никогда не передавалось по каналам связи. Покупатель формирует банкноту :math:`<n, s>` и действует так же, как в первой «плохой» схеме. Но теперь никто не знает, кому соответствует эта банкнота, т.е. она стала анонимной, как обычная бумажная банкнота
+
+Почему же данная схема плохая? Она имеет следующий недостаток: можно сфабриковать фальшивую банкноту, если известны хотя бы две настоящие. Делается это так. Путь злоумышленник (будь то покупатель или магазин) имеет две настоящие банкноты. Тогда он легко сможет изготовить фальшивую банкноту, вычислив числа
+
+.. math::
+  n_3 = n_1*n_2 \bmod N \\
+  s_3 = s_1*s_2 \bmod N \\
+  n_3^{c} = (n_1*n_2)^{c} = n_1^{c}*n_2^{c} = s_1*s_2 = s_3 \bmod N
+
+**Хорошая схема**
+
+Банкнота теперь определяется как пара чисел  :math:`<n, s_f>`, где подписывается не n, а f(n)
+
+.. math::
+  s_f = (f(n))^{c} \bmod N
+
+Для проверки подписи банком необходимо
+
+.. math::
+  s_f^{d} \bmod N = f(n)
+
+Заметим, что при выборе односторонней функции нужно проявлять осторожность. Например, функция :math:`f(n) = n^2 \bmod N`, которая действительно является односторонней, не годится для рассматриваемого протокола. Читатель может проверить, что банкноты, созданные с использованием такой функции, будут по-прежнему обладать мультипликативным свойством как во второй плохой схеме. На практике в качестве f(n) обычно используются криптографичесие хеш-функции
+
+
+**Реализация "слепой подписи" на основе голосования**
+
+.. code-block:: java
+
+  // Client.java
+  package laba5_blind_signature;
+
+  import laba1.powMod;
+  import laba3.RSAsign;
+  import org.apache.commons.codec.digest.DigestUtils;
+
+  import java.math.BigInteger;
+  import java.util.Scanner;
+
+  import static laba2.FileManipulation.writeIntSignToFile;
+
+  public class Client {
+    private BigInteger C;
+    private BigInteger D;
+    private BigInteger N;
+    private BigInteger r;
+    private final Bulletin bulletin;
+    private String message;
+
+    public Client(Bulletin bulletin) {
+        this.bulletin = bulletin;
+        RSAsign rsa  = new RSAsign();
+        C = new BigInteger(String.valueOf(rsa.getC()));
+        D = new BigInteger(String.valueOf(rsa.getD()));
+        N = new BigInteger(String.valueOf(rsa.getN()));
+        System.out.println("C = "+rsa.getC()+" D = "+rsa.getD()+" N = "+rsa.getN());
+    }
+
+    public String answerQuestion() {
+        System.out.println(bulletin.getFullQuestion());
+        for (int i = 0; i < bulletin.getPossibleAnswer().length; i++) {
+            System.out.println(i+1+"."+bulletin.getPossibleAnswer()[i]+" ");
+        }
+        Scanner in = new Scanner(System.in);
+        System.out.print("-> ");
+        int choice = in.nextInt();
+        message = bulletin.getFullQuestion()+" - "+bulletin.getPossibleAnswer()[choice - 1];
+        return message;
+    }
+
+    public BigInteger HashOfAnswer () {
+        String checksumMD5 = DigestUtils.md5Hex(message);
+        BigInteger hash = new BigInteger(checksumMD5, 16);
+        return hash.mod(new BigInteger(String.valueOf(N)));
+    }
+
+    public long getSignBulletin(BigInteger hash){
+        long S = powMod.calculate(hash.longValue(), C.longValue(), N.longValue());
+        writeIntSignToFile("blind",(int)S);
+        return S;
+    }
+
+    public BigInteger getD() {
+        return D;
+    }
+
+    public BigInteger getN() {
+        return N;
+    }
+  }
+
+  // Bulletin.java
+  public class Bulletin {
+    private final String[] possibleAnswer;
+    private final String fullQuestion;
+
+    public Bulletin(String fullQuestion) {
+        possibleAnswer = new String[]{"Yes", "No", "Refrain"};
+        this.fullQuestion = fullQuestion;
+    }
+
+    public String[] getPossibleAnswer() {
+        return possibleAnswer;
+    }
+
+    public String getFullQuestion() {
+        return fullQuestion;
+    }
+  }
+
+  // Commission.java
+  package laba5_blind_signature;
+
+  public class Commission {
+    public static Bulletin askQuestion(String question) {
+        return new Bulletin(question);
+    }
+  }
+
+  //Server.java
+  package laba5_blind_signature;
+
+  import laba1.powMod;
+
+  import java.math.BigInteger;
+
+  public class Server {
+
+    public boolean checkSignature(BigInteger hash, long S, BigInteger D, BigInteger N) {
+        long w = powMod.calculate(S, D.longValue(), N.longValue());
+
+        System.out.println("message hash = "+hash+" w hash = "+w);
+
+        return w == hash.longValue();
+    }
+  }
+
+  //Main.java
+  package laba5_blind_signature;
+
+  import java.math.BigInteger;
+
+  public class Main {
+    public static void main(String[] args) {
+        BigInteger hash;
+        long ClientSignature;
+        Bulletin bulletin = Commission.askQuestion("Putin is great?");
+
+        Client Valera = new Client(bulletin);
+        System.out.println("Answer = "+Valera.answerQuestion());
+        hash = Valera.HashOfAnswer();
+        ClientSignature = Valera.getSignBulletin(hash);
+        System.out.println("Client signature = "+ClientSignature);
+
+        Server server = new Server();
+        System.out.println(server.checkSignature(hash, ClientSignature, Valera.getD(), Valera.getN()));
+    }
+  }
+
 
 
 

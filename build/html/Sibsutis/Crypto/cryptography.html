@@ -127,9 +127,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#id16">Глава 5. Криптографические протоколы</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id17">Ментальный покер(Пример на основе двух пользователей)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id18">Многопользовательный ментальный покер</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id19">Электронные деньги (Слепая подпись)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id19">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id20">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Compilers/llvm.html">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -939,8 +940,8 @@ e = m * D_B^{k} \bmod p\end{split}\]</div>
 <div class="section" id="id9">
 <h3>Шифр Вернама<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Этот шифр был предложен в 1926 году американским инженером Вернамом (Gilbert Vernam) и использовался на практике, но доказательство его невскрываемости было получено значительно позже Шенноном. Простейший шифр на основе бинарной логики (а именно операции XOR), который обладает абсолютной криптографической стойкостью. Без знания ключа, расшифровать его невозможно Для шифра Вернама часто используется название «одноразовая лента» (one-time pad). Мы опишем этот шифр для случая двоичного алфавита, чтобы упростить обозначения. Пусть множество сообщений M состоит из слов двоичного алфавита длины n , т.е. всего сообщений не более, чем 2 n.</p>
-<table class="docutils align-default" id="id21">
-<caption><span class="caption-text">Таблица истинности XOR</span><a class="headerlink" href="#id21" title="Постоянная ссылка на таблицу">¶</a></caption>
+<table class="docutils align-default" id="id22">
+<caption><span class="caption-text">Таблица истинности XOR</span><a class="headerlink" href="#id22" title="Постоянная ссылка на таблицу">¶</a></caption>
 <colgroup>
 <col style="width: 24%" />
 <col style="width: 29%" />
@@ -1720,9 +1721,196 @@ u_{BC} = u_B^{D_C} \bmod p \ - \ Пользователь \ C\end{split}\]</div>
 </pre></div>
 </div>
 </div>
-</div>
 <div class="section" id="id19">
-<h2>Используемая литература<a class="headerlink" href="#id19" title="Ссылка на этот заголовок">¶</a></h2>
+<h3>Электронные деньги (Слепая подпись)<a class="headerlink" href="#id19" title="Ссылка на этот заголовок">¶</a></h3>
+<p><strong>Первая плохая схема</strong></p>
+<p>Во многих странах люди оплачивают покупки при помощи электронных карточек, заказывают авиабилеты через Интернет, покупают самые разнообразные товары в Интернет-магазинах. Сведения о покупках накапливаются в магазинах и банках. Поэтому появилась новая проблема, иногда называемая «проблема Большого Брата». Суть проблемы состоит в том, что исчезает анонимность процесса покупки, т.е. информация о покупках любого человека может стать известной третьим лицам и использоваться против него</p>
+<p>Мы рассмотрим две «плохие» схемы, а затем «хорошую», чтобы было легче понять суть метода. Вначале дадим более точную постановку задачи. Имеются три
+участника: банк, покупатель и магазин. Покупатель и магазин имеют соответствующие счета в банке, и покупатель хочет купить некоторый товар в магазине. Покупка осуществляется в виде трехступенчатого процесса:</p>
+<ol class="arabic simple">
+<li><p>покупатель снимает нужную сумму со своего счета в банке</p></li>
+<li><p>покупатель «пересылает» деньги в магазин</p></li>
+<li><p>магазин сообщает об этом в банк, соответствующая сумма денег зачисляется на счет магазина, а покупатель забирает товар(или последний ему доставляется)</p></li>
+</ol>
+<p>Наша цель — разработать такую схему, чтобы</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>она была надежна</p></li>
+<li><p>чтобы банк не знал, кто купил товар, т.е. была сохранена ано нимность обычных дене</p></li>
+</ul>
+</div></blockquote>
+<p>Опишем первую «плохую» схему (она базируется на RSA). Банк имеет следующую информацию: секретные числа P , Q, C и открытые</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}N = PQ, \\
+d = c^{-1} \bmod (P-1)(Q-1)\end{split}\]</div>
+<p>Допустим, покупатель решил израсходовать некоторую заранее оговоренную с банком сумму (например, 100$). (Мы сначала рассмотрим случай, когда может использоваться «банкнота» только одного номинала (скажем, 100$).) Покупатель высылает в банк число n , которое будет номером банкноты (обычно требуется, чтобы генерировалось случайное число в промежутке [2, N − 1]).
+Банк вычисляет число:</p>
+<div class="math notranslate nohighlight">
+\[s = n^{C} \bmod N\]</div>
+<p>и формирует банкноту <span class="math notranslate nohighlight">\(&lt;n, s&gt;\)</span>, которую возвращает покупателю, предварительно уменьшив его счет на 100$. Параметр s в банкноте это подпись банка. Никто не может подделать подпись, так как число c секретно. Покупатель предъявляет банкноту <span class="math notranslate nohighlight">\(&lt;n, s&gt;\)</span> в магазине, чтобы купить товар. Магазин отправляет эту банкноту в банк для проверки. Прежде всего, банк проверяет правильность подписи (эту проверку мог бы сделать и магазин, используя открытые ключи банка). Но кроме этого банк хранит все номера возвратившихся к нему банк-нот и проверяет, нет ли числа n в этом списке. Если n есть в списке, то платеж не принимается (кто-то пытается использовать банкноту повторно), и банк сообщает об этом магазину. Если же все проверки прошли успешно, то банк добавляет 100$ на счет магазина, а магазин отпускает товар покупателю.</p>
+<p>Недостаток этой схемы — отсутствует анонимность. Банк, а также все, кто имеет доступ к открытым линиям связи, могут запомнить, какому покупателю соответствует число n , и тем самым выяснить, кто купил товар.</p>
+<p><strong>Вторая плохая схема</strong></p>
+<p>Рассмотрим вторую «плохую» схему, которая уже обеспечивает анонимность. Эта схема базируется на так называемой «слепой подписи». Снова покупатель хочет купить товар. Он генерирует число n ,которое теперь не будет посылаться в банк. Затем он генерирует случайное число r , взаимно простое с N , и вычисляет число</p>
+<div class="math notranslate nohighlight">
+\[n̂ = (n*r^{d}) \bmod N\]</div>
+<p>Число n̂ покупатель отправляет в банк.
+Банк вычисляет число</p>
+<div class="math notranslate nohighlight">
+\[ŝ = (n̂^{c}) \bmod N\]</div>
+<p>и отправляет ŝ обратно покупателю (не забыв при этом снять 100$ с его счета). Покупатель находит число <span class="math notranslate nohighlight">\(r^{-1}\)</span> mod N и вычисляет</p>
+<div class="math notranslate nohighlight">
+\[s = (ŝ*r^{-1}) \bmod N
+s = n̂ * r^{-1}\]</div>
+<p>Мы получили подпись банка к n , но самого числа n ни банк, ни кто либо другой не видел. Вычисление называется «слепой подписью», так как реальное сообщение ( n ) подписывающий не видит и узнать не может. Таким образом, покупатель имеет число n , которое никому неизвестно и никогда не передавалось по каналам связи. Покупатель формирует банкноту <span class="math notranslate nohighlight">\(&lt;n, s&gt;\)</span> и действует так же, как в первой «плохой» схеме. Но теперь никто не знает, кому соответствует эта банкнота, т.е. она стала анонимной, как обычная бумажная банкнота</p>
+<p>Почему же данная схема плохая? Она имеет следующий недостаток: можно сфабриковать фальшивую банкноту, если известны хотя бы две настоящие. Делается это так. Путь злоумышленник (будь то покупатель или магазин) имеет две настоящие банкноты. Тогда он легко сможет изготовить фальшивую банкноту, вычислив числа</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}n_3 = n_1*n_2 \bmod N \\
+s_3 = s_1*s_2 \bmod N \\
+n_3^{c} = (n_1*n_2)^{c} = n_1^{c}*n_2^{c} = s_1*s_2 = s_3 \bmod N\end{split}\]</div>
+<p><strong>Хорошая схема</strong></p>
+<p>Банкнота теперь определяется как пара чисел  <span class="math notranslate nohighlight">\(&lt;n, s_f&gt;\)</span>, где подписывается не n, а f(n)</p>
+<div class="math notranslate nohighlight">
+\[s_f = (f(n))^{c} \bmod N\]</div>
+<p>Для проверки подписи банком необходимо</p>
+<div class="math notranslate nohighlight">
+\[s_f^{d} \bmod N = f(n)\]</div>
+<p>Заметим, что при выборе односторонней функции нужно проявлять осторожность. Например, функция <span class="math notranslate nohighlight">\(f(n) = n^2 \bmod N\)</span>, которая действительно является односторонней, не годится для рассматриваемого протокола. Читатель может проверить, что банкноты, созданные с использованием такой функции, будут по-прежнему обладать мультипликативным свойством как во второй плохой схеме. На практике в качестве f(n) обычно используются криптографичесие хеш-функции</p>
+<p><strong>Реализация «слепой подписи» на основе голосования</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// Client.java</span>
+<span class="kn">package</span> <span class="nn">laba5_blind_signature</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">laba1.powMod</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">laba3.RSAsign</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.codec.digest.DigestUtils</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="p">;</span>
+
+<span class="kn">import static</span> <span class="nn">laba2.FileManipulation.writeIntSignToFile</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="p">{</span>
+  <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">C</span><span class="p">;</span>
+  <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">D</span><span class="p">;</span>
+  <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">N</span><span class="p">;</span>
+  <span class="kd">private</span> <span class="n">BigInteger</span> <span class="n">r</span><span class="p">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">Bulletin</span> <span class="n">bulletin</span><span class="p">;</span>
+  <span class="kd">private</span> <span class="n">String</span> <span class="n">message</span><span class="p">;</span>
+
+  <span class="kd">public</span> <span class="nf">Client</span><span class="p">(</span><span class="n">Bulletin</span> <span class="n">bulletin</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">bulletin</span> <span class="o">=</span> <span class="n">bulletin</span><span class="p">;</span>
+      <span class="n">RSAsign</span> <span class="n">rsa</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">RSAsign</span><span class="p">();</span>
+      <span class="n">C</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">rsa</span><span class="p">.</span><span class="na">getC</span><span class="p">()));</span>
+      <span class="n">D</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">rsa</span><span class="p">.</span><span class="na">getD</span><span class="p">()));</span>
+      <span class="n">N</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">rsa</span><span class="p">.</span><span class="na">getN</span><span class="p">()));</span>
+      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;C = &quot;</span><span class="o">+</span><span class="n">rsa</span><span class="p">.</span><span class="na">getC</span><span class="p">()</span><span class="o">+</span><span class="s">&quot; D = &quot;</span><span class="o">+</span><span class="n">rsa</span><span class="p">.</span><span class="na">getD</span><span class="p">()</span><span class="o">+</span><span class="s">&quot; N = &quot;</span><span class="o">+</span><span class="n">rsa</span><span class="p">.</span><span class="na">getN</span><span class="p">());</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">answerQuestion</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">bulletin</span><span class="p">.</span><span class="na">getFullQuestion</span><span class="p">());</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">bulletin</span><span class="p">.</span><span class="na">getPossibleAnswer</span><span class="p">().</span><span class="na">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="s">&quot;.&quot;</span><span class="o">+</span><span class="n">bulletin</span><span class="p">.</span><span class="na">getPossibleAnswer</span><span class="p">()</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="s">&quot; &quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">Scanner</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">in</span><span class="p">);</span>
+      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;-&gt; &quot;</span><span class="p">);</span>
+      <span class="kt">int</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">in</span><span class="p">.</span><span class="na">nextInt</span><span class="p">();</span>
+      <span class="n">message</span> <span class="o">=</span> <span class="n">bulletin</span><span class="p">.</span><span class="na">getFullQuestion</span><span class="p">()</span><span class="o">+</span><span class="s">&quot; - &quot;</span><span class="o">+</span><span class="n">bulletin</span><span class="p">.</span><span class="na">getPossibleAnswer</span><span class="p">()</span><span class="o">[</span><span class="n">choice</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span><span class="p">;</span>
+      <span class="k">return</span> <span class="n">message</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">HashOfAnswer</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">String</span> <span class="n">checksumMD5</span> <span class="o">=</span> <span class="n">DigestUtils</span><span class="p">.</span><span class="na">md5Hex</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+      <span class="n">BigInteger</span> <span class="n">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">checksumMD5</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">hash</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="k">new</span> <span class="n">BigInteger</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">N</span><span class="p">)));</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getSignBulletin</span><span class="p">(</span><span class="n">BigInteger</span> <span class="n">hash</span><span class="p">){</span>
+      <span class="kt">long</span> <span class="n">S</span> <span class="o">=</span> <span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">hash</span><span class="p">.</span><span class="na">longValue</span><span class="p">(),</span> <span class="n">C</span><span class="p">.</span><span class="na">longValue</span><span class="p">(),</span> <span class="n">N</span><span class="p">.</span><span class="na">longValue</span><span class="p">());</span>
+      <span class="n">writeIntSignToFile</span><span class="p">(</span><span class="s">&quot;blind&quot;</span><span class="p">,(</span><span class="kt">int</span><span class="p">)</span><span class="n">S</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">S</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getD</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">D</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="n">BigInteger</span> <span class="nf">getN</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">N</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Bulletin.java</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Bulletin</span> <span class="p">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span><span class="o">[]</span> <span class="n">possibleAnswer</span><span class="p">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">fullQuestion</span><span class="p">;</span>
+
+  <span class="kd">public</span> <span class="nf">Bulletin</span><span class="p">(</span><span class="n">String</span> <span class="n">fullQuestion</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">possibleAnswer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]</span><span class="p">{</span><span class="s">&quot;Yes&quot;</span><span class="p">,</span> <span class="s">&quot;No&quot;</span><span class="p">,</span> <span class="s">&quot;Refrain&quot;</span><span class="p">};</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">fullQuestion</span> <span class="o">=</span> <span class="n">fullQuestion</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getPossibleAnswer</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">possibleAnswer</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getFullQuestion</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">fullQuestion</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Commission.java</span>
+<span class="kn">package</span> <span class="nn">laba5_blind_signature</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Commission</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">Bulletin</span> <span class="nf">askQuestion</span><span class="p">(</span><span class="n">String</span> <span class="n">question</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="n">Bulletin</span><span class="p">(</span><span class="n">question</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//Server.java</span>
+<span class="kn">package</span> <span class="nn">laba5_blind_signature</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">laba1.powMod</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Server</span> <span class="p">{</span>
+
+  <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">checkSignature</span><span class="p">(</span><span class="n">BigInteger</span> <span class="n">hash</span><span class="p">,</span> <span class="kt">long</span> <span class="n">S</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">D</span><span class="p">,</span> <span class="n">BigInteger</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">long</span> <span class="n">w</span> <span class="o">=</span> <span class="n">powMod</span><span class="p">.</span><span class="na">calculate</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">D</span><span class="p">.</span><span class="na">longValue</span><span class="p">(),</span> <span class="n">N</span><span class="p">.</span><span class="na">longValue</span><span class="p">());</span>
+
+      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;message hash = &quot;</span><span class="o">+</span><span class="n">hash</span><span class="o">+</span><span class="s">&quot; w hash = &quot;</span><span class="o">+</span><span class="n">w</span><span class="p">);</span>
+
+      <span class="k">return</span> <span class="n">w</span> <span class="o">==</span> <span class="n">hash</span><span class="p">.</span><span class="na">longValue</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//Main.java</span>
+<span class="kn">package</span> <span class="nn">laba5_blind_signature</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">java.math.BigInteger</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">BigInteger</span> <span class="n">hash</span><span class="p">;</span>
+      <span class="kt">long</span> <span class="n">ClientSignature</span><span class="p">;</span>
+      <span class="n">Bulletin</span> <span class="n">bulletin</span> <span class="o">=</span> <span class="n">Commission</span><span class="p">.</span><span class="na">askQuestion</span><span class="p">(</span><span class="s">&quot;Putin is great?&quot;</span><span class="p">);</span>
+
+      <span class="n">Client</span> <span class="n">Valera</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="p">(</span><span class="n">bulletin</span><span class="p">);</span>
+      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Answer = &quot;</span><span class="o">+</span><span class="n">Valera</span><span class="p">.</span><span class="na">answerQuestion</span><span class="p">());</span>
+      <span class="n">hash</span> <span class="o">=</span> <span class="n">Valera</span><span class="p">.</span><span class="na">HashOfAnswer</span><span class="p">();</span>
+      <span class="n">ClientSignature</span> <span class="o">=</span> <span class="n">Valera</span><span class="p">.</span><span class="na">getSignBulletin</span><span class="p">(</span><span class="n">hash</span><span class="p">);</span>
+      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Client signature = &quot;</span><span class="o">+</span><span class="n">ClientSignature</span><span class="p">);</span>
+
+      <span class="n">Server</span> <span class="n">server</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Server</span><span class="p">();</span>
+      <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">server</span><span class="p">.</span><span class="na">checkSignature</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">ClientSignature</span><span class="p">,</span> <span class="n">Valera</span><span class="p">.</span><span class="na">getD</span><span class="p">(),</span> <span class="n">Valera</span><span class="p">.</span><span class="na">getN</span><span class="p">()));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id20">
+<h2>Используемая литература<a class="headerlink" href="#id20" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="ryabko_fionov_kriptograficheskie_metody_zashchity_i.pdf">Б.Я. Рябко, А.Н. Фионов. «Криптографические методы защиты информации»</a></p>
 </div>
 </div>
