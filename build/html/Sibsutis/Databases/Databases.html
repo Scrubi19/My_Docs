@@ -123,7 +123,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id15">Стандарты на цифровую подпись (ГОСТ Р34.10-94)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id16">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id16">Глава 5. Криптографические протоколы</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id17">Ментальный покер(Пример на основе двух пользователей)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id18">Многопользовательный ментальный покер</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id19">Электронные деньги (Слепая подпись)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id20">Протокол доказательства с нулевым с нулевым знанием для задачи «Гамильтонов цикл»</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id21">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Compilers/llvm.html">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -185,6 +192,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#mysql">Установка MySQL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id10">Основы MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sql">Типы данных SQL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id12">Используемая литература</a></li>
 </ul>
 </li>
@@ -698,7 +706,9 @@ GRANT ALL PRIVILEGES ON * . * TO <span class="s1">&#39;test_user&#39;</span>@<sp
 </div>
 <div class="section" id="id10">
 <h2>Основы MySQL<a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h2>
-<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">create</span> <span class="k">database</span> <span class="n">bank</span><span class="p">;</span> <span class="cm">/* создание базы данных */</span>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span> <span class="n">username</span> <span class="o">-</span><span class="n">p</span> <span class="cm">/* вход в mysql под пользователем username */</span>
+
+<span class="k">create</span> <span class="k">database</span> <span class="n">bank</span><span class="p">;</span> <span class="cm">/* создание базы данных */</span>
 
 <span class="n">use</span> <span class="n">bank</span><span class="p">;</span> <span class="cm">/* выбор базы данных */</span>
 </pre></div>
@@ -707,6 +717,9 @@ GRANT ALL PRIVILEGES ON * . * TO <span class="s1">&#39;test_user&#39;</span>@<sp
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">source</span> <span class="n">path_to_example</span><span class="p">.</span><span class="k">sql</span> <span class="cm">/* загрузка данных */</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="sql">
+<h2>Типы данных SQL<a class="headerlink" href="#sql" title="Ссылка на этот заголовок">¶</a></h2>
 </div>
 <div class="section" id="id12">
 <h2>Используемая литература<a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h2>

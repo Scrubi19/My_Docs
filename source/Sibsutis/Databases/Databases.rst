@@ -247,6 +247,8 @@
 
 .. code-block:: sql
 
+  mysql -u username -p /* вход в mysql под пользователем username */
+
   create database bank; /* создание базы данных */
 
   use bank; /* выбор базы данных */
@@ -258,6 +260,10 @@
 .. code-block:: sql
   
   source path_to_example.sql /* загрузка данных */
+
+
+Типы данных SQL
+~~~~~~~~~~~~~~~~~
 
 
 
