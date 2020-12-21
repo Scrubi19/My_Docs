@@ -100,6 +100,17 @@
 <li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id8">Условия</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../Cheat_sheets/cheat.html#id9">Регулярные выражения</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id10">Основы</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id11">Часто используемые шаблоны</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id12">Положение строк в тексте</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id13">Определение диапазона</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id14">Квантификаторы или указание кол-ва повторений</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id15">Скобочные группы</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id16">Перечисление</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Cheat_sheets/cheat.html#id19">Полезные ссылки</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Crypto/cryptography.html">Криптографические методы защиты информации</a><ul>
@@ -127,9 +138,16 @@
 <li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id16">Глава 5. Криптографические протоколы</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id17">Ментальный покер(Пример на основе двух пользователей)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id18">Многопользовательный ментальный покер</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id19">Электронные деньги (Слепая подпись)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id19">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id20">Протокол доказательства с нулевым знанием для задачи «Гамильтонов цикл»</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id21">Доказательство с нулевым знанием</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id22">Гамильтонов цикл</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Crypto/cryptography.html#id23">Ход алгоритма</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Crypto/cryptography.html#id24">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">LLVM: инфраструктура для разработки компилятора</a><ul>
@@ -170,7 +188,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#id15">Оптимизации времени компиляции и времени компоновки</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id16">Используемая литература</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tail-recursion-elimination-tre">Оптимизация Tail Recursion Elimination (TRE)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id16">Задачи оптимизации</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17">Проход оптимизации: Анализ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18">Проход оптимизации: Оптимизация</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id19">Пример работы оптимизации (Успех)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id21">Используемая литература</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Ruby/ruby.html">Ruby on Rails</a><ul>
@@ -191,6 +216,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#mysql">Установка MySQL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id10">Основы MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#sql">Типы данных SQL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id12">Используемая литература</a></li>
 </ul>
 </li>
@@ -1271,11 +1297,163 @@ attributes <span class="c1">#0 = { noinline nounwind optnone ... }</span>
 <li><p>-O0 - отсутствие оптимизаций</p></li>
 <li><p>-Os и -Oz - Такие же как и -O2 с дополнительными оптимизациями для уменьшения объема выполняемого кода</p></li>
 <li><p>-O2 - уровень умеренной оптимизации, включает в себя большинство из доступных</p></li>
-<li><p>-O3 - Такой же как -O2, дополнительно включающий оптимизации на которые требуется больше времени или которые приводят к увеличению объема кода.</p></li>
+<li><p>-O3 - Такой же как -O2, дополнительно включающий оптимизации на которые требуется больше времени или которые приводят к увеличению объема кода</p></li>
 </ul>
 </div>
+<div class="section" id="tail-recursion-elimination-tre">
+<h2>Оптимизация Tail Recursion Elimination (TRE)<a class="headerlink" href="#tail-recursion-elimination-tre" title="Ссылка на этот заголовок">¶</a></h2>
+<p><strong>Хвостовая рекурсия</strong> - частный случай рекурсии, при котором рекурсивный вызов единственен и является последней инструкцией метода. При этом метод, вызвавший “сам себя”, должен немедленно возвратить результат рекурсивного вызова, не производя над ним предварительно никаких преобразований. Разумеется, последнее требование относится только к методам, возвращающим значение, отличное от void</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// рекурсивный поиск суммы от 1 до n</span>
+<span class="kt">int</span> <span class="nf">recSum</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="n">recSum</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// тот же алгоритм с применением хвостовой рекурсии</span>
+<span class="kt">int</span> <span class="nf">tailRecSum</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sum</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="k">return</span> <span class="n">tailRecSum</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">n</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <div class="section" id="id16">
-<h2>Используемая литература<a class="headerlink" href="#id16" title="Ссылка на этот заголовок">¶</a></h2>
+<h3>Задачи оптимизации<a class="headerlink" href="#id16" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Tail Call Elimination преобразует рекурсивные вызовы текущей функции, за которыми следует инструкция возврата с ветвлением, создавая цикл. Этот проход также реализует расширения базового алгоритма:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Тривиальные инструкции между вызовом и возвратом не препятствуют выполнению преобразования</p></li>
+<li><p>Преобразует функции, которые являются хвостовыми рекурсивными, для использования переменной-накопителя</p></li>
+<li><p>TRE выполняется, если функция возвращает результат, возвращенный вызовом, или если функция возвращает константу времени выполнения при всех выходах из функции</p></li>
+<li><p>Если проход может доказать, что вызываемые объекты не имеют доступа к своему кадру стека вызывающего абонента, они помечаются как подходящие для исключения хвостового вызова (генератором кода)</p></li>
+</ul>
+</div></blockquote>
+<p>Проход оптимизации можно логически разбить на две взаимодополняющие части: <em>Анализ</em> и <em>Преобразование</em></p>
+<blockquote>
+<div><p><strong>Анализ</strong></p>
+</div></blockquote>
+<p>Осуществляет проход по коду функции, собирает информацию о созданных переменных, помечает вызовы функций для дальнейшего исключения</p>
+<blockquote>
+<div><p><strong>Преобразование</strong></p>
+</div></blockquote>
+<p>Используя информацию, полученную в результате анализа, удаляет помеченные вызовы функций, создает тело цикла (базовый блок) в конце которого описывается условие перехода (phi)</p>
+</div>
+<div class="section" id="id17">
+<h3>Проход оптимизации: Анализ<a class="headerlink" href="#id17" title="Ссылка на этот заголовок">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>static bool canTRE(Function &amp;F)</strong> - сканирует указанную функцию на предмет инструкций alloca. Если он содержит какие-либо динамические аллоки, возвращает false</p></li>
+<li><p><strong>void walk(Value Root)</strong> - Начинает поиск с корневого значения, чтобы отметить вызовы, которые используют значение или производное значение в AllocaUsers, а также места, откуда оно может уйти в EscapePoints</p></li>
+<li><p><strong>void callUsesLocalStack(CallBase &amp;CB, bool IsNocapture)</strong> — функция добавляет значения в два списка:</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p><em>AllocaUsers</em> - вызовы alloc пользователя</p></li>
+<li><p><em>EscapePoints</em> - такие call, которые могут записывать что-то в память на стеке, исключение их из CallBase может привезти к утечке значения</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="nc">AllocaDerivedValueTracker</span> <span class="p">{</span>
+  <span class="kt">void</span> <span class="nf">walk</span><span class="p">(</span><span class="n">Value</span> <span class="o">*</span><span class="n">Root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Use</span> <span class="o">*</span><span class="p">,</span> <span class="mi">32</span><span class="o">&gt;</span> <span class="n">Worklist</span><span class="p">;</span>
+    <span class="n">SmallPtrSet</span><span class="o">&lt;</span><span class="n">Use</span> <span class="o">*</span><span class="p">,</span> <span class="mi">32</span><span class="o">&gt;</span> <span class="n">Visited</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">AddUsesToWorklist</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span> <span class="o">*</span><span class="n">V</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">U</span> <span class="p">:</span> <span class="n">V</span><span class="o">-&gt;</span><span class="n">uses</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Visited</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="o">&amp;</span><span class="n">U</span><span class="p">).</span><span class="n">second</span><span class="p">)</span>
+          <span class="k">continue</span><span class="p">;</span>
+        <span class="n">Worklist</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">&amp;</span><span class="n">U</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+    <span class="n">AddUsesToWorklist</span><span class="p">(</span><span class="n">Root</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">Worklist</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">Use</span> <span class="o">*</span><span class="n">U</span> <span class="o">=</span> <span class="n">Worklist</span><span class="p">.</span><span class="n">pop_back_val</span><span class="p">();</span>
+      <span class="n">Instruction</span> <span class="o">*</span><span class="n">I</span> <span class="o">=</span> <span class="n">cast</span><span class="o">&lt;</span><span class="n">Instruction</span><span class="o">&gt;</span><span class="p">(</span><span class="n">U</span><span class="o">-&gt;</span><span class="n">getUser</span><span class="p">());</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="n">I</span><span class="o">-&gt;</span><span class="n">getOpcode</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">Call</span><span class="p">:</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">Invoke</span><span class="p">:</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="o">&amp;</span><span class="n">CB</span> <span class="o">=</span> <span class="n">cast</span><span class="o">&lt;</span><span class="n">CallBase</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">I</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">CB</span><span class="p">.</span><span class="n">isArgOperand</span><span class="p">(</span><span class="n">U</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">CB</span><span class="p">.</span><span class="n">isByValArgument</span><span class="p">(</span><span class="n">CB</span><span class="p">.</span><span class="n">getArgOperandNo</span><span class="p">(</span><span class="n">U</span><span class="p">)))</span>
+          <span class="k">continue</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">IsNocapture</span> <span class="o">=</span>
+            <span class="n">CB</span><span class="p">.</span><span class="n">isDataOperand</span><span class="p">(</span><span class="n">U</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">CB</span><span class="p">.</span><span class="n">doesNotCapture</span><span class="p">(</span><span class="n">CB</span><span class="p">.</span><span class="n">getDataOperandNo</span><span class="p">(</span><span class="n">U</span><span class="p">));</span>
+        <span class="n">callUsesLocalStack</span><span class="p">(</span><span class="n">CB</span><span class="p">,</span> <span class="n">IsNocapture</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">IsNocapture</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">Load</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">// The result of a load is not alloca-derived (unless an alloca has</span>
+        <span class="c1">// otherwise escaped, but this is a local analysis).</span>
+        <span class="k">continue</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">Store</span><span class="p">:</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">U</span><span class="o">-&gt;</span><span class="n">getOperandNo</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="n">EscapePoints</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">I</span><span class="p">);</span>
+        <span class="k">continue</span><span class="p">;</span>  <span class="c1">// Stores have no users to analyze.</span>
+      <span class="p">}</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">BitCast</span><span class="p">:</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">GetElementPtr</span><span class="p">:</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">PHI</span><span class="p">:</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">Select</span><span class="p">:</span>
+      <span class="k">case</span> <span class="n">Instruction</span><span class="o">::</span><span class="nl">AddrSpaceCast</span><span class="p">:</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="n">EscapePoints</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">I</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">AddUsesToWorklist</span><span class="p">(</span><span class="n">I</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>static bool markTails(Function &amp;F, …)</strong> - помечает tail call, как кандидата для последующего удаления</p></li>
+<li><p><strong>static bool canMoveAboveCall(Instruction I, CallInst CI, …)</strong> - Вернет истину, если можно безопасно переместить указанную инструкцию после вызова в перед вызовом</p></li>
+<li><p><strong>static bool canTransformAccumulatorRecursion(Instruction I, ..)</strong> - проверяет возможность преобразование рекурсии с использованием переменной аккумулятора</p></li>
+</ul>
+</div>
+<div class="section" id="id18">
+<h3>Проход оптимизации: Оптимизация<a class="headerlink" href="#id18" title="Ссылка на этот заголовок">¶</a></h3>
+<p>TailRecursionEliminator - класс отвечает за смену всех хвостовых рекурсивных вызовов на циклы и включает след.функции:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>CallInst findTRECandidate( BasicBlock BB, ..)</strong> - поиск в базовом блоке вызов call, который будет подходить для оптимизации</p></li>
+<li><p><strong>bool processBlock(BasicBlock &amp;BB, bool CannotTailCallElimCallsMarkedTail)</strong> — создает базовый блок, который является телом нового цикла, который получился в результате устранения хвостовой рекурсии</p></li>
+<li><p><strong>void insertAccumulator(Instruction AccRecInstr)</strong> — инициализация и вставка переменной аккумулятора, в которой будет храниться результат функции</p></li>
+<li><p>bool <strong>eliminateCall(CallInst CI)</strong> — удаление всех хвостовых вызовов из IR представления</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id19">
+<h3>Пример работы оптимизации (Успех)<a class="headerlink" href="#id19" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Получение читаемой формы IR без оптимизации (.ll файл)</span>
+$ clang-10 -S -O3 -emit-llvm -mllvm -disable-llvm-optzns factorial.c -o no_opt_factorial.ll
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Применение Tail Call Elimination</span>
+$ opt --tailcallelim -S no_opt_factorial.ll -o opt_factorial.ll -time-passes -stats
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Factorial.c (вычисление факториала)</span>
+<span class="kt">int</span> <span class="nf">factorial</span> <span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">acc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nl">acc</span> <span class="p">:</span> <span class="n">factorial</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">acc</span> <span class="o">*</span> <span class="n">n</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="n">factorial</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../../_images/TRE.svg"><img alt="../../_images/TRE.svg" src="../../_images/TRE.svg" width="1200px" /></a>
+</div>
+<p><a class="reference external" href="TRE.pdf">ссылка на презентацию</a></p>
+</div>
+</div>
+<div class="section" id="id21">
+<h2>Используемая литература<a class="headerlink" href="#id21" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="LLVMbook.pdf">LLVM. Инфраструктура для разработки компиляторов</a></p>
 </div>
 </div>
