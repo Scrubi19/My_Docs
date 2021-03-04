@@ -9,9 +9,9 @@ Scrubi19_Docs
    :maxdepth: 2
 
    Sibsutis/Cheat_sheets/cheat.rst
+   Sibsutis/Bash/bash.rst
    Sibsutis/Crypto/cryptography.rst
    Sibsutis/Compilers/llvm.rst
-   Sibsutis/Ruby/ruby.rst
    Sibsutis/Databases/Databases.rst
 
 Контакты

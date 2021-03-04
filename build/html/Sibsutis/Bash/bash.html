@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Ruby on Rails &mdash; Документация My_Docs 0.0.1</title>
+  <title>BASH &mdash; Документация My_Docs 0.0.1</title>
   
 
   
@@ -42,8 +42,8 @@
     
     <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
     <link rel="search" title="Поиск" href="../../search.html" />
-    <link rel="next" title="Базы данных" href="../Databases/Databases.html" />
-    <link rel="prev" title="LLVM: инфраструктура для разработки компилятора" href="../Compilers/llvm.html" /> 
+    <link rel="next" title="Криптографические методы защиты информации" href="../Crypto/cryptography.html" />
+    <link rel="prev" title="Шпаргалки" href="../Cheat_sheets/cheat.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -109,14 +109,13 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Bash/bash.html">Bash</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Bash/bash.html#id1">BASH</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Bash/bash.html#id2">Команды</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Bash/bash.html#id3">Переменные и параметры скрипта</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Bash/bash.html#id4">Зарезервированные переменные</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Bash/bash.html#id5">Условия</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">BASH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Команды</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Переменные и параметры скрипта</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Зарезервированные переменные</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Условия</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#switch-case">Switch Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">Логические операторы</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Crypto/cryptography.html">Криптографические методы защиты информации</a><ul>
@@ -204,11 +203,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../Compilers/llvm.html#id21">Используемая литература</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Ruby on Rails</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ubuntu">Установка на Ubuntu</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">Начало</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="../Databases/Databases.html">Базы данных</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Databases/Databases.html#id2">Реляционные базы данных. Операции в реляционной алгебре</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Databases/Databases.html#id3">Выборка</a></li>
@@ -274,13 +268,13 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Ruby on Rails</li>
+      <li>BASH</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/Sibsutis/Ruby/ruby.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+            <a href="../../_sources/Sibsutis/Bash/bash.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
           
         
       </li>
@@ -293,63 +287,140 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ruby-on-rails">
-<h1>Ruby on Rails<a class="headerlink" href="#ruby-on-rails" title="Ссылка на этот заголовок">¶</a></h1>
-<div class="section" id="ubuntu">
-<h2>Установка на Ubuntu<a class="headerlink" href="#ubuntu" title="Ссылка на этот заголовок">¶</a></h2>
-<ol class="arabic simple">
-<li>Установить rbenv</li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-</pre></div>
-</div>
-<ol class="arabic simple" start="2">
-<li>Вписать зависимости</li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;export PATH=&quot;$HOME/.rbenv/bin:$PATH&quot;&#39;</span> &gt;&gt; ~/.bashrc
-<span class="nb">echo</span> <span class="s1">&#39;eval &quot;$(rbenv init -)&quot;&#39;</span> &gt;&gt; ~/.bashrc
-<span class="nb">exec</span> <span class="nv">$SHELL</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="3">
-<li>Установить ruby-build</li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/rbenv/ruby-build.git <span class="s2">&quot;</span><span class="k">$(</span>rbenv root<span class="k">)</span><span class="s2">&quot;</span>/plugins/ruby-build
-</pre></div>
-</div>
-<ol class="arabic simple" start="4">
-<li>Установить ruby</li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rbenv install <span class="m">2</span>.7.1
-rbenv global <span class="m">2</span>.7.1
-</pre></div>
-</div>
-<p>Пример Gemfile:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
-
-ruby <span class="s1">&#39;2.7.1&#39;</span>
-
-gem <span class="s1">&#39;colorize&#39;</span>
-gem <span class="s1">&#39;csv&#39;</span>
-gem <span class="s1">&#39;rails&#39;</span>
-gem <span class="s1">&#39;rspec&#39;</span>
-gem <span class="s1">&#39;rubocop&#39;</span>
-gem <span class="s1">&#39;simplecov&#39;</span>
-</pre></div>
-</div>
-<p>Команды:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bundle install - установка gem-ов из Gemfile
-bundle <span class="nb">exec</span> rubocop - запуск rubocop
-bundle <span class="nb">exec</span> rspec - запуск тестов
-</pre></div>
-</div>
+  <div class="section" id="bash">
+<h1>BASH<a class="headerlink" href="#bash" title="Ссылка на этот заголовок">¶</a></h1>
+<p>BASH — Bourne-Again SHell (что может переводится как «перерожденный шел», или «Снова шел Борна(создатель sh)»), самый популярный командный интерпретатор в юниксоподобных системах, в особенности в GNU/Linux</p>
+<div class="admonition warning">
+<p class="first admonition-title">Предупреждение</p>
+<p class="last">Любой bash-скрипт должен начинаться со строки
+<strong>#!/bin/bash</strong>
+<em>в этой строке после #! указывается путь к bash-интерпретатору, поэтому если он у вас установлен в другом месте(где, вы можете узнать набрав `whereis bash`) поменяйте её на ваш путь.</em></p>
 </div>
 <div class="section" id="id1">
-<h2>Начало<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h2>
-<p><strong>Ruby on Rails</strong> – это фреймворк для разработки веб-приложений, написанный
-на языке программирования Ruby</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rails new &lt;name of project&gt; <span class="c1"># генерирует новый проект на rails</span>
-rails server <span class="c1"># создает локальный сервер для страницы проэкта (http://localhost:3000/)</span>
+<h2>Команды<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span>     <span class="c1"># вывод аргументов, разделенных пробелами, на стандартное устройство вывода</span>
+<span class="nb">exit</span>     <span class="c1"># выход из оболочки</span>
+<span class="nb">break</span>    <span class="c1"># выход из цикла for, while или until</span>
+<span class="k">continue</span> <span class="c1"># выполнение следующей итерации цикла for, while или until</span>
+<span class="nb">export</span>   <span class="c1"># отмечает аргументы как переменные для передачи в дочерние процессы в среде</span>
+<span class="nb">hash</span>     <span class="c1"># запоминает полные имена путей команд, указанных в качестве аргументов, чтобы не искать их при следующем обращении</span>
+<span class="nb">kill</span>     <span class="c1"># посылает сигнал завершения процессу</span>
+<span class="nb">pwd</span>      <span class="c1"># выводит текущий рабочий каталог</span>
+<span class="nb">read</span>     <span class="c1"># читает строку из ввода оболочки и использует ее для присвоения значений указанным переменным.\</span>
+<span class="k">return</span>   <span class="c1"># заставляет функцию оболочки выйти с указанным значением</span>
+<span class="nb">shift</span>    <span class="c1"># перемещает позиционные параметры налево</span>
+<span class="nb">test</span>     <span class="c1"># вычисляет условное выражение</span>
+<span class="nb">times</span>    <span class="c1"># выводит имя пользователя и системное время, использованное оболочкой и ее потомками</span>
+<span class="nb">trap</span>     <span class="c1"># указывает команды, которые должны выполняться при получении оболочкой сигнала</span>
+<span class="nb">unset</span>    <span class="c1"># вызывает уничтожение переменных оболочки</span>
+<span class="nb">wait</span>     <span class="c1"># ждет выхода из дочернего процесса и сообщает выходное состояние.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>Переменные и параметры скрипта<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#присваиваем переменной parametr1 значение первого параметра скрипта</span>
+<span class="nv">parametr1</span><span class="o">=</span><span class="nv">$1</span>
+<span class="c1">#присваиваем переменной script_name значение имени скрипта</span>
+<span class="nv">script_name</span><span class="o">=</span><span class="nv">$0</span>
+<span class="c1"># обращение к переменным осуществляется через $имя_переменной.</span>
+<span class="nb">echo</span> <span class="s2">&quot;Вы запустили скрипт с именем </span><span class="nv">$script_name</span><span class="s2"> и параметром </span><span class="nv">$parametr1</span><span class="s2">&quot;</span>
+<span class="c1"># в одинарных кавычках не происходит подстановки переменных.</span>
+<span class="nb">echo</span> <span class="s1">&#39;Вы запустили скрипт с именем $script_name и параметром $parametr1&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>Зарезервированные переменные<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$DIRSTACK</span>   <span class="c1"># содержимое вершины стека каталогов</span>
+<span class="nv">$EDITOR</span>     <span class="c1"># текстовый редактор по умолчанию</span>
+<span class="nv">$EUID</span>       <span class="c1"># Эффективный UID. Если вы использовали программу su для выполнения команд от другого пользователя, то эта переменная содержит UID этого пользователя, в то время как...</span>
+<span class="nv">$UID</span>        <span class="c1"># содержит реальный идентификатор, который устанавливается только при логине.</span>
+<span class="nv">$FUNCNAME</span>   <span class="c1"># имя текущей функции в скрипте.</span>
+<span class="nv">$GROUPS</span>     <span class="c1"># массив групп к которым принадлежит текущий пользователь</span>
+<span class="nv">$HOME</span>       <span class="c1"># домашний каталог пользователя</span>
+<span class="nv">$HOSTNAME</span>   <span class="c1"># ваш hostname</span>
+<span class="nv">$HOSTTYPE</span>   <span class="c1"># архитектура машины.</span>
+<span class="nv">$LC_CTYPE</span>   <span class="c1"># внутренняя переменная, котороя определяет кодировку символов</span>
+<span class="nv">$OLDPWD</span>     <span class="c1"># прежний рабочий каталог</span>
+<span class="nv">$OSTYPE</span>     <span class="c1"># тип ОС</span>
+<span class="nv">$PATH</span>       <span class="c1"># путь поиска программ</span>
+<span class="nv">$PPID</span>       <span class="c1"># идентификатор родительского процесса</span>
+<span class="nv">$SECONDS</span>    <span class="c1"># время работы скрипта(в сек.)</span>
+<span class="nv">$#</span>          <span class="c1"># общее количество параметров переданных скрипту</span>
+<span class="nv">$*</span>          <span class="c1"># все аргументы переданыне скрипту(выводятся в строку)</span>
+<span class="nv">$@</span>          <span class="c1"># тоже самое, что и предыдущий, но параметры выводятся в столбик</span>
+<span class="nv">$!</span>          <span class="c1"># PID последнего запущенного в фоне процесса</span>
+<span class="nv">$$</span>          <span class="c1"># PID самого скрипта</span>
+<span class="nv">$?</span>          <span class="c1"># результат последней выполненной команды</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>Условия<a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$?</span><span class="s2">&quot;</span> -eq <span class="s2">&quot;if&quot;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;if something&quot;</span>
+<span class="k">else</span>
+    <span class="nb">echo</span> <span class="s2">&quot;else something&quot;</span>
+<span class="k">if</span>
+</pre></div>
+</div>
+<p>Для построения многоярусных условий вида:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$?</span><span class="s2">&quot;</span> -eq <span class="s2">&quot;if&quot;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;if something&quot;</span>
+<span class="k">elif</span> <span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$?</span><span class="s2">&quot;</span> -eq <span class="s2">&quot;if&quot;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;elif something&quot;</span>
+<span class="k">else</span>
+    <span class="nb">echo</span> <span class="s2">&quot;else something&quot;</span>
+<span class="k">if</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="switch-case">
+<h2>Switch Case<a class="headerlink" href="#switch-case" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Если необходимо сравнивать какую-то одну переменную с большим количеством параметров, то целесообразней использовать оператор case.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">read</span> doing
+
+<span class="k">case</span> <span class="nv">$doing</span> in
+  <span class="m">1</span><span class="o">)</span>
+    /usr/bin/nano<span class="sb">`</span> <span class="c1"># если $doing содержит 1, то запустить nano</span>
+  <span class="p">;;</span>
+
+  <span class="m">2</span><span class="o">)</span>
+    /usr/bin/vi<span class="sb">`</span> <span class="c1"># если $doing содержит 2, то запустить vi</span>
+  <span class="p">;;</span>
+
+  <span class="m">3</span><span class="o">)</span>
+    /usr/bin/emacs<span class="sb">`</span> <span class="c1"># если $doing содержит 3, то запустить emacs</span>
+  <span class="p">;;</span>
+
+  <span class="m">4</span><span class="o">)</span>
+    <span class="nb">exit</span> <span class="m">0</span>
+  <span class="p">;;</span>
+
+  *<span class="o">)</span>
+    <span class="nb">echo</span> <span class="s2">&quot;nothing&quot;</span>
+  <span class="p">;;</span>
+<span class="k">esac</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>Логические операторы<a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Операторы используются для конструкции if-then-else-fi:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-z       <span class="c1"># строка пуста</span>
+-n       <span class="c1"># строка не пуста</span>
+<span class="o">=</span>, <span class="o">(==)</span>  <span class="c1"># строки равны</span>
+!<span class="o">=</span>       <span class="c1"># строки неравны</span>
+-eq      <span class="c1"># равно</span>
+-ne      <span class="c1"># неравно</span>
+-lt,<span class="o">(</span>&lt; <span class="o">)</span> <span class="c1"># меньше</span>
+-le,<span class="o">(</span>&lt;<span class="o">=)</span> <span class="c1"># меньше или равно</span>
+-gt,<span class="o">(</span>&gt;<span class="o">)</span>  <span class="c1"># больше</span>
+-ge,<span class="o">(</span>&gt;<span class="o">=)</span> <span class="c1"># больше или равно</span>
+ !       <span class="c1"># отрицание логического выражения</span>
+-a,<span class="o">(&amp;&amp;)</span>  <span class="c1"># логическое «И»</span>
+-o,<span class="o">(||)</span>  <span class="c1"># логическое «ИЛИ»</span>
 </pre></div>
 </div>
 </div>
